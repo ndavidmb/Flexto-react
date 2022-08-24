@@ -1,10 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
-import {
-  deleteApartment,
-  getApartments,
-  getPaginateApartments,
-} from './../services/apartment.service'
+import { ApartmentService } from './../services/apartment.service'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
@@ -12,10 +8,6 @@ import { TRow } from '../../shared/styled-components/TRow'
 import { Apartment } from '../interfaces/apartment.interface'
 import { useDispatch } from 'react-redux'
 import { Pagination } from '../../shared/components/Pagination'
-import {
-  DocumentData,
-  Query,
-} from 'firebase/firestore/lite'
 
 type Props = {
   consult: number
@@ -32,27 +24,27 @@ export const ApartmentList: FC<Props> = ({
     [],
   )
 
+  const apartmentService = ApartmentService()
+
   const [paginate, setPaginate] = useState<{
-    next: Query<DocumentData>
-    previous: Query<DocumentData>
     totalPages: number
   } | null>(null)
 
   useEffect(() => {
     dispatch(setLoading(true))
-    getPaginateApartments(10)
-      .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
+    apartmentService
+      .getPaginateApartments(10)
+      .then(({ apartments, totalPages }) => {
+        setApartments(apartments)
+        setPaginate({ totalPages })
+      })
       .finally(() => dispatch(setLoading(false)))
   }, [consult])
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
-    deleteApartment(id)
+    apartmentService
+      .deleteApartment(id)
       .then(() => {
         setApartments(
           apartments.filter(
@@ -63,29 +55,31 @@ export const ApartmentList: FC<Props> = ({
       .finally(() => dispatch(setLoading(false)))
   }
 
-  const handleNext = () => {
-    dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.next)
-      .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
-      .finally(() => dispatch(setLoading(false)))
-  }
+  // const handleNext = () => {
+  //   dispatch(setLoading(true))
+  //   apartmentService
+  //     .getPaginateApartments(10, paginate?.next)
+  //     .then(
+  //       ({ previous, apartments, next, totalPages }) => {
+  //         setApartments(apartments)
+  //         setPaginate({ previous, next, totalPages })
+  //       },
+  //     )
+  //     .finally(() => dispatch(setLoading(false)))
+  // }
 
-  const handlePrevious = () => {
-    dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.previous)
-      .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
-      .finally(() => dispatch(setLoading(false)))
-  }
+  // const handlePrevious = () => {
+  //   dispatch(setLoading(true))
+  //   apartmentService
+  //     .getPaginateApartments(10, paginate?.previous)
+  //     .then(
+  //       ({ previous, apartments, next, totalPages }) => {
+  //         setApartments(apartments)
+  //         setPaginate({ previous, next, totalPages })
+  //       },
+  //     )
+  //     .finally(() => dispatch(setLoading(false)))
+  // }
 
   return (
     <>
@@ -127,8 +121,6 @@ export const ApartmentList: FC<Props> = ({
       </Table>
       {paginate && (
         <Pagination
-          next={handleNext}
-          previous={handlePrevious}
           totalPages={paginate.totalPages}
         ></Pagination>
       )}

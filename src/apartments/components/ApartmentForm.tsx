@@ -4,10 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Apartment } from '../interfaces/apartment.interface'
-import {
-  addApartment,
-  updateApartment,
-} from '../services/apartment.service'
+import { ApartmentService } from '../services/apartment.service'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -27,6 +24,8 @@ export const ApartmentForm: FC<Props> = ({
 
   const dispatch = useDispatch()
 
+  const apartmentService = ApartmentService()
+
   const handleSubmit = (values: Apartment) => {
     // Pone el spinner a andar
     dispatch(setLoading(true))
@@ -40,7 +39,8 @@ export const ApartmentForm: FC<Props> = ({
   }
 
   const updateApt = (values: Apartment) => {
-    updateApartment(data?.id as string, values)
+    apartmentService
+      .updateApartment(data?.id as string, values)
       .then(() => {
         closeModal(true)
       })
@@ -49,11 +49,12 @@ export const ApartmentForm: FC<Props> = ({
 
   // Esto llama al service, y agrega un apartamento
   const createApt = (values: Apartment) => {
-    addApartment({
-      // Se pasa de número a string
-      apartmentNumber: values.apartmentNumber,
-      tower: values.tower,
-    })
+    apartmentService
+      .addApartment({
+        // Se pasa de número a string
+        apartmentNumber: values.apartmentNumber,
+        tower: values.tower,
+      })
       .then(() => {
         closeModal(true)
       })
