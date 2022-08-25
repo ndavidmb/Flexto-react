@@ -10,23 +10,23 @@ import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
-import { Apartment } from '../interfaces/apartment.interface'
+import { Owner } from '../interfaces/owner.interface'
 import {
-  deleteApartment, getPaginateApartments
-} from './../services/apartment.service'
+  deleteOwner, getPaginateOwners
+} from './../services/owner.service'
 
 type Props = {
   consult: number
-  openEdit: (data?: Apartment) => void
+  openEdit: (data?: Owner) => void
 }
 
-export const ApartmentList: FC<Props> = ({
+export const OwnerList: FC<Props> = ({
   openEdit: open,
   consult,
 }) => {
   const dispatch = useDispatch()
 
-  const [apartments, setApartments] = useState<Apartment[]>(
+  const [owners, setOwners] = useState<Owner[]>(
     [],
   )
 
@@ -38,10 +38,10 @@ export const ApartmentList: FC<Props> = ({
 
   useEffect(() => {
     dispatch(setLoading(true))
-    getPaginateApartments(10)
+    getPaginateOwners(10)
       .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
+        ({ previous, owners, next, totalPages }) => {
+          setOwners(owners)
           setPaginate({ previous, next, totalPages })
         },
       )
@@ -50,11 +50,11 @@ export const ApartmentList: FC<Props> = ({
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
-    deleteApartment(id)
+    deleteOwner(id)
       .then(() => {
-        setApartments(
-          apartments.filter(
-            (apartment) => apartment.id !== id,
+        setOwners(
+          owners.filter(
+            (owner) => owner.id !== id,
           ),
         )
       })
@@ -63,10 +63,10 @@ export const ApartmentList: FC<Props> = ({
 
   const handleNext = () => {
     dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.next)
+    getPaginateOwners(10, paginate?.next)
       .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
+        ({ previous, owners, next, totalPages }) => {
+          setOwners(owners)
           setPaginate({ previous, next, totalPages })
         },
       )
@@ -75,10 +75,10 @@ export const ApartmentList: FC<Props> = ({
 
   const handlePrevious = () => {
     dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.previous)
+    getPaginateOwners(10, paginate?.previous)
       .then(
-        ({ previous, apartments, next, totalPages }) => {
-          setApartments(apartments)
+        ({ previous, owners, next, totalPages }) => {
+          setOwners(owners)
           setPaginate({ previous, next, totalPages })
         },
       )
@@ -89,31 +89,40 @@ export const ApartmentList: FC<Props> = ({
     <>
       <Table>
         <THead>
-          <th scope="col">Apartamento</th>
-          <th scope="col">Torre</th>
-          <th scope="col">Acción</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Apartamento</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Acción</th>
         </THead>
         <tbody>
-          {apartments.map((apartment, index) => (
-            <TRow index={index} key={apartment.id}>
+          {owners.map((owner, index) => (
+            <TRow index={index} key={owner.id}>
               <th
                 scope="row"
                 className="font-medium text-gray-900 whitespace-nowrap"
               >
-                {apartment.apartmentNumber}
+                {owner.name}
               </th>
-              <td>{apartment.tower}</td>
+              <td>{owner.phone}</td>
+              <td>
+                <div className="flex flex-col">
+                  <span>Apto. {owner.apartment?.apartmentNumber}</span>
+                  <span>Bloque {owner.apartment?.tower}</span>
+                </div>
+              </td>
+              <td>{owner.email}</td>
               <td className="flex gap-2">
                 <Button
                   color="link"
-                  onClick={() => open(apartment)}
+                  onClick={() => open(owner)}
                 >
                   Editar
                 </Button>
                 <Button
                   color="link"
                   onClick={() =>
-                    handleDelete(apartment.id as string)
+                    handleDelete(owner.id as string)
                   }
                 >
                   Eliminar

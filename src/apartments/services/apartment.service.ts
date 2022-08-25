@@ -3,14 +3,15 @@ import {
   collection,
   deleteDoc,
   doc,
+  DocumentReference,
   endBefore,
+  getDoc,
   getDocs,
   limit,
   orderBy,
   query,
   startAfter,
-  updateDoc,
-  where,
+  updateDoc
 } from 'firebase/firestore/lite'
 import { db } from '../../shared/services/firebase.service'
 import { Apartment } from '../interfaces/apartment.interface'
@@ -102,4 +103,8 @@ export const getPaginateApartments = async (
     previous,
     totalPages: documentSnapshots.size / limitPage,
   }
+}
+export const getApartmentsByRef = async (ref: DocumentReference) => {
+  const apartmentRef = await getDoc(ref)
+  return apartmentRef.data()
 }

@@ -1,8 +1,10 @@
-import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { DocumentData } from 'firebase/firestore/lite'
 
 export interface Owner {
   name: string
   phone: string
-  apartment: Apartment
   email: string
+  apartment?: DocumentData | undefined
+  id?: string
+  apartmentId?: string
 }
