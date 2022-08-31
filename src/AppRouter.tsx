@@ -10,6 +10,7 @@ import { ApartmentWrapper } from './apartments/ApartmentWrapper'
 import App from './App'
 import { AuthWrapper } from './auth/AuthWrapper'
 import { RecoveryPassword } from './auth/components/RecoveryPassword'
+import { Register } from './auth/components/Register'
 import { CustomizationWrapper } from './customizations/CustomizationWrapper'
 import { HomeRouter } from './HomeRouter'
 import { OwnerWrapper } from './owners/OwnerWrapper'
@@ -50,6 +51,10 @@ export const AppRouting = () => {
             <Route
               path="recovery-password"
               element={<RecoveryPassword />}
+            />
+            <Route
+              path="register"
+              element={<Register />}
             />
             <Route index element={<AuthWrapper />} />
             <Route path="home/*" element={<HomeRouter />} />

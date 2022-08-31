@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
-import { ApartmentService } from './../services/apartment.service'
+import { useApartmentService } from './../services/apartment.service'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
@@ -24,7 +24,7 @@ export const ApartmentList: FC<Props> = ({
     [],
   )
 
-  const apartmentService = ApartmentService()
+  const apartmentService = useApartmentService()
 
   const [paginate, setPaginate] = useState<{
     totalPages: number

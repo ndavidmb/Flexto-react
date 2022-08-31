@@ -1,11 +1,9 @@
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import {
   logoutFirebase,
   signIn,
   signInGoogle,
 } from '../../../../auth/services/auth.service'
-import { AppDispatch, RootState } from '../../store'
+import { AppDispatch } from '../../store'
 import { setLoading } from '../loading/loadingSlice'
 import { login, logout } from './authSlice'
 

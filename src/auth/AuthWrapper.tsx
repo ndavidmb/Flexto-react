@@ -13,7 +13,7 @@ import {
 import { RootState } from '../shared/store/store'
 import { Button } from '../shared/styled-components/Button'
 import { ErrorAlert } from '../shared/styled-components/ErrorAlert'
-import { Input } from '../shared/styled-components/Input/Input'
+import { Input } from '../shared/styled-components/Input'
 
 export const AuthWrapper = () => {
   const { errorMessage, email } = useSelector(
@@ -36,6 +36,10 @@ export const AuthWrapper = () => {
 
   const handleGoogle = () => {
     dispatch(startGoogleSignIn())
+  }
+
+  const handleRegister = () => {
+    navigate('register')
   }
 
   useEffect(() => {
@@ -91,7 +95,7 @@ export const AuthWrapper = () => {
                   Ingresar
                 </Button>
 
-                <Button
+                {/* <Button
                   onClick={handleGoogle}
                   type="button"
                   className="flex gap-1"
@@ -99,6 +103,13 @@ export const AuthWrapper = () => {
                 >
                   <IoLogoGoogle />
                   Ingresar con Google
+                </Button> */}
+                <Button
+                  type="button"
+                  color="secondary"
+                  onClick={handleRegister}
+                >
+                  Registrarse
                 </Button>
               </div>
             </Form>
