@@ -17,7 +17,7 @@ export const Button: FC<Props> = ({
 }) => {
   const colorsTypes = {
     primary: 'bg-primary',
-    secondary: 'bg-gray-200',
+    secondary: 'bg-gray-200 !text-gray-600',
     warning: 'bg-yellow-400',
     link: 'text-primary',
   }

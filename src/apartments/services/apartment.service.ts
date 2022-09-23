@@ -3,12 +3,8 @@ import {
   collection,
   deleteDoc,
   doc,
-  endBefore,
   getDocs,
-  limit,
-  orderBy,
   query,
-  startAfter,
   updateDoc,
   where,
 } from 'firebase/firestore/lite'
@@ -45,56 +41,41 @@ export function ApartmentService() {
 
   const getPaginateApartments = async (
     limitPage: number,
-    q = query(
-      collection(db, 'apartments'),
-      where('customization', '==', '/customizations/EYNQVuzkZ5IiTQ7aZyGh')
-      // orderBy('tower'),
-      // limit(limitPage),
-    ),
     search = '',
   ) => {
+    const q = query(
+      collection(db, 'apartments'),
+      where(
+        'customization',
+        '==',
+        `customizations/${theme?.id}`,
+      ),
+    )
+
     const documentSnapshots = await getDocs(q)
 
-    const lastVisible =
-      documentSnapshots.docs[
-        documentSnapshots.docs.length - 1
-      ]
-
-    const firstVisible = documentSnapshots.docs[0]
-
-    const next = query(
-      collection(db, 'apartments'),
-      orderBy('tower'),
-      startAfter(lastVisible),
-      limit(limitPage),
-    )
-
-    const previous = query(
-      collection(db, 'apartments'),
-      orderBy('tower'),
-      endBefore(firstVisible),
-      limit(limitPage),
-    )
-
-    const apartmentsList = documentSnapshots.docs.map(
-      (doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }),
-    )
+    const apartmentsList = documentSnapshots.docs
+      .map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Apartment),
+      )
+      .sort((a, b) => a.tower.localeCompare(b.tower))
 
     return {
-      next,
-      apartments: apartmentsList as Apartment[],
-      previous,
-      totalPages: documentSnapshots.size / limitPage,
+      apartments: apartmentsList,
+      totalPages: Math.ceil(
+        documentSnapshots.size / limitPage,
+      ),
     }
   }
 
-  return {
-    getPaginateApartments,
-    updateApartment,
+ return {
     addApartment,
     deleteApartment,
+    updateApartment,
+    getPaginateApartments,
   }
 }

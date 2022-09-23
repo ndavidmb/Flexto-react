@@ -5,8 +5,14 @@ import {
   IoLogOut,
   IoPeople,
 } from 'react-icons/io5'
-import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../../store/hooks'
+import { logout } from '../../store/slices/auth/authSlice'
+import { startLogout } from '../../store/slices/auth/thunks'
+import { RootState } from '../../store/store'
 import { MenuLink } from '../../styled-components/MenuLink'
+import { Avatar } from '../Avatar'
 
 const removeEndOfRoute = (route: string) => {
   const split = route.split('/')
@@ -14,16 +20,29 @@ const removeEndOfRoute = (route: string) => {
 }
 
 export const Sidebar = () => {
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
+  )
   const location = useLocation()
 
+  const dispatch = useAppDispatch()
+
+  const navigate = useNavigate()
+
   const route = removeEndOfRoute(location.pathname)
+
+  const handleLogout = () => {
+    dispatch(startLogout())
+    navigate(`/${theme?.id}`)
+  }
 
   return (
     <aside className="w-1/4 bg-menu" aria-label="Sidebar">
       <div className="overflow-y-auto h-full py-4 px-3">
-        <h2 className="font-bold text-2xl pl-3 pb-2 border-b border-gray-600 text-gray-200">
+        <h2 className="font-bold text-xl text-center text-gray-200">
           FlexTo
         </h2>
+        <Avatar />
         <ul className="space-y-2 py-2">
           <MenuLink href={`${route}/owners`}>
             <IoPeople className="text-xl" />
@@ -41,10 +60,18 @@ export const Sidebar = () => {
             <IoBuild className="text-xl" />
             Personalización
           </MenuLink>
-          <MenuLink href={`${route}/`}>
+          {/* <MenuLink href={`${route}/`}>
             <IoLogOut className="text-xl" />
             Salir
-          </MenuLink>
+          </MenuLink> */}
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full gap-2 p-2 text-base font-normal text-gray-400 rounded-lg bg-menu-item"
+          >
+            <IoLogOut className="text-xl" />
+            Salir
+          </button>
         </ul>
       </div>
     </aside>

@@ -18,6 +18,9 @@ function App() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
+  const user = useSelector(
+    (state: RootState) => state.authState,
+  )
   const dispatch = useAppDispatch()
   const customizationService = CustomizationService()
 

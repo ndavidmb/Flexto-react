@@ -38,7 +38,8 @@ export const ApartmentForm: FC<Props> = ({
   }
 
   const updateApt = (values: Apartment) => {
-    apartmentService.updateApartment(data?.id as string, values)
+    apartmentService
+      .updateApartment(data?.id as string, values)
       .then(() => {
         closeModal(true)
       })
@@ -47,11 +48,12 @@ export const ApartmentForm: FC<Props> = ({
 
   // Esto llama al service, y agrega un apartamento
   const createApt = (values: Apartment) => {
-    apartmentService.addApartment({
-      // Se pasa de número a string
-      apartmentNumber: values.apartmentNumber,
-      tower: values.tower,
-    })
+    apartmentService
+      .addApartment({
+        // Se pasa de número a string
+        apartmentNumber: values.apartmentNumber,
+        tower: values.tower,
+      })
       .then(() => {
         closeModal(true)
       })
