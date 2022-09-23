@@ -1,7 +1,3 @@
-import {
-  DocumentData,
-  Query,
-} from 'firebase/firestore/lite'
 import { FC } from 'react'
 import { PaginationLink } from '../styled-components/PaginationLink'
 

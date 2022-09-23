@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../shared/components/Modal/Modal'
-import { Pagination } from '../shared/components/Pagination'
 import { useModal } from '../shared/hooks/useModal'
 import { ApartmentForm } from './components/ApartmentForm'
 import { ApartmentList } from './components/ApartmentList'

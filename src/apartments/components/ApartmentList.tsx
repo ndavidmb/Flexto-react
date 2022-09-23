@@ -1,10 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
-import {
-  deleteApartment,
-  getApartments,
-  getPaginateApartments,
-} from './../services/apartment.service'
+import { ApartmentService } from './../services/apartment.service'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
@@ -28,6 +24,8 @@ export const ApartmentList: FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
 
+  const apartmentService = ApartmentService()
+
   const [apartments, setApartments] = useState<Apartment[]>(
     [],
   )
@@ -40,7 +38,8 @@ export const ApartmentList: FC<Props> = ({
 
   useEffect(() => {
     dispatch(setLoading(true))
-    getPaginateApartments(10)
+    apartmentService
+      .getPaginateApartments(10)
       .then(
         ({ previous, apartments, next, totalPages }) => {
           setApartments(apartments)
@@ -52,7 +51,8 @@ export const ApartmentList: FC<Props> = ({
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
-    deleteApartment(id)
+    apartmentService
+      .deleteApartment(id)
       .then(() => {
         setApartments(
           apartments.filter(
@@ -65,7 +65,8 @@ export const ApartmentList: FC<Props> = ({
 
   const handleNext = () => {
     dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.next)
+    apartmentService
+      .getPaginateApartments(10, paginate?.next)
       .then(
         ({ previous, apartments, next, totalPages }) => {
           setApartments(apartments)
@@ -77,7 +78,8 @@ export const ApartmentList: FC<Props> = ({
 
   const handlePrevious = () => {
     dispatch(setLoading(true))
-    getPaginateApartments(10, paginate?.previous)
+    apartmentService
+      .getPaginateApartments(10, paginate?.previous)
       .then(
         ({ previous, apartments, next, totalPages }) => {
           setApartments(apartments)
