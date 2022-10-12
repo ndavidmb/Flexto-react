@@ -13,9 +13,9 @@ import { db } from '../../shared/services/firebase.service'
 import { RootState } from '../../shared/store/store'
 import { Apartment } from '../interfaces/apartment.interface'
 
-export function ApartmentService() {
-  const theme = useSelector(
-    (state: RootState) => state.themeState.theme,
+export function useApartmentService() {
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
   )
 
   const addApartment = async (apartment: Apartment) => {

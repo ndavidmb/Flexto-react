@@ -1,12 +1,12 @@
-import { Field } from 'formik'
+import { Field, FormikProps } from 'formik'
 import { FC } from 'react'
-import styles from './Input.module.scss'
 
 type Props = {
   name: string
-  type: string
+  type: 'email' | 'password' | 'text' | 'number'
   placeholder: string
   className?: string
+
 }
 
 export const Input: FC<Props> = ({
@@ -18,14 +18,14 @@ export const Input: FC<Props> = ({
   return (
     <Field
       className={`
-      ${className}
-      ${styles['input-field']}
-      border
-      bg-white
-      px-2
-      rounded
-      py-1
-     `}
+        ${className}
+          border
+          h-8
+          bg-white
+          px-2
+          rounded
+          py-1
+        `}
       name={name}
       placeholder={placeholder}
       type={type}

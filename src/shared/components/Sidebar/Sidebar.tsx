@@ -8,7 +8,6 @@ import {
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
-import { logout } from '../../store/slices/auth/authSlice'
 import { startLogout } from '../../store/slices/auth/thunks'
 import { RootState } from '../../store/store'
 import { MenuLink } from '../../styled-components/MenuLink'
@@ -32,7 +31,7 @@ export const Sidebar = () => {
   const route = removeEndOfRoute(location.pathname)
 
   const handleLogout = () => {
-    dispatch(startLogout())
+    dispatch(startLogout(theme?.id ?? ''))
     navigate(`/${theme?.id}`)
   }
 
@@ -60,10 +59,6 @@ export const Sidebar = () => {
             <IoBuild className="text-xl" />
             Personalización
           </MenuLink>
-          {/* <MenuLink href={`${route}/`}>
-            <IoLogOut className="text-xl" />
-            Salir
-          </MenuLink> */}
 
           <button
             onClick={handleLogout}
