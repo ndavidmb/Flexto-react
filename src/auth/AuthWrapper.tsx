@@ -1,26 +1,25 @@
 import { Form, Formik } from 'formik'
 import { useEffect } from 'react'
-import { IoLogoGoogle } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { LoadingSvg } from '../shared/components/Loading/Loading'
 import { useAppDispatch } from '../shared/store/hooks'
-import { hideError } from '../shared/store/slices/auth/authSlice'
-import {
-  emailAndPasswordSignIn,
-  startGoogleSignIn,
-} from '../shared/store/slices/auth/thunks'
+import { emailAndPasswordSignIn } from '../shared/store/slices/auth/thunks'
 import { RootState } from '../shared/store/store'
 import { Button } from '../shared/styled-components/Button'
 import { ErrorAlert } from '../shared/styled-components/ErrorAlert'
 import { Input } from '../shared/styled-components/Input'
 
 export const AuthWrapper = () => {
-  const { errorMessage, email } = useSelector(
+  const { email } = useSelector(
     (state: RootState) => state.authState,
   )
   const { loading } = useSelector(
     (state: RootState) => state.loadingState,
+  )
+
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
   )
 
   const navigate = useNavigate()
@@ -31,11 +30,9 @@ export const AuthWrapper = () => {
     email: string
     password: string
   }) => {
-    dispatch(emailAndPasswordSignIn(values))
-  }
-
-  const handleGoogle = () => {
-    dispatch(startGoogleSignIn())
+    dispatch(
+      emailAndPasswordSignIn(values, theme?.id ?? ''),
+    )
   }
 
   const handleRegister = () => {
@@ -47,10 +44,6 @@ export const AuthWrapper = () => {
       navigate('home/owners')
     }
   }, [email])
-
-  const closeAlert = () => {
-    dispatch(hideError())
-  }
 
   return (
     <>
@@ -64,11 +57,7 @@ export const AuthWrapper = () => {
               Ingresa tu correo electrónico y contraseña
             </small>
           </h2>
-          {errorMessage && (
-            <ErrorAlert closeAlert={closeAlert}>
-              {errorMessage}
-            </ErrorAlert>
-          )}
+
           <Formik
             onSubmit={handleSubmit}
             initialValues={{

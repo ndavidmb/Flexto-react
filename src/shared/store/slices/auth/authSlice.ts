@@ -1,49 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { IUser } from '../../../../auth/interfaces/user.interface'
 
-interface IState {
+interface IState extends IUser {
   status: boolean
-  uid: string | null
-  email: string | null
-  displayName: string | null
-  photoURL: string | null
-  errorMessage: string | null
 }
 
 const initialValue: IState = {
   status: false,
-  uid: null,
-  email: null,
-  displayName: null,
-  photoURL: null,
-  errorMessage: null,
+  uid: '',
+  email: '',
+  displayName: '',
+  photoUrl: '',
+  role: 'client',
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: initialValue,
   reducers: {
-    login: (state, { payload }) => {
+    login: (state, { payload }: { payload: IUser }) => {
       state.status = true
       state.uid = payload.uid
       state.email = payload.email
       state.displayName = payload.displayName
-      state.photoURL = payload.photoURL
-      state.errorMessage = null
+      state.photoUrl = payload.photoUrl
     },
-    logout: (state, { payload }) => {
+    logout: (state) => {
       state.status = false
-      state.uid = null
-      state.email = null
-      state.displayName = null
-      state.photoURL = null
-      state.errorMessage = payload.errorMessage
-    },
-
-    hideError: (state) => {
-      state.errorMessage = null
+      state.uid = ''
+      state.email = ''
+      state.displayName = ''
+      state.photoUrl = ''
+      state.role = 'client'
     },
   },
 })
 
-export const { login, logout, hideError } =
-  authSlice.actions
+export const { login, logout } = authSlice.actions

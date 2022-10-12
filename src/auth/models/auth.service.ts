@@ -3,7 +3,6 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   signInWithEmailAndPassword,
-  signInWithPopup,
   updateProfile,
   User,
 } from 'firebase/auth'
@@ -12,7 +11,6 @@ import { useSelector } from 'react-redux'
 import {
   authFirebase,
   db,
-  googleProvider,
   uploadFile,
 } from '../../shared/services/firebase.service'
 import { RootState } from '../../shared/store/store'
@@ -43,43 +41,6 @@ export const signIn = async (credentials: {
         ok: false,
         errorMessage:
           'Correo electrónico o contraseña incorrectos',
-      }
-    }
-
-    console.error(error)
-    throw Error(error as string)
-  }
-}
-
-export const signInGoogle = async () => {
-  try {
-    const result = await signInWithPopup(
-      authFirebase,
-      googleProvider,
-    )
-
-    // const credentials =
-    //   GoogleAuthProvider.credentialFromResult(result)
-
-    const { displayName, email, photoURL, uid } =
-      result.user
-
-    return {
-      ok: true,
-      displayName,
-      email,
-      photoURL,
-      uid,
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: FirebaseError | unknown) {
-    if (error instanceof FirebaseError) {
-      const errorCode = error.code
-      const errorMessage = error.message
-      return {
-        ok: false,
-        errorCode,
-        errorMessage,
       }
     }
 
@@ -127,27 +88,18 @@ export function useAuthService() {
             role: user.role,
             agreement: theme?.id,
             photo: url,
-          })
-            .then(() => {
-              const { uid, photoURL, email, displayName } =
-                response.user
-
-              return {
-                ok: true,
-                uid,
-                photoURL,
-                email,
-                displayName,
-              }
-            })
-            .catch((error) => {
-              console.log(error)
-              // TODO: Delete user when fails
-              // deleteFirebaseUser(authFirebase.currentUser)
-              //   .then(() => console.log('done'))
-              //   .catch((err) => console.error(err))
-            }),
+          }),
         ])
+          .then(() => {
+            // TODO: Implements login
+          })
+          .catch((error) => {
+            console.log(error)
+            // TODO: Delete user when fails
+            // deleteFirebaseUser(authFirebase.currentUser)
+            //   .then(() => console.log('done'))
+            //   .catch((err) => console.error(err))
+          })
       }
     } catch (error) {
       if (error instanceof FirebaseError) {

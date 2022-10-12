@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase/firestore/lite'
 import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -42,4 +43,9 @@ export const uploadFile = async (
   await uploadBytes(storageRef, file)
   const url = await getDownloadURL(storageRef)
   return url
+}
+
+export const deleteFile = async (filename: string) => {
+  const desertRef = ref(storage, `pictures/${filename}`)
+  return await deleteObject(desertRef)
 }
