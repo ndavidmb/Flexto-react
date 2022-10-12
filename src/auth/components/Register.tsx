@@ -5,14 +5,12 @@ import { Input } from '../../shared/styled-components/Input'
 import { InputFile } from '../../shared/styled-components/InputFile'
 import * as yup from 'yup'
 import { IRegisterForm } from '../interfaces/register-form.interface'
-import { ErrorRegisterAlert } from './ErrorRegisterAlert'
 import { AuthController } from '../controllers/auth.controller'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../shared/store/store'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { login } from '../../shared/store/slices/auth/authSlice'
 import { FirebaseError } from 'firebase/app'
-import { FIREBASE_ERRORS } from '../../shared/constants/firebase-errors.constants'
 import { ALERT_MESSAGES } from '../../shared/constants/alert-messages.constants'
 import { useNavigate } from 'react-router-dom'
 
@@ -176,11 +174,6 @@ export const Register = () => {
                   <Button type="button" color="secondary">
                     Volver
                   </Button>
-
-                  <ErrorRegisterAlert
-                    errors={errors}
-                    touched={touched}
-                  />
                 </div>
               </Form>
             </>

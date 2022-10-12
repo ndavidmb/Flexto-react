@@ -1,7 +1,9 @@
 import { FirebaseError } from 'firebase/app'
 import { AuthController } from '../../../../auth/controllers/auth.controller'
+import { ToastList } from '../../../styled-components/ToastList'
 import { AppDispatch } from '../../store'
 import { setLoading } from '../loading/loadingSlice'
+import { showToast } from '../toast/toastSlice'
 import { login, logout } from './authSlice'
 
 export const emailAndPasswordSignIn = (
@@ -18,6 +20,13 @@ export const emailAndPasswordSignIn = (
       const result = await authController.signIn(values)
       dispatch(login(result))
     } catch (err) {
+      dispatch(
+        showToast({
+          type: 'error',
+          title: 'Error en el ingreso',
+          details: ['Usuario o contraseña invalida']
+        }),
+      )
       if (err instanceof FirebaseError) {
         dispatch(logout())
       }

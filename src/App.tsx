@@ -7,9 +7,11 @@ import {
 } from 'react-router-dom'
 import { CustomizationService } from './customizations/services/customization.service'
 import { LoadingSvg } from './shared/components/Loading/Loading'
+import { Toast } from './shared/components/Toast/Toast'
 import { useAppDispatch } from './shared/store/hooks'
 import { setTheme } from './shared/store/slices/theme/themeSlice'
 import { RootState } from './shared/store/store'
+import { ToastList } from './shared/styled-components/ToastList'
 import { addStyle } from './shared/utils/addStyle'
 
 function App() {
@@ -18,9 +20,7 @@ function App() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
-  const user = useSelector(
-    (state: RootState) => state.authState,
-  )
+  
   const dispatch = useAppDispatch()
   const customizationService = CustomizationService()
 
@@ -41,7 +41,12 @@ function App() {
     }
   }, [])
 
-  return <>{theme ? <Outlet /> : <LoadingSvg />}</>
+  return (
+    <>
+      <Toast />
+      {theme ? <Outlet /> : <LoadingSvg />}
+    </>
+  )
 }
 
 export default App
