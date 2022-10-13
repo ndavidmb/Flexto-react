@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setTheme } from '../../shared/store/slices/theme/themeSlice'
 import { RootState } from '../../shared/store/store'
+import { generateKey } from '../../shared/utils/createKey'
 
 const OPTIONS_THEME = [
   '#42032C',
@@ -43,7 +44,12 @@ export const CustomizationSelect: FC<Props> = ({
   )
 
   const changeThemeProp = (newColor: string) => {
-    dispatch(setTheme({ ...theme, [id]: [newColor.toUpperCase(), title] }))
+    dispatch(
+      setTheme({
+        ...theme,
+        [id]: [newColor.toUpperCase(), title],
+      }),
+    )
     setColor(newColor)
   }
 
@@ -79,6 +85,7 @@ export const CustomizationSelect: FC<Props> = ({
       <div className="flex gap-2">
         {OPTIONS_THEME.map((color) => (
           <div
+            key={generateKey(color)}
             className="border cursor-pointer w-4 h-4 border-gray-400 rounded"
             onClick={() => changeThemeProp(color)}
             style={{ backgroundColor: color }}

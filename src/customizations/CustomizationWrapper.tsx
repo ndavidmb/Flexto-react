@@ -6,6 +6,7 @@ import { CustomizationSelect } from './components/CustomizationSelect'
 import { Button } from '../shared/styled-components/Button'
 import { CustomizationService } from './services/customization.service'
 import { Theme } from './interfaces/theme.interface'
+import { generateKey } from '../shared/utils/createKey'
 
 export const CustomizationWrapper = () => {
   const { theme } = useSelector(
@@ -46,7 +47,7 @@ export const CustomizationWrapper = () => {
                   const [color, customizationName] = value
                   return (
                     <CustomizationSelect
-                      key={key + color + index}
+                      key={generateKey(key)}
                       id={key}
                       title={customizationName}
                       gray={index % 2 === 0}
