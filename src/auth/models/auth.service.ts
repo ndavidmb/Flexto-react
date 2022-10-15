@@ -14,6 +14,7 @@ import {
   uploadFile,
 } from '../../shared/services/firebase.service'
 import { RootState } from '../../shared/store/store'
+import { RoleType } from '../interfaces/user.interface'
 
 export const signIn = async (credentials: {
   email: string
@@ -61,7 +62,7 @@ export function useAuthService() {
     email: string
     password: string
     displayName: string
-    role: 'admin' | 'client'
+    role: RoleType
     photo: {
       blob: Blob
       name: string

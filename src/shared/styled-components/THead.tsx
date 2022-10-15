@@ -2,8 +2,6 @@ import {
   Children,
   cloneElement,
   FC,
-  ReactNode,
-  useEffect,
 } from 'react'
 
 type Props = {
