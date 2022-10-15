@@ -1,13 +1,25 @@
 import { ReactNode, FC } from 'react'
+import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import { RoleType } from '../../auth/interfaces/user.interface'
+import { RootState } from '../store/store'
 
 type Props = {
   href: string
   children: ReactNode
+  permissionsRole: RoleType
 }
 
-export const MenuLink: FC<Props> = ({ children, href }) => {
-  return (
+export const MenuLink: FC<Props> = ({
+  children,
+  href,
+  permissionsRole,
+}) => {
+  const { role } = useSelector(
+    (state: RootState) => state.authState,
+  )
+
+  return role === permissionsRole ? (
     <li>
       <NavLink
         to={href}
@@ -20,5 +32,7 @@ export const MenuLink: FC<Props> = ({ children, href }) => {
         {children}
       </NavLink>
     </li>
+  ) : (
+    <></>
   )
 }

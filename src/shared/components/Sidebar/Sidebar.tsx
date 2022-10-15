@@ -1,8 +1,10 @@
 import {
+  IoAccessibility,
   IoBuild,
   IoBusiness,
   IoCheckmarkDoneCircle,
   IoLogOut,
+  IoMail,
   IoPeople,
 } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
@@ -43,21 +45,49 @@ export const Sidebar = () => {
         </h2>
         <Avatar />
         <ul className="space-y-2 py-2">
-          <MenuLink href={`${route}/owners`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/owners`}
+          >
             <IoPeople className="text-xl" />
             Propietarios
           </MenuLink>
-          <MenuLink href={`${route}/apartments`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/apartments`}
+          >
             <IoBusiness className="text-xl" />
             Apartamentos
           </MenuLink>
-          <MenuLink href={`${route}/states`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/states`}
+          >
             <IoCheckmarkDoneCircle className="text-xl" />
             Estados
           </MenuLink>
-          <MenuLink href={`${route}/custom`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/custom`}
+          >
             <IoBuild className="text-xl" />
             Personalización
+          </MenuLink>
+
+          <MenuLink
+            permissionsRole="client"
+            href={`${route}/own-status`}
+          >
+            <IoAccessibility className="text-xl" />
+            Estado
+          </MenuLink>
+
+          <MenuLink
+            permissionsRole="client"
+            href={`${route}/request`}
+          >
+            <IoMail className="text-xl" />
+            Enviar petición
           </MenuLink>
 
           <button
