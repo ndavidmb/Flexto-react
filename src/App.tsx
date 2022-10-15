@@ -8,10 +8,10 @@ import {
 import { CustomizationService } from './customizations/services/customization.service'
 import { LoadingSvg } from './shared/components/Loading/Loading'
 import { Toast } from './shared/components/Toast/Toast'
+import { useAuthValidation } from './shared/hooks/useAuthValidation'
 import { useAppDispatch } from './shared/store/hooks'
 import { setTheme } from './shared/store/slices/theme/themeSlice'
 import { RootState } from './shared/store/store'
-import { ToastList } from './shared/styled-components/ToastList'
 import { addStyle } from './shared/utils/addStyle'
 
 function App() {
@@ -20,9 +20,11 @@ function App() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
-  
+
   const dispatch = useAppDispatch()
   const customizationService = CustomizationService()
+
+  useAuthValidation(navigate, id)
 
   useEffect(() => {
     if (id) {

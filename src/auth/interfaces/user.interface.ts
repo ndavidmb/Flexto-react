@@ -1,6 +1,8 @@
+export type RoleType = 'admin' | 'client'
+
 export interface IUserBase {
   email: string
-  role: 'admin' | 'client'
+  role: RoleType
 }
 
 export interface IUserWithDisplayName extends IUserBase {
@@ -14,4 +16,10 @@ export interface IUser extends IUserWithDisplayName {
 
 export interface IUserWithPassword extends IUserBase {
   password: string
+}
+
+export interface IExtraUser {
+  agreement: string
+  role: RoleType
+  uid: string
 }

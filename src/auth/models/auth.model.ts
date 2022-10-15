@@ -12,6 +12,7 @@ import {
   deleteDoc,
   doc,
   DocumentReference,
+  getDocs,
 } from 'firebase/firestore/lite'
 import {
   authFirebase,
@@ -19,6 +20,10 @@ import {
   deleteFile,
   uploadFile,
 } from '../../shared/services/firebase.service'
+import {
+  IExtraUser,
+  RoleType,
+} from '../interfaces/user.interface'
 
 export class AuthModel {
   private password: string
@@ -26,7 +31,7 @@ export class AuthModel {
   private uid = ''
   private displayName = ''
   private photoUrl = ''
-  private role: 'admin' | 'client' = 'client'
+  private role: RoleType = 'client'
 
   constructor(email: string, password: string) {
     this.email = email
@@ -47,6 +52,24 @@ export class AuthModel {
     this.uid = uid
   }
 
+  async getExtraUser() {
+    const registerUsers = collection(db, 'registeredUsers')
+    const registeredUserSnapshot = await getDocs(
+      registerUsers,
+    )
+    const extraUsersFields = registeredUserSnapshot.docs
+      .map((doc) => doc.data() as IExtraUser)
+      .filter((f) => f.uid === this.uid)
+
+    if (extraUsersFields.length > 1) {
+      throw new Error(
+        'Should exist just one user with the uid',
+      )
+    }
+
+    return extraUsersFields[0]
+  }
+
   static async logOut(): Promise<void> {
     return await authFirebase.signOut()
   }
@@ -59,11 +82,9 @@ export class AuthModel {
     )
   }
 
-  async createUserExtra(user: {
-    agreement: string
-    uid: string
-    role: string
-  }): Promise<DocumentReference> {
+  async createUserExtra(
+    user: IExtraUser,
+  ): Promise<DocumentReference> {
     return await addDoc(
       collection(db, 'registeredUsers'),
       user,
@@ -113,7 +134,7 @@ export class AuthModel {
     uid: string
     displayName: string
     photoUrl: string
-    role: 'admin' | 'client'
+    role: RoleType
   } {
     return {
       email: this.email,

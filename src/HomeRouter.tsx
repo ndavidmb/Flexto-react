@@ -5,7 +5,7 @@ import { OwnerWrapper } from './owners/OwnerWrapper'
 import { ProtectedRouter } from './shared/components/ProtectedRouter'
 import { StatesWrapper } from './states/StatesWrapper'
 
-export const HomeRouter = () => {
+const HomeRouter = () => {
   return (
     <ProtectedRouter>
       <Routes>
@@ -27,3 +27,5 @@ export const HomeRouter = () => {
     </ProtectedRouter>
   )
 }
+
+export default HomeRouter

@@ -14,10 +14,21 @@ export function AuthController(agreement: string) {
       credentials.password,
     )
     await authModel.signIn()
-    return {
-      ok: true,
-      ...authModel.getUser(),
+    const extraUser = await authModel.getExtraUser()
+
+    if (agreement === extraUser.agreement) {
+      return {
+        ok: true,
+        agreement,
+        ...authModel.getUser(),
+      }
     }
+
+    logOut()
+    throw new FirebaseError(
+      'custom-error',
+      'invalid agreement',
+    )
   }
 
   const logOut = async () => {
