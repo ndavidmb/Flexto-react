@@ -18,9 +18,10 @@ export function AuthController(agreement: string) {
 
     if (agreement === extraUser.agreement) {
       return {
+        ...authModel.getUser(),
         ok: true,
         agreement,
-        ...authModel.getUser(),
+        role: extraUser.role,
       }
     }
 
