@@ -28,6 +28,7 @@ export const authSlice = createSlice({
       state.displayName = payload.displayName
       state.photoUrl = payload.photoUrl
       state.agreement = payload.agreement
+      state.role = payload.role
     },
     logout: (state) => {
       state.uid = ''

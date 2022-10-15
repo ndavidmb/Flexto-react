@@ -5,6 +5,8 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
+import { AuthController } from '../../auth/controllers/auth.controller'
+import { AuthModel } from '../../auth/models/auth.model'
 import { authFirebase } from '../services/firebase.service'
 import { useAppDispatch } from '../store/hooks'
 import {
@@ -23,8 +25,12 @@ export const useAuthValidation = (
       dispatch(logout())
     }
 
-    const validUser = (user: User) => {
+    const validUser = async(user: User) => {
       const { displayName, email, photoURL, uid } = user
+      const authModel = new AuthModel(email ?? '', '')
+      authModel.uid = uid
+      const extraUser = await authModel.getExtraUser()
+
       dispatch(
         login({
           displayName: displayName ?? '',
@@ -32,7 +38,7 @@ export const useAuthValidation = (
           photoUrl: photoURL ?? '',
           agreement: agreement ?? '',
           uid,
-          role: 'client',
+          role: extraUser.role,
         }),
       )
       navigate('home/owners')
@@ -40,7 +46,7 @@ export const useAuthValidation = (
 
     onAuthStateChanged(authFirebase, async (user) => {
       if (user) {
-        validUser(user)
+        await validUser(user)
         return
       }
 

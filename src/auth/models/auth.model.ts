@@ -28,10 +28,10 @@ import {
 export class AuthModel {
   private password: string
   private email: string
-  private uid = ''
   private displayName = ''
   private photoUrl = ''
   private role: RoleType = 'client'
+  uid = ''
 
   constructor(email: string, password: string) {
     this.email = email
