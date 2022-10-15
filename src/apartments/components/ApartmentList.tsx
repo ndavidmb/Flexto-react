@@ -7,7 +7,7 @@ import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Apartment } from '../interfaces/apartment.interface'
-import { ApartmentService } from './../services/apartment.service'
+import { useApartmentService } from './../services/apartment.service'
 
 
 
@@ -26,7 +26,7 @@ export const ApartmentList: FC<Props> = ({
     [],
   )
 
-  const apartmentService = ApartmentService()
+  const apartmentService = useApartmentService()
 
   const [paginate, setPaginate] = useState<{
     totalPages: number

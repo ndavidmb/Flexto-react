@@ -2,7 +2,7 @@ import { Field, Form, Formik } from 'formik'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
-import { ApartmentService } from '../../apartments/services/apartment.service'
+import { useApartmentService } from '../../apartments/services/apartment.service'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Owner } from '../interfaces/owner.interface'
@@ -18,7 +18,7 @@ export const OwnerForm: FC<Props> = ({
   data,
   closeModal,
 }) => {
-  const apartmentService = ApartmentService()
+  const apartmentService = useApartmentService()
   const initialValues: Owner = {
     // Si es string
     name: data?.name || '',

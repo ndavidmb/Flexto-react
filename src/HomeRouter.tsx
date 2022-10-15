@@ -1,12 +1,24 @@
+import { FC, lazy, ReactNode, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ApartmentWrapper } from './apartments/ApartmentWrapper'
 import { CustomizationWrapper } from './customizations/CustomizationWrapper'
 import { OwnerDetail } from './owners/components/OwnerDetail'
 import { OwnerWrapper } from './owners/OwnerWrapper'
+import { LoadingSvg } from './shared/components/Loading/Loading'
 import { ProtectedRouter } from './shared/components/ProtectedRouter'
 import { StateWrapper } from './states/StatesWrapper'
 
-export const HomeRouter = () => {
+const ClientRequestsWrapper = lazy(
+  () => import('./client-requests/ClientRequestsWrapper'),
+)
+
+const LazyRoute: FC<{
+  children: ReactNode
+}> = ({ children }) => (
+  <Suspense fallback={<LoadingSvg />}>{children}</Suspense>
+)
+
+const HomeRouter = () => {
   return (
     <ProtectedRouter>
       <Routes>
@@ -22,6 +34,14 @@ export const HomeRouter = () => {
           element={<CustomizationWrapper />}
         />
         <Route
+          path="request"
+          element={
+            <LazyRoute>
+              <ClientRequestsWrapper />
+            </LazyRoute>
+          }
+        />
+        <Route
           path="*"
           element={<Navigate to="/NotFound" replace />}
         />
@@ -29,3 +49,5 @@ export const HomeRouter = () => {
     </ProtectedRouter>
   )
 }
+
+export default HomeRouter

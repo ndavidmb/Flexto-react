@@ -1,14 +1,15 @@
 import {
+  IoAccessibility,
   IoBuild,
   IoBusiness,
   IoCheckmarkDoneCircle,
   IoLogOut,
+  IoMail,
   IoPeople,
 } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
-import { logout } from '../../store/slices/auth/authSlice'
 import { startLogout } from '../../store/slices/auth/thunks'
 import { RootState } from '../../store/store'
 import { MenuLink } from '../../styled-components/MenuLink'
@@ -32,7 +33,7 @@ export const Sidebar = () => {
   const route = removeEndOfRoute(location.pathname)
 
   const handleLogout = () => {
-    dispatch(startLogout())
+    dispatch(startLogout(theme?.id ?? ''))
     navigate(`/${theme?.id}`)
   }
 
@@ -44,26 +45,50 @@ export const Sidebar = () => {
         </h2>
         <Avatar />
         <ul className="space-y-2 py-2">
-          <MenuLink href={`${route}/owners`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/owners`}
+          >
             <IoPeople className="text-xl" />
             Propietarios
           </MenuLink>
-          <MenuLink href={`${route}/apartments`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/apartments`}
+          >
             <IoBusiness className="text-xl" />
             Apartamentos
           </MenuLink>
-          <MenuLink href={`${route}/states`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/states`}
+          >
             <IoCheckmarkDoneCircle className="text-xl" />
             Estados
           </MenuLink>
-          <MenuLink href={`${route}/custom`}>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/custom`}
+          >
             <IoBuild className="text-xl" />
             Personalización
           </MenuLink>
-          {/* <MenuLink href={`${route}/`}>
-            <IoLogOut className="text-xl" />
-            Salir
-          </MenuLink> */}
+
+          <MenuLink
+            permissionsRole="client"
+            href={`${route}/own-status`}
+          >
+            <IoAccessibility className="text-xl" />
+            Estado
+          </MenuLink>
+
+          <MenuLink
+            permissionsRole="client"
+            href={`${route}/request`}
+          >
+            <IoMail className="text-xl" />
+            Enviar petición
+          </MenuLink>
 
           <button
             onClick={handleLogout}

@@ -1,49 +1,43 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { IUser } from '../../../../auth/interfaces/user.interface'
 
-interface IState {
-  status: boolean
-  uid: string | null
-  email: string | null
-  displayName: string | null
-  photoURL: string | null
-  errorMessage: string | null
+interface IState extends IUser {
+  agreement: string
+}
+
+interface IUserPayload {
+  payload: IState
 }
 
 const initialValue: IState = {
-  status: false,
-  uid: null,
-  email: null,
-  displayName: null,
-  photoURL: null,
-  errorMessage: null,
+  uid: '',
+  email: '',
+  displayName: '',
+  photoUrl: '',
+  role: 'client',
+  agreement: '',
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: initialValue,
   reducers: {
-    login: (state, { payload }) => {
-      state.status = true
+    login: (state, { payload }: IUserPayload) => {
       state.uid = payload.uid
       state.email = payload.email
       state.displayName = payload.displayName
-      state.photoURL = payload.photoURL
-      state.errorMessage = null
+      state.photoUrl = payload.photoUrl
+      state.agreement = payload.agreement
     },
-    logout: (state, { payload }) => {
-      state.status = false
-      state.uid = null
-      state.email = null
-      state.displayName = null
-      state.photoURL = null
-      state.errorMessage = payload.errorMessage
-    },
-
-    hideError: (state) => {
-      state.errorMessage = null
+    logout: (state) => {
+      state.uid = ''
+      state.email = ''
+      state.displayName = ''
+      state.photoUrl = ''
+      state.role = 'client'
+      state.agreement = ''
     },
   },
 })
 
-export const { login, logout, hideError } =
-  authSlice.actions
+export const { login, logout } = authSlice.actions

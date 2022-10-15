@@ -5,9 +5,10 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
-import { AuthWrapper } from './auth/AuthWrapper'
-import { getCustomizationById } from './customizations/services/customization.service'
+import { CustomizationService } from './customizations/services/customization.service'
 import { LoadingSvg } from './shared/components/Loading/Loading'
+import { Toast } from './shared/components/Toast/Toast'
+import { useAuthValidation } from './shared/hooks/useAuthValidation'
 import { useAppDispatch } from './shared/store/hooks'
 import { setTheme } from './shared/store/slices/theme/themeSlice'
 import { RootState } from './shared/store/store'
@@ -19,14 +20,16 @@ function App() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
-  const user = useSelector(
-    (state: RootState) => state.authState,
-  )
+
   const dispatch = useAppDispatch()
+  const customizationService = CustomizationService()
+
+  useAuthValidation(navigate, id)
 
   useEffect(() => {
     if (id) {
-      getCustomizationById(id)
+      customizationService
+        .getCustomizationById(id)
         .then((theme) => {
           if (theme) {
             dispatch(setTheme(theme))
@@ -40,7 +43,12 @@ function App() {
     }
   }, [])
 
-  return <>{theme ? <Outlet /> : <LoadingSvg />}</>
+  return (
+    <>
+      <Toast />
+      {theme ? <Outlet /> : <LoadingSvg />}
+    </>
+  )
 }
 
 export default App

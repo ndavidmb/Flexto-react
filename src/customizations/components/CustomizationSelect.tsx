@@ -1,4 +1,28 @@
 import { FC, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useAppDispatch } from '../../shared/store/hooks'
+import { setTheme } from '../../shared/store/slices/theme/themeSlice'
+import { RootState } from '../../shared/store/store'
+import { generateKey } from '../../shared/utils/createKey'
+
+const OPTIONS_THEME = [
+  '#42032C',
+  '#D36B00',
+  '#E6D2AA',
+  '#820000',
+  '#B9005B',
+  '#FF7C7C',
+  '#1F2937',
+  '#101827',
+  '#2563EB',
+  '#355764',
+  '#5A8F7B',
+  '#81CACF',
+  '#2C3333',
+  '#E7F6F2',
+  '#FFF9CA',
+  '#FFDEB4',
+]
 
 type Props = {
   title: string
@@ -14,25 +38,20 @@ export const CustomizationSelect: FC<Props> = ({
   gray = false,
 }) => {
   const [color, setColor] = useState(defaultColor)
+  const dispatch = useAppDispatch()
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
+  )
 
-  const optionsTheme = [
-    '#42032C',
-    '#D36B00',
-    '#E6D2AA',
-    '#820000',
-    '#B9005B',
-    '#FF7C7C',
-    '#1F2937',
-    '#101827',
-    '#2563EB',
-    '#355764',
-    '#5A8F7B',
-    '#81CACF',
-    '#2C3333',
-    '#E7F6F2',
-    '#FFF9CA',
-    '#FFDEB4',
-  ]
+  const changeThemeProp = (newColor: string) => {
+    dispatch(
+      setTheme({
+        ...theme,
+        [id]: [newColor.toUpperCase(), title],
+      }),
+    )
+    setColor(newColor)
+  }
 
   return (
     <div
@@ -52,21 +71,23 @@ export const CustomizationSelect: FC<Props> = ({
             value={color}
             id={id}
             onChange={(e) => {
-              setColor(e.target.value)
+              changeThemeProp(e.target.value)
             }}
           />
           <label
             htmlFor={id}
             className="pl-2 pr-5 selection:content-none"
           >
-            {defaultColor.toUpperCase()}
+            {color.toUpperCase()}
           </label>
         </div>
       </div>
       <div className="flex gap-2">
-        {optionsTheme.map((color) => (
+        {OPTIONS_THEME.map((color) => (
           <div
-            className="border cursor-pointer w-4 h-4 border-gray-800"
+            key={generateKey(color)}
+            className="border cursor-pointer w-4 h-4 border-gray-400 rounded"
+            onClick={() => changeThemeProp(color)}
             style={{ backgroundColor: color }}
           ></div>
         ))}

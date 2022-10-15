@@ -3,42 +3,64 @@ import {
   collection,
   doc,
   getDoc,
+  updateDoc,
 } from 'firebase/firestore/lite'
+import { useSelector } from 'react-redux'
 import { db } from '../../shared/services/firebase.service'
+import { RootState } from '../../shared/store/store'
 import { Theme } from '../interfaces/theme.interface'
 
 let currentId: string | null = null
 let cacheResponse: Theme | null = null
 
-export const getCustomizationById = async (
-  id: string,
-): Promise<Theme> => {
-  if (currentId !== id) {
-    currentId = id
-    const docRef = doc(db, `customizations/${id}`)
-
-    const customizationSnapshot = await getDoc(docRef)
-
-    if (!customizationSnapshot.exists()) {
-      throw new Error("Theme doesn't exist")
-    }
-
-    console.log(customizationSnapshot.data())
-    cacheResponse = {
-      id: customizationSnapshot.id,
-      ...customizationSnapshot.data(),
-    } as Theme
-  }
-
-  return cacheResponse as Theme
-}
-export const addCustomization = async (
-  customization: Theme,
-) => {
-  const docRef = await addDoc(
-    collection(db, 'customization'),
-    customization,
+export function CustomizationService() {
+  const theme = useSelector(
+    (state: RootState) => state.themeState.theme,
   )
 
-  return docRef
+  const getCustomizationById = async (
+    id: string,
+  ): Promise<Theme> => {
+    if (currentId !== id) {
+      currentId = id
+      const docRef = doc(db, `customizations/${id}`)
+
+      const customizationSnapshot = await getDoc(docRef)
+
+      if (!customizationSnapshot.exists()) {
+        throw new Error("Theme doesn't exist")
+      }
+
+      cacheResponse = {
+        id: customizationSnapshot.id,
+        ...customizationSnapshot.data(),
+      } as Theme
+    }
+
+    return cacheResponse as Theme
+  }
+
+  const addCustomization = async (customization: Theme) => {
+    const docRef = await addDoc(
+      collection(db, 'customizations'),
+      customization,
+    )
+
+    return docRef
+  }
+
+  const updateCustomization = async (
+    customization: Theme,
+  ) => {
+    const { id, ...rest } = customization
+    const docRef = doc(db, `customizations/${id}`)
+
+    await updateDoc(docRef, rest)
+  }
+
+  return {
+    getCustomizationById,
+    addCustomization,
+    updateCustomization,
+  }
 }

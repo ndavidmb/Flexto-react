@@ -15,7 +15,7 @@ import { db } from '../../shared/services/firebase.service'
 import { RootState } from '../../shared/store/store'
 import { Apartment } from '../interfaces/apartment.interface'
 
-export function ApartmentService() {
+export function useApartmentService() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )

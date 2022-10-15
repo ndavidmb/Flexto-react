@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik'
 import { useState } from 'react'
 import { Button } from '../../shared/styled-components/Button'
 import { ErrorAlert } from '../../shared/styled-components/ErrorAlert'
-import { Input } from '../../shared/styled-components/Input/Input'
+import { Input } from '../../shared/styled-components/Input'
 
 export const RecoveryPassword = () => {
   const [errorMessage, setErrorMessage] = useState('')

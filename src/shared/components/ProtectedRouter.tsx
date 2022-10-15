@@ -10,12 +10,16 @@ type Props = {
 export const ProtectedRouter: FC<Props> = ({
   children,
 }) => {
-  const { status } = useSelector(
+  const { uid } = useSelector(
     (state: RootState) => state.authState,
   )
   const location = useLocation()
 
-  const [, id] = location.pathname.split('/');
+  const [, id] = location.pathname.split('/')
 
-  return <>{status ? children : <Navigate to={`/${id}`} />}</>
+  return (
+    <>
+      {uid ? children : <Navigate to={`/${id}`} />}
+    </>
+  )
 }
