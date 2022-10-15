@@ -1,7 +1,3 @@
-import {
-  DocumentData,
-  Query
-} from 'firebase/firestore/lite'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Pagination } from '../../shared/components/Pagination'
@@ -11,9 +7,9 @@ import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Owner } from '../interfaces/owner.interface'
-import {
-  deleteOwner, getPaginateOwners
-} from './../services/owner.service'
+import { OwnerService } from './../services/owner.service'
+
+
 
 type Props = {
   consult: number
@@ -30,27 +26,27 @@ export const OwnerList: FC<Props> = ({
     [],
   )
 
+  const ownerService = OwnerService()
+
   const [paginate, setPaginate] = useState<{
-    next: Query<DocumentData>
-    previous: Query<DocumentData>
     totalPages: number
   } | null>(null)
 
   useEffect(() => {
     dispatch(setLoading(true))
-    getPaginateOwners(10)
-      .then(
-        ({ previous, owners, next, totalPages }) => {
-          setOwners(owners)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
+    ownerService
+      .getPaginateOwners(10)
+      .then(({ owners, totalPages }) => {
+        setOwners(owners)
+        setPaginate({ totalPages })
+      })
       .finally(() => dispatch(setLoading(false)))
   }, [consult])
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
-    deleteOwner(id)
+    ownerService
+      .deleteOwner(id)
       .then(() => {
         setOwners(
           owners.filter(
@@ -61,39 +57,16 @@ export const OwnerList: FC<Props> = ({
       .finally(() => dispatch(setLoading(false)))
   }
 
-  const handleNext = () => {
-    dispatch(setLoading(true))
-    getPaginateOwners(10, paginate?.next)
-      .then(
-        ({ previous, owners, next, totalPages }) => {
-          setOwners(owners)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
-      .finally(() => dispatch(setLoading(false)))
-  }
-
-  const handlePrevious = () => {
-    dispatch(setLoading(true))
-    getPaginateOwners(10, paginate?.previous)
-      .then(
-        ({ previous, owners, next, totalPages }) => {
-          setOwners(owners)
-          setPaginate({ previous, next, totalPages })
-        },
-      )
-      .finally(() => dispatch(setLoading(false)))
-  }
 
   return (
     <>
       <Table>
         <THead>
-        <th scope="col">Nombre</th>
-        <th scope="col">Telefono</th>
-        <th scope="col">Apartamento</th>
-        <th scope="col">Correo</th>
-        <th scope="col">Acción</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Telefono</th>
+          <th scope="col">Apartamento</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Acción</th>
         </THead>
         <tbody>
           {owners.map((owner, index) => (
@@ -107,8 +80,12 @@ export const OwnerList: FC<Props> = ({
               <td>{owner.phone}</td>
               <td>
                 <div className="flex flex-col">
-                  <span>Apto. {owner.apartment?.apartmentNumber}</span>
-                  <span>Bloque {owner.apartment?.tower}</span>
+                  <span>
+                    Apto. {owner.apartment?.apartmentNumber}
+                  </span>
+                  <span>
+                    Bloque {owner.apartment?.tower}
+                  </span>
                 </div>
               </td>
               <td>{owner.email}</td>
@@ -134,8 +111,9 @@ export const OwnerList: FC<Props> = ({
       </Table>
       {paginate && (
         <Pagination
-          next={handleNext}
+          /* next={handleNext}
           previous={handlePrevious}
+          */
           totalPages={paginate.totalPages}
         ></Pagination>
       )}

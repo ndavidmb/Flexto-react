@@ -5,15 +5,14 @@ import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { State } from '../interfaces/state.interface'
 import { StateFromForm } from '../interfaces/stateFromForm.interface'
-import {
-  addState,
-  updateStates
-} from '../services/state.service'
+import { StateService } from '../services/state.service'
+
 
 // Estos varían en el tipo de la data
 type Props = {
   data?: State
   closeModal: (refresh?: boolean) => void
+
 }
 
 // Esto varía dependiendo de los datos que necesite llenar
@@ -30,6 +29,8 @@ export const StateForm: FC<Props> = ({
 
   const dispatch = useDispatch()
 
+  const stateService = StateService()
+
   const handleSubmit = (values: StateFromForm) => {
     // Pone el spinner a andar
     dispatch(setLoading(true))
@@ -43,7 +44,8 @@ export const StateForm: FC<Props> = ({
   }
 
   const updateSta = (values: StateFromForm) => {
-    updateStates(data?.id as string,{
+    stateService.
+    updateState(data?.id as string,{
       affair: values.affair,
       detail: values.detail,
       state: values.state.split(','),
@@ -56,6 +58,7 @@ export const StateForm: FC<Props> = ({
 
   // Esto llama al service, y agrega un apartamento
   const createSta = (values: StateFromForm) => {
+    stateService.
     addState({
       // Se pasa de número a string
       affair: values.affair,
@@ -117,7 +120,7 @@ export const StateForm: FC<Props> = ({
         </div>
         <div className="flex flex-row-reverse gap-3 pt-3">
           <Button type="submit" color="primary">
-            Crear
+            {data ? 'Actualizar' : 'Crear'}
           </Button>
           <Button color="link" onClick={() => closeModal()}>
             Cerrar

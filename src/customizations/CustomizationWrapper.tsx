@@ -1,9 +1,9 @@
-import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
-import { ContainerHeader } from '../shared/styled-components/ContainerHeader'
 import { useSelector } from 'react-redux'
+import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
 import { RootState } from '../shared/store/store'
-import { CustomizationSelect } from './components/CustomizationSelect'
 import { Button } from '../shared/styled-components/Button'
+import { ContainerHeader } from '../shared/styled-components/ContainerHeader'
+import { CustomizationSelect } from './components/CustomizationSelect'
 
 export const CustomizationWrapper = () => {
   const { theme } = useSelector(

@@ -1,26 +1,22 @@
-import {
-  DocumentData,
-  Query,
-} from 'firebase/firestore/lite'
 import { FC } from 'react'
 import { PaginationLink } from '../styled-components/PaginationLink'
 
 type Props = {
-  next: () => void
-  previous: () => void
+  // next: () => void
+  // previous: () => void
   totalPages: number
 }
 
 export const Pagination: FC<Props> = ({
-  next,
-  previous,
+  // next,
+  // previous,
   totalPages,
 }) => {
   return (
     <nav className="pt-2">
       <ul className="flex justify-end items-center">
         <li
-          onClick={() => previous()}
+          // onClick={() => previous()}
           className="block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
         >
           <span className="sr-only">Previous</span>
@@ -44,7 +40,7 @@ export const Pagination: FC<Props> = ({
           </PaginationLink>
         ))}
         <li
-          onClick={next}
+          // onClick={next}
           className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
         >
           <span className="sr-only">Next</span>

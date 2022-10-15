@@ -2,91 +2,84 @@ import {
   addDoc,
   collection,
   deleteDoc,
-  doc, endBefore, getDocs,
-  limit,
-  orderBy,
+  doc,
+  getDocs,
   query,
-  startAfter,
-  updateDoc
+  updateDoc,
+  where
 } from 'firebase/firestore/lite'
+import { useSelector } from 'react-redux'
 import { db } from '../../shared/services/firebase.service'
+import { RootState } from '../../shared/store/store'
 import { State } from '../interfaces/state.interface'
 
-export const getState = async (): Promise<State[]> => {
-  const stateRef = collection(db, 'state')
-  const q = query(
-    stateRef,
-    orderBy('affair'),
-    limit(10),
-  )
-  const stateSnapshot = await getDocs(stateRef)
-  const statesList = stateSnapshot.docs.map((doc) =>
-    ({
-      id: doc.id,
-      ...doc.data(),
-    })
-  )
-  return statesList as State[]
-}
-export const addState = async (state: State) => {
-  const docRef = await addDoc(collection(db, 'state'), {
-    state,
-  })
-  return docRef
-}
-
-export const deleteStates = async (id: string ) =>{
-  await deleteDoc(doc(db, `state/${id}`))
-}
-
-export const updateStates = async (id: string, state: State ) =>{
-  const ref = doc(db, `state/${id}`)
-  await updateDoc(ref,{...state})
-}
-
-export const getPaginateStates = async (
-  limitPage: number,
-  q = query(
-    collection(db, 'state'),
-    orderBy('affair'),
-    limit(limitPage),
-  ),
-  search = '',
-) => {
-  const documentSnapshots = await getDocs(q)
-
-  const lastVisible =
-    documentSnapshots.docs[
-      documentSnapshots.docs.length - 1
-    ]
-
-  const firstVisible = documentSnapshots.docs[0]
-
-  const next = query(
-    collection(db, 'state'),
-    orderBy('affair'),
-    startAfter(lastVisible),
-    limit(limitPage),
+export function StateService() {
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
   )
 
-  const previous = query(
-    collection(db, 'state'),
-    orderBy('affair'),
-    endBefore(firstVisible),
-    limit(limitPage),
-  )
+  const addState = async (state: State) => {
+    const docRef = await addDoc(
+      collection(db, 'state'),
+      state,
+    )
+    return docRef
+  }
 
-  const stateLists = documentSnapshots.docs.map(
-    (doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }),
-  )
+  const deleteState = async (id: string) => {
+    await deleteDoc(doc(db, `state/${id}`))
+  }
+
+  const updateState = async (
+    id: string,
+    state: State,
+  ) => {
+    const ref = doc(db, `state/${id}`)
+
+    await updateDoc(ref, { ...state })
+  }
+
+  const getPaginateStates = async (
+    limitPage: number,
+    search = '',
+  ) => {
+    const q = query(
+      collection(db, 'state'),
+      where(
+        'customization',
+        '==',
+        `customizations/${theme?.id}`,
+      ),
+    )
+
+    const documentSnapshots = await getDocs(q)
+    console.log(documentSnapshots.docs)
+    for(const pepito of documentSnapshots.docs){
+      console.log(pepito)
+    }
+    console.log(`/customizations/${theme?.id}`,)
+    const StatesList = documentSnapshots.docs
+      .map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as State),
+      )
+      .sort((a, b) => a.affair.localeCompare(b.affair))
+
+    return {
+      states: StatesList,
+      totalPages: Math.ceil(
+        documentSnapshots.size / limitPage,
+      ),
+    }
+  }
 
   return {
-    next,
-    states: stateLists as State[],
-    previous,
-    totalPages: documentSnapshots.size / limitPage,
+    addState,
+    deleteState,
+    updateState,
+    getPaginateStates,
   }
 }

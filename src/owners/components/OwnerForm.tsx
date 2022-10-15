@@ -2,16 +2,12 @@ import { Field, Form, Formik } from 'formik'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
-import { getApartments } from '../../apartments/services/apartment.service'
+import { ApartmentService } from '../../apartments/services/apartment.service'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Owner } from '../interfaces/owner.interface'
-import {
-  addOwner,
-  UpdateOwner
-} from '../services/owner.service'
+import { OwnerService } from '../services/owner.service'
 
-// Estos varían en el tipo de la data
 // Estos varían en el tipo de la data
 type Props = {
   data?: Owner
@@ -22,6 +18,7 @@ export const OwnerForm: FC<Props> = ({
   data,
   closeModal,
 }) => {
+  const apartmentService = ApartmentService()
   const initialValues: Owner = {
     // Si es string
     name: data?.name || '',
@@ -32,6 +29,8 @@ export const OwnerForm: FC<Props> = ({
   }
 
   const dispatch = useDispatch()
+
+  const ownerService = OwnerService()
 
   const handleSubmit = (values: Owner) => {
     // Pone el spinner a andar
@@ -46,7 +45,13 @@ export const OwnerForm: FC<Props> = ({
   }
 
   const updateOwnr = (values: Owner) => {
-    UpdateOwner(data?.id as string, values)
+    ownerService.
+    updateOwner(data?.id as string,{
+      name: values.name,
+      phone: values.phone,
+      apartmentId: values.apartmentId,
+      email: values.email,
+    })
       .then(() => {
         closeModal(true)
       })
@@ -57,20 +62,23 @@ export const OwnerForm: FC<Props> = ({
     [],
   )
   useEffect(() => {
-    getApartments().then((apt) => {
-      setApartments(apt)
-    })
+    apartmentService
+      .getPaginateApartments(10)
+      .then((apt) => {
+        setApartments(apt.apartments)
+      })
   }, [])
 
   // Esto llama al service, y agrega un apartamento
   const createOwnr = (values: Owner) => {
-    addOwner({
-      // Se pasa de número a string
-      name: values.name ,
-      phone: values.phone,
-      email: values.email,
-      apartmentId: values.apartmentId,
-    })
+    ownerService
+      .addOwner({
+        // Se pasa de número a string
+        name: values.name,
+        phone: values.phone,
+        apartmentId: values.apartmentId,
+        email: values.email,
+      })
       .then(() => {
         closeModal(true)
       })
@@ -148,11 +156,11 @@ export const OwnerForm: FC<Props> = ({
             type="email"
             className="border bg-white px-2 py-1"
             placeholder="Correo"
-          />
+          ></Field>
         </div>
         <div className="flex flex-row-reverse gap-3 pt-3">
           <Button type="submit" color="primary">
-            Crear
+            {data ? 'Actualizar' : 'Crear'}
           </Button>
           <Button color="link" onClick={() => closeModal()}>
             Cerrar
