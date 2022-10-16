@@ -1,20 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IUser } from '../../../../auth/interfaces/user.interface'
-
-interface IState extends IUser {
-  agreement: string
-}
-
-interface IUserPayload {
-  payload: IState
-}
+import {
+  IState,
+  IUserExtraPayload,
+  IUserPayload,
+} from '../../interfaces/auth/auth.interface'
 
 const initialValue: IState = {
   uid: '',
   email: '',
   displayName: '',
   photoUrl: '',
-  role: 'client',
+  role: undefined,
   agreement: '',
 }
 
@@ -28,6 +24,8 @@ export const authSlice = createSlice({
       state.displayName = payload.displayName
       state.photoUrl = payload.photoUrl
       state.agreement = payload.agreement
+    },
+    addExtra: (state, { payload }: IUserExtraPayload) => {
       state.role = payload.role
     },
     logout: (state) => {
@@ -41,4 +39,4 @@ export const authSlice = createSlice({
   },
 })
 
-export const { login, logout } = authSlice.actions
+export const { login, logout, addExtra } = authSlice.actions

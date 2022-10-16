@@ -10,6 +10,7 @@ import { AuthModel } from '../../auth/models/auth.model'
 import { authFirebase } from '../services/firebase.service'
 import { useAppDispatch } from '../store/hooks'
 import {
+  addExtra,
   login,
   logout,
 } from '../store/slices/auth/authSlice'
@@ -25,12 +26,8 @@ export const useAuthValidation = (
       dispatch(logout())
     }
 
-    const validUser = async(user: User) => {
+    const validUser = async (user: User) => {
       const { displayName, email, photoURL, uid } = user
-      const authModel = new AuthModel(email ?? '', '')
-      authModel.uid = uid
-      const extraUser = await authModel.getExtraUser()
-
       dispatch(
         login({
           displayName: displayName ?? '',
@@ -38,10 +35,18 @@ export const useAuthValidation = (
           photoUrl: photoURL ?? '',
           agreement: agreement ?? '',
           uid,
-          role: extraUser.role,
         }),
       )
       navigate('home/owners')
+
+      const authModel = new AuthModel(email ?? '', '')
+      authModel.uid = uid
+      const extraUser = await authModel.getExtraUser()
+      dispatch(
+        addExtra({
+          role: extraUser.role,
+        }),
+      )
     }
 
     onAuthStateChanged(authFirebase, async (user) => {

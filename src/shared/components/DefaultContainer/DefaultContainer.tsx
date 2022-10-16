@@ -1,4 +1,8 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useAppDispatch } from '../../store/hooks'
+import { setLoading } from '../../store/slices/loading/loadingSlice'
+import { RootState } from '../../store/store'
 import { Loading } from '../Loading/Loading'
 import { Sidebar } from '../Sidebar/Sidebar'
 import styles from './DefaultContainer.module.scss'
@@ -10,6 +14,20 @@ type Props = {
 export const DefaultContainer: FC<Props> = ({
   children,
 }) => {
+  const { role } = useSelector(
+    (state: RootState) => state.authState,
+  )
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (role === undefined) {
+      dispatch(setLoading(true))
+      return
+    }
+    dispatch(setLoading(false))
+  }, [role])
+
   return (
     <main className="h-screen w-full flex">
       <Sidebar />

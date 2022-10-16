@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import '../styles/index.scss'
-import { AppRouting } from './AppRouter'
+import { AppRouting } from './router/AppRouter'
 import { store } from './shared/store/store'
 
 ReactDOM.createRoot(

@@ -2,7 +2,7 @@ export type RoleType = 'admin' | 'client'
 
 export interface IUserBase {
   email: string
-  role: RoleType
+  role?: RoleType
 }
 
 export interface IUserWithDisplayName extends IUserBase {
