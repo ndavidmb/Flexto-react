@@ -5,12 +5,12 @@ import {
   Routes,
 } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-import App from './App'
-import { AuthWrapper } from './auth/AuthWrapper'
-import { RecoveryPassword } from './auth/components/RecoveryPassword'
-import { Register } from './auth/components/Register'
-import { NotFound } from './shared/components/NotFound'
-import { LoadingSvg } from './shared/components/Loading/Loading'
+import App from '../App'
+import { AuthWrapper } from '../auth/AuthWrapper'
+import { RecoveryPassword } from '../auth/components/RecoveryPassword'
+import { Register } from '../auth/components/Register'
+import { NotFound } from '../shared/components/NotFound'
+import { LoadingSvg } from '../shared/components/Loading/Loading'
 
 const HomeRouter = lazy(() => import('./HomeRouter'))
 

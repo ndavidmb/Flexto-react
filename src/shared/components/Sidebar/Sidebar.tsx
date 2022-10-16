@@ -24,6 +24,7 @@ export const Sidebar = () => {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
+
   const location = useLocation()
 
   const dispatch = useAppDispatch()
@@ -72,6 +73,14 @@ export const Sidebar = () => {
           >
             <IoBuild className="text-xl" />
             Personalización
+          </MenuLink>
+
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/act`}
+          >
+            <IoBuild className="text-xl" />
+            Actas
           </MenuLink>
 
           <MenuLink
