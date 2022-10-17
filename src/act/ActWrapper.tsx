@@ -11,6 +11,7 @@ export const ActWrapper = () => {
   }
 
   const handlePdf = () => {
+    // eslint-disable-next-line new-cap
     const doc = new jsPDF()
     doc.html(
       `

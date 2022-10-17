@@ -1,17 +1,11 @@
 import { Form, Formik } from 'formik'
-import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { emailAndPasswordSignIn } from '../../shared/store/slices/auth/thunks'
-import { RootState } from '../../shared/store/store'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 
 export const Login = () => {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
-
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -19,9 +13,7 @@ export const Login = () => {
     email: string
     password: string
   }) => {
-    dispatch(
-      emailAndPasswordSignIn(values, theme?.id ?? ''),
-    )
+    dispatch(emailAndPasswordSignIn(values))
   }
 
   const handleRegister = () => {

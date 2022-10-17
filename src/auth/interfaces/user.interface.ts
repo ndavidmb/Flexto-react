@@ -19,7 +19,7 @@ export interface IUserWithPassword extends IUserBase {
 }
 
 export interface IExtraUser {
-  agreement: string
+  agreement?: string
   role: RoleType
   uid: string
 }

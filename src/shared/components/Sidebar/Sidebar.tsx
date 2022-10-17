@@ -35,7 +35,7 @@ export const Sidebar = () => {
 
   const handleLogout = () => {
     dispatch(startLogout(theme?.id ?? ''))
-    navigate(`/${theme?.id}`)
+    navigate(`/${theme?.id}/auth`)
   }
 
   return (

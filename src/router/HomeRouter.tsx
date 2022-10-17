@@ -48,10 +48,6 @@ const HomeRouter = () => {
             </LazyRoute>
           }
         />
-        <Route
-          path="*"
-          element={<Navigate to="/NotFound" replace />}
-        />
       </Routes>
     </ProtectedRouter>
   )

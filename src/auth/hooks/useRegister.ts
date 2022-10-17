@@ -1,4 +1,4 @@
-import { AuthController } from '../controllers/auth.controller'
+import { useAuthController } from '../controllers/auth.controller'
 import { useState } from 'react'
 import * as yup from 'yup'
 import { useAppDispatch } from '../../shared/store/hooks'
@@ -18,7 +18,7 @@ export const useRegister = (theme: Theme | null) => {
     name: string
   }>(null)
 
-  const authController = AuthController(theme?.id ?? '')
+  const authController = useAuthController(theme?.id ?? '')
 
   const registerSchema = yup.object().shape({
     name: yup

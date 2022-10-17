@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
   IState,
-  IUserExtraPayload,
   IUserPayload,
 } from '../../interfaces/auth/auth.interface'
 
@@ -10,7 +9,7 @@ const initialValue: IState = {
   email: '',
   displayName: '',
   photoUrl: '',
-  role: undefined,
+  role: 'client',
   agreement: '',
 }
 
@@ -24,8 +23,6 @@ export const authSlice = createSlice({
       state.displayName = payload.displayName
       state.photoUrl = payload.photoUrl
       state.agreement = payload.agreement
-    },
-    addExtra: (state, { payload }: IUserExtraPayload) => {
       state.role = payload.role
     },
     logout: (state) => {
@@ -39,4 +36,4 @@ export const authSlice = createSlice({
   },
 })
 
-export const { login, logout, addExtra } = authSlice.actions
+export const { login, logout } = authSlice.actions
