@@ -3,9 +3,10 @@ import {
   IoBuild,
   IoBusiness,
   IoCheckmarkDoneCircle,
+  IoHandRightOutline,
   IoLogOut,
   IoMail,
-  IoPeople,
+  IoPeople
 } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -65,6 +66,13 @@ export const Sidebar = () => {
           >
             <IoCheckmarkDoneCircle className="text-xl" />
             Estados
+          </MenuLink>
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/access-request`}
+          >
+            <IoHandRightOutline className="text-xl" />
+            Solicitudes de acceso
           </MenuLink>
           <MenuLink
             permissionsRole="admin"

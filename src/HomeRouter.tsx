@@ -1,6 +1,7 @@
 import { FC, lazy, ReactNode, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ApartmentWrapper } from './apartments/ApartmentWrapper'
+import { AccessRequest } from './client-requests/components/AccessRequest'
 import { CustomizationWrapper } from './customizations/CustomizationWrapper'
 import { OwnerDetail } from './owners/components/OwnerDetail'
 import { OwnerWrapper } from './owners/OwnerWrapper'
@@ -29,6 +30,7 @@ const HomeRouter = () => {
         <Route path="owners" element={<OwnerWrapper />} />
         <Route path="states" element={<StateWrapper />} />
         <Route path="owner-detail" element={<OwnerDetail />} />
+        <Route path="access-request" element={<AccessRequest />} />
         <Route
           path="custom"
           element={<CustomizationWrapper />}
