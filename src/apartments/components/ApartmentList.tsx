@@ -1,13 +1,12 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
-import { useApartmentService } from './../services/apartment.service'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Apartment } from '../interfaces/apartment.interface'
-import { useDispatch } from 'react-redux'
-import { Pagination } from '../../shared/components/Pagination'
+import { useApartmentService } from './../services/apartment.service'
 
 type Props = {
   consult: number
@@ -25,18 +24,14 @@ export const ApartmentList: FC<Props> = ({
   )
 
   const apartmentService = useApartmentService()
-
-  const [paginate, setPaginate] = useState<{
-    totalPages: number
-  } | null>(null)
+  
 
   useEffect(() => {
     dispatch(setLoading(true))
     apartmentService
-      .getPaginateApartments(10)
-      .then(({ apartments, totalPages }) => {
+      .getApartments()
+      .then((apartments) => {
         setApartments(apartments)
-        setPaginate({ totalPages })
       })
       .finally(() => dispatch(setLoading(false)))
   }, [consult])
@@ -54,32 +49,6 @@ export const ApartmentList: FC<Props> = ({
       })
       .finally(() => dispatch(setLoading(false)))
   }
-
-  // const handleNext = () => {
-  //   dispatch(setLoading(true))
-  //   apartmentService
-  //     .getPaginateApartments(10, paginate?.next)
-  //     .then(
-  //       ({ previous, apartments, next, totalPages }) => {
-  //         setApartments(apartments)
-  //         setPaginate({ previous, next, totalPages })
-  //       },
-  //     )
-  //     .finally(() => dispatch(setLoading(false)))
-  // }
-
-  // const handlePrevious = () => {
-  //   dispatch(setLoading(true))
-  //   apartmentService
-  //     .getPaginateApartments(10, paginate?.previous)
-  //     .then(
-  //       ({ previous, apartments, next, totalPages }) => {
-  //         setApartments(apartments)
-  //         setPaginate({ previous, next, totalPages })
-  //       },
-  //     )
-  //     .finally(() => dispatch(setLoading(false)))
-  // }
 
   return (
     <>
@@ -119,11 +88,6 @@ export const ApartmentList: FC<Props> = ({
           ))}
         </tbody>
       </Table>
-      {paginate && (
-        <Pagination
-          totalPages={paginate.totalPages}
-        ></Pagination>
-      )}
     </>
   )
 }
