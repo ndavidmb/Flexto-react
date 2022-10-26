@@ -51,7 +51,6 @@ export function addStyle(theme: Theme) {
   style.textContent = styleString
 
   const root = document.documentElement
-  console.log(theme.primary[0])
   root.style.setProperty('--primary', theme.primary[0])
   root.style.setProperty('--menu', theme.menu[0])
 }

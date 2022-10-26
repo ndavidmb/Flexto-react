@@ -25,6 +25,7 @@ export const Sidebar = () => {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
+
   const location = useLocation()
 
   const dispatch = useAppDispatch()
@@ -35,7 +36,7 @@ export const Sidebar = () => {
 
   const handleLogout = () => {
     dispatch(startLogout(theme?.id ?? ''))
-    navigate(`/${theme?.id}`)
+    navigate(`/${theme?.id}/auth`)
   }
 
   return (
@@ -80,6 +81,14 @@ export const Sidebar = () => {
           >
             <IoBuild className="text-xl" />
             Personalización
+          </MenuLink>
+
+          <MenuLink
+            permissionsRole="admin"
+            href={`${route}/act`}
+          >
+            <IoBuild className="text-xl" />
+            Actas
           </MenuLink>
 
           <MenuLink

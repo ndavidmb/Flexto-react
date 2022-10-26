@@ -1,13 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IUser } from '../../../../auth/interfaces/user.interface'
-
-interface IState extends IUser {
-  agreement: string
-}
-
-interface IUserPayload {
-  payload: IState
-}
+import {
+  IState,
+  IUserPayload,
+} from '../../interfaces/auth/auth.interface'
 
 const initialValue: IState = {
   uid: '',

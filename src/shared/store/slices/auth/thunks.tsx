@@ -1,21 +1,23 @@
 import { FirebaseError } from 'firebase/app'
-import { AuthController } from '../../../../auth/controllers/auth.controller'
-import { ToastList } from '../../../styled-components/ToastList'
-import { AppDispatch } from '../../store'
+import { User } from 'firebase/auth'
+import { useAuthController } from '../../../../auth/controllers/auth.controller'
+import { AuthModel } from '../../../../auth/models/auth.model'
+import { AppDispatch, RootState } from '../../store'
 import { setLoading } from '../loading/loadingSlice'
 import { showToast } from '../toast/toastSlice'
 import { login, logout } from './authSlice'
 
-export const emailAndPasswordSignIn = (
-  values: {
-    email: string
-    password: string
-  },
-  agreement: string,
-) => {
-  return async (dispatch: AppDispatch) => {
+export const emailAndPasswordSignIn = (values: {
+  email: string
+  password: string
+}) => {
+  return async (
+    dispatch: AppDispatch,
+    getState: () => RootState,
+  ) => {
+    const agreement = getState().themeState.theme?.id
     dispatch(setLoading(true))
-    const authController = AuthController(agreement)
+    const authController = useAuthController(agreement)
     try {
       const result = await authController.signIn(values)
       dispatch(login(result))
@@ -35,9 +37,32 @@ export const emailAndPasswordSignIn = (
   }
 }
 
+export const validateUser = (user: User) => {
+  return async (dispatch: AppDispatch) => {
+    const { displayName, email, photoURL, uid } = user
+
+    const authModel = new AuthModel(email ?? '', '')
+    authModel.uid = uid
+
+    const extraUser = await authModel.getExtraUser()
+    console.log(extraUser)
+
+    dispatch(
+      login({
+        displayName: displayName ?? '',
+        email: email ?? '',
+        photoUrl: photoURL ?? '',
+        agreement: extraUser.agreement,
+        role: extraUser.role,
+        uid,
+      }),
+    )
+  }
+}
+
 export const startLogout = (agreement: string) => {
   return async (dispatch: AppDispatch) => {
-    const authController = AuthController(agreement)
+    const authController = useAuthController(agreement)
     await authController.logOut()
     dispatch(logout())
   }

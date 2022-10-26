@@ -4,7 +4,7 @@ import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { IUser } from '../interfaces/user.interface'
 import { AuthModel } from '../models/auth.model'
 
-export function AuthController(agreement: string) {
+export function useAuthController(agreement?: string) {
   const signIn = async (credentials: {
     email: string
     password: string
