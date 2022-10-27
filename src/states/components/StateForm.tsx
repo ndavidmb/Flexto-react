@@ -5,14 +5,12 @@ import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { State } from '../interfaces/state.interface'
 import { StateFromForm } from '../interfaces/stateFromForm.interface'
-import { StateService } from '../services/state.service'
-
+import { useStateService } from '../services/state.service'
 
 // Estos varían en el tipo de la data
 type Props = {
   data?: State
   closeModal: (refresh?: boolean) => void
-
 }
 
 // Esto varía dependiendo de los datos que necesite llenar
@@ -29,7 +27,7 @@ export const StateForm: FC<Props> = ({
 
   const dispatch = useDispatch()
 
-  const stateService = StateService()
+  const stateService = useStateService()
 
   const handleSubmit = (values: StateFromForm) => {
     // Pone el spinner a andar
@@ -44,12 +42,13 @@ export const StateForm: FC<Props> = ({
   }
 
   const updateSta = (values: StateFromForm) => {
-    stateService.
-    updateState(data?.id as string,{
-      affair: values.affair,
-      detail: values.detail,
-      state: values.state.split(','),
-    })
+    stateService
+      .updateState(data?.id as string, {
+        affair: values.affair,
+        detail: values.detail,
+        state: values.state.split(',')
+        .map((state) => state.trim()),
+      })
       .then(() => {
         closeModal(true)
       })
@@ -58,17 +57,21 @@ export const StateForm: FC<Props> = ({
 
   // Esto llama al service, y agrega un apartamento
   const createSta = (values: StateFromForm) => {
-    stateService.
-    addState({
-      // Se pasa de número a string
+    const stateForService: State = {
       affair: values.affair,
       detail: values.detail,
-      state: values.state.split(','),
-    })
+      state: values.state
+        .split(',')
+        .map((state) => state.trim()),
+    }
+    stateService
+      .addState(stateForService)
       .then(() => {
         closeModal(true)
       })
-      .finally(() => dispatch(setLoading(false)))
+      .finally(() => {
+        dispatch(setLoading(false))
+      })
   }
 
   return (

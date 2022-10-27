@@ -1,85 +1,37 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where
-} from 'firebase/firestore/lite'
-import { useSelector } from 'react-redux'
-import { db } from '../../shared/services/firebase.service'
-import { RootState } from '../../shared/store/store'
+import { useFirestore } from '../../shared/hooks/useFirestore'
 import { State } from '../interfaces/state.interface'
 
-export function StateService() {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
+export function useStateService() {
+  const firestore = useFirestore<State>('state')
 
   const addState = async (state: State) => {
-    const docRef = await addDoc(
-      collection(db, 'state'),
-      state,
-    )
+    const docRef = await firestore.addFirestore(state)
     return docRef
   }
 
   const deleteState = async (id: string) => {
-    await deleteDoc(doc(db, `state/${id}`))
+    await firestore.deleteFirestore(id)
   }
 
   const updateState = async (
     id: string,
     state: State,
   ) => {
-    const ref = doc(db, `state/${id}`)
-
-    await updateDoc(ref, { ...state })
+    return await firestore.updateFirestore(id, state)
   }
 
-  const getPaginateStates = async (
-    limitPage: number,
-    search = '',
-  ) => {
-    const q = query(
-      collection(db, 'state'),
-      where(
-        'customization',
-        '==',
-        `customizations/${theme?.id}`,
-      ),
-    )
+  const getStates = async () => {
+    const states = await firestore.getAllFirestore()
 
-    const documentSnapshots = await getDocs(q)
-    console.log(documentSnapshots.docs)
-    for(const pepito of documentSnapshots.docs){
-      console.log(pepito)
-    }
-    console.log(`/customizations/${theme?.id}`,)
-    const StatesList = documentSnapshots.docs
-      .map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as State),
-      )
-      .sort((a, b) => a.affair.localeCompare(b.affair))
-
-    return {
-      states: StatesList,
-      totalPages: Math.ceil(
-        documentSnapshots.size / limitPage,
-      ),
-    }
+    // Consejo para debug
+    console.log(states)
+    return states
   }
 
   return {
     addState,
     deleteState,
     updateState,
-    getPaginateStates,
+    getStates,
   }
 }

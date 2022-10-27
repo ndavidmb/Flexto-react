@@ -1,30 +1,12 @@
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Pagination } from '../../shared/components/Pagination'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { State } from '../interfaces/state.interface'
-import { StateService } from './../services/state.service'
-
-const Mock = {
-  states: [
-    {
-      id: '1',
-      affair: 'Pago',
-      detail: 'Administración',
-      state: ['Pago', 'No pago'],
-    },
-    {
-      id:'2',
-      affair: 'Alquiler',
-      detail: 'Canchas de fútbol',
-      state: ['Alquilado', 'No alquilado', 'En uso'],
-    },
-  ],
-}
+import { useStateService } from './../services/state.service'
 
 type Props = {
   consult: number
@@ -39,21 +21,18 @@ export const StateList: FC<Props> = ({
 
   const [states, setStates] = useState<State[]>([])
 
-  const stateService = StateService()
-
-  const [paginate, setPaginate] = useState<{
-    totalPages: number
-  } | null>(null)
+  const stateService = useStateService()
 
   useEffect(() => {
     dispatch(setLoading(true))
     stateService
-      .getPaginateStates(10)
-      .then(({ states, totalPages }) => {
+      .getStates()
+      .then((states) => {
         setStates(states)
-        setPaginate({ totalPages })
       })
-      .finally(() => dispatch(setLoading(false)))
+      .finally(() => {
+        dispatch(setLoading(false))
+      })
   }, [consult])
 
   const handleDelete = (id: string) => {
@@ -76,7 +55,7 @@ export const StateList: FC<Props> = ({
           <th scope="col">Acción</th>
         </THead>
         <tbody>
-          {Mock.states.map((state, index) => (
+          {states.map((state, index) => (
             <TRow index={index} key={state.affair + index}>
               <th
                 scope="row"
@@ -112,11 +91,6 @@ export const StateList: FC<Props> = ({
           ))}
         </tbody>
       </Table>
-      {paginate && (
-        <Pagination
-          totalPages={paginate.totalPages}
-        ></Pagination>
-      )}
     </>
   )
 }
