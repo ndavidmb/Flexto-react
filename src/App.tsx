@@ -33,7 +33,7 @@ function App() {
     }
 
     const validUser = async (user: User) => {
-      await dispatch(validateUser(user))
+      await dispatch(validateUser(user, id || ''))
     }
 
     onAuthStateChanged(authFirebase, async (user) => {

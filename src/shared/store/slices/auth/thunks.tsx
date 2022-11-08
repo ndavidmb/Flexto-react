@@ -37,7 +37,10 @@ export const emailAndPasswordSignIn = (values: {
   }
 }
 
-export const validateUser = (user: User) => {
+export const validateUser = (
+  user: User,
+  customizationId: string,
+) => {
   return async (dispatch: AppDispatch) => {
     const { displayName, email, photoURL, uid } = user
 
@@ -45,7 +48,10 @@ export const validateUser = (user: User) => {
     authModel.uid = uid
 
     const extraUser = await authModel.getExtraUser()
-
+    if (extraUser.agreement !== customizationId) {
+      dispatch(startLogout(customizationId))
+      return
+    }
     dispatch(
       login({
         displayName: displayName ?? '',
