@@ -1,7 +1,7 @@
 import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
 import { ContainerHeader } from '../shared/styled-components/ContainerHeader'
 
-const ClientRequestsWrapper = () => {
+export const ClientRequestsWrapper = () => {
   return (
     <DefaultContainer>
       <div className="w-full flex flex-col items-center mb-4 justify-center">
@@ -10,5 +10,3 @@ const ClientRequestsWrapper = () => {
     </DefaultContainer>
   )
 }
-
-export default ClientRequestsWrapper

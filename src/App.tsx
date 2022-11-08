@@ -1,4 +1,3 @@
-import { onAuthStateChanged, User } from 'firebase/auth'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import {
@@ -6,13 +5,10 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
-import { CustomizationService } from './customizations/services/customization.service'
-import { LoadingSvg } from './shared/components/Loading/Loading'
+import { useCustomizationService } from './customizations/services/customization.service'
 import { Toast } from './shared/components/Toast/Toast'
-import { authFirebase } from './shared/services/firebase.service'
+import { useUserValidation } from './shared/hooks/useUserValidation'
 import { useAppDispatch } from './shared/store/hooks'
-import { logout } from './shared/store/slices/auth/authSlice'
-import { validateUser } from './shared/store/slices/auth/thunks'
 import { setTheme } from './shared/store/slices/theme/themeSlice'
 import { RootState } from './shared/store/store'
 import { addStyle } from './shared/utils/addStyle'
@@ -20,31 +16,14 @@ import { addStyle } from './shared/utils/addStyle'
 function App() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { themeState, authState } = useSelector(
+  const { themeState } = useSelector(
     (state: RootState) => state,
   )
 
   const dispatch = useAppDispatch()
-  const customizationService = CustomizationService()
+  const customizationService = useCustomizationService()
 
-  useEffect(() => {
-    const invalidUser = () => {
-      dispatch(logout())
-    }
-
-    const validUser = async (user: User) => {
-      await dispatch(validateUser(user, id || ''))
-    }
-
-    onAuthStateChanged(authFirebase, async (user) => {
-      if (user) {
-        await validUser(user)
-        return
-      }
-
-      invalidUser()
-    })
-  }, [])
+  useUserValidation(dispatch, id || '', navigate)
 
   useEffect(() => {
     if (id) {
@@ -63,7 +42,7 @@ function App() {
     }
   }, [themeState.theme?.id])
 
-  if (themeState.theme && authState.role) {
+  if (themeState.theme) {
     return (
       <>
         <Toast />

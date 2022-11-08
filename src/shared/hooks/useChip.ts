@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function useChip(initialValue: string) {
+export function useChip(initialValue: string) {
   const [colspanSize, setColspanSize] = useState(0)
   const [chips, setChips] = useState<string[]>([])
   const [hidden, setHidden] = useState(false)

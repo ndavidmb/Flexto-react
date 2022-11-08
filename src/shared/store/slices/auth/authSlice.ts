@@ -9,7 +9,7 @@ const initialValue: IState = {
   email: '',
   displayName: '',
   photoUrl: '',
-  role: 'client',
+  role: null,
   agreement: '',
 }
 
@@ -30,7 +30,7 @@ export const authSlice = createSlice({
       state.email = ''
       state.displayName = ''
       state.photoUrl = ''
-      state.role = 'client'
+      state.role = null
       state.agreement = ''
     },
   },

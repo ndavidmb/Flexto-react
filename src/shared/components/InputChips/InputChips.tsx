@@ -1,5 +1,5 @@
-import { FC, useEffect, useRef } from 'react'
-import useChip from '../../hooks/useChip'
+import { FC, useEffect } from 'react'
+import { useChip } from '../../hooks/useChip'
 import { Chip } from './Chip'
 
 type Props = {

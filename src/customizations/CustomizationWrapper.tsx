@@ -6,14 +6,14 @@ import { ContainerHeader } from '../shared/styled-components/ContainerHeader'
 import { generateKey } from '../shared/utils/createKey'
 import { CustomizationSelect } from './components/CustomizationSelect'
 import { Theme } from './interfaces/theme.interface'
-import { CustomizationService } from './services/customization.service'
+import { useCustomizationService } from './services/customization.service'
 
 export const CustomizationWrapper = () => {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
 
-  const customizationService = CustomizationService()
+  const customizationService = useCustomizationService()
 
   const save = () => {
     customizationService
