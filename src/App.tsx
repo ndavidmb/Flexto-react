@@ -20,8 +20,8 @@ import { addStyle } from './shared/utils/addStyle'
 function App() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
+  const { themeState, authState } = useSelector(
+    (state: RootState) => state,
   )
 
   const dispatch = useAppDispatch()
@@ -61,14 +61,18 @@ function App() {
           navigate('/NotFound')
         })
     }
-  }, [theme?.id])
+  }, [themeState.theme?.id])
 
-  return (
-    <>
-      <Toast />
-      {theme ? <Outlet /> : <LoadingSvg />}
-    </>
-  )
+  if (themeState.theme && authState.role) {
+    return (
+      <>
+        <Toast />
+        <Outlet />
+      </>
+    )
+  }
+
+  return <></>
 }
 
 export default App

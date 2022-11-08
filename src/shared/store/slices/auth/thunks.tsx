@@ -45,7 +45,6 @@ export const validateUser = (user: User) => {
     authModel.uid = uid
 
     const extraUser = await authModel.getExtraUser()
-    console.log(extraUser)
 
     dispatch(
       login({
