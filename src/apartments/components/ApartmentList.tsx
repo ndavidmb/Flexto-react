@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { Dispatch, FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
@@ -9,32 +9,21 @@ import { Apartment } from '../interfaces/apartment.interface'
 import { useApartmentService } from './../services/apartment.service'
 
 type Props = {
-  consult: number
+  apartments: Apartment[],
+  setApartments: Dispatch<React.SetStateAction<Apartment[]>>
   openEdit: (data?: Apartment) => void
 }
 
 export const ApartmentList: FC<Props> = ({
   openEdit: open,
-  consult,
+  apartments,
+  setApartments
 }) => {
   const dispatch = useDispatch()
-
-  const [apartments, setApartments] = useState<Apartment[]>(
-    [],
-  )
 
   const apartmentService = useApartmentService()
   
 
-  useEffect(() => {
-    dispatch(setLoading(true))
-    apartmentService
-      .getApartments()
-      .then((apartments) => {
-        setApartments(apartments)
-      })
-      .finally(() => dispatch(setLoading(false)))
-  }, [consult])
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))

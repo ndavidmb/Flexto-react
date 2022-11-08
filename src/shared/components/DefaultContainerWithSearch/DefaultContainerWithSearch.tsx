@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { Dispatch, FC, ReactNode } from 'react'
 import { Button } from '../../styled-components/Button'
 import { ContainerHeader } from '../../styled-components/ContainerHeader'
 import { SearchInput } from '../../styled-components/SearchInput'
@@ -9,6 +9,11 @@ type Props = {
   title: string
   children: ReactNode
   action: () => void
+  searchOptions: {
+    searchKeys: string[]
+    setApartments: Dispatch<React.SetStateAction<any[]>>
+    items: any[]
+  }
 }
 
 export const DefaultContainerWithSearch: FC<Props> = ({
@@ -16,6 +21,7 @@ export const DefaultContainerWithSearch: FC<Props> = ({
   title,
   actionName = 'Crear nuevo',
   action,
+  searchOptions,
 }) => {
   return (
     <DefaultContainer>
@@ -23,7 +29,10 @@ export const DefaultContainerWithSearch: FC<Props> = ({
         <Button color="primary" onClick={() => action()}>
           {actionName}
         </Button>
-        <SearchInput placeholder="Buscar" />
+        <SearchInput
+          searchOptions={searchOptions}
+          placeholder="Buscar"
+        />
       </ContainerHeader>
       <div className="px-4">{children}</div>
     </DefaultContainer>
