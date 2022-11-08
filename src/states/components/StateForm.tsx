@@ -1,8 +1,10 @@
-import { Field, Form, Formik } from 'formik'
+import { useFormik } from 'formik'
 import { FC } from 'react'
 import { useDispatch } from 'react-redux'
+import { InputChips } from '../../shared/components/InputChips/InputChips'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
+import { emptyFields } from '../../shared/utils/emptyFields'
 import { State } from '../interfaces/state.interface'
 import { StateFromForm } from '../interfaces/stateFromForm.interface'
 import { useStateService } from '../services/state.service'
@@ -25,29 +27,34 @@ export const StateForm: FC<Props> = ({
     state: data?.state ? data.state.join(',') : '',
   }
 
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {
+      if (emptyFields(values)) {
+        return
+      }
+
+      dispatch(setLoading(true))
+      if (data) {
+        updateSta(values)
+        return
+      }
+      createSta(values)
+    },
+  })
+
   const dispatch = useDispatch()
 
   const stateService = useStateService()
-
-  const handleSubmit = (values: StateFromForm) => {
-    // Pone el spinner a andar
-    dispatch(setLoading(true))
-
-    if (data) {
-      updateSta(values)
-      return
-    }
-
-    createSta(values)
-  }
 
   const updateSta = (values: StateFromForm) => {
     stateService
       .updateState(data?.id as string, {
         affair: values.affair,
         detail: values.detail,
-        state: values.state.split(',')
-        .map((state) => state.trim()),
+        state: values.state
+          .split(',')
+          .map((state) => state.trim()),
       })
       .then(() => {
         closeModal(true)
@@ -75,61 +82,64 @@ export const StateForm: FC<Props> = ({
   }
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
+    <form
+      onSubmit={formik.handleSubmit}
+      className="flex flex-col gap-2"
     >
-      <Form className="flex flex-col gap-2">
-        <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="affair"
-            className="font-semibold p-1"
-          >
-            Asunto
-          </label>
-          <Field
-            id="affair"
-            name="affair"
-            className="border bg-white px-2 py-1"
-            placeholder="Asunto"
-          />
-        </div>
-        <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="detail"
-            className="font-semibold p-1"
-          >
-            Detalle
-          </label>
-          <Field
-            id="detail"
-            name="detail"
-            className="border bg-white px-2 py-1"
-            placeholder="Detalle"
-          />
-        </div>
-        <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="state"
-            className="font-semibold p-1"
-          >
-            Estado
-          </label>
-          <Field
-            id="state"
-            name="state"
-            className="border bg-white px-2 py-1"
-          ></Field>
-        </div>
-        <div className="flex flex-row-reverse gap-3 pt-3">
-          <Button type="submit" color="primary">
-            {data ? 'Actualizar' : 'Crear'}
-          </Button>
-          <Button color="link" onClick={() => closeModal()}>
-            Cerrar
-          </Button>
-        </div>
-      </Form>
-    </Formik>
+      <div className="flex flex-col text-gray-900">
+        <label
+          htmlFor="affair"
+          className="font-semibold p-1"
+        >
+          Asunto
+        </label>
+        <input
+          id="affair"
+          name="affair"
+          className="border bg-white px-2 py-1"
+          placeholder="Asunto"
+          onChange={formik.handleChange}
+          value={formik.values.affair}
+        />
+      </div>
+      <div className="flex flex-col text-gray-900">
+        <label
+          htmlFor="detail"
+          className="font-semibold p-1"
+        >
+          Detalle
+        </label>
+        <input
+          id="detail"
+          name="detail"
+          className="border bg-white px-2 py-1"
+          placeholder="Detalle"
+          onChange={formik.handleChange}
+          value={formik.values.detail}
+        />
+      </div>
+      <div className="flex flex-col w-full text-gray-900">
+        <label
+          htmlFor="state-chips"
+          className="font-semibold p-1"
+        >
+          Estado
+        </label>
+        <InputChips
+          className="w-full"
+          id="state"
+          name="state"
+          formik={formik}
+        />
+      </div>
+      <div className="flex flex-row-reverse gap-3 pt-3">
+        <Button type="submit" color="primary">
+          {data ? 'Actualizar' : 'Crear'}
+        </Button>
+        <Button color="link" onClick={() => closeModal()}>
+          Cerrar
+        </Button>
+      </div>
+    </form>
   )
 }
