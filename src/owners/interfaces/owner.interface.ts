@@ -7,3 +7,10 @@ export interface Owner {
   apartment: Apartment
   id?: string
 }
+
+export interface OwnerFromForm{
+  name: string
+  phone: string
+  email: string
+  apartmentId: string
+}

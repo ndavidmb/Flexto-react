@@ -1,13 +1,12 @@
 import { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Pagination } from '../../shared/components/Pagination'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Owner } from '../interfaces/owner.interface'
-import { OwnerService } from './../services/owner.service'
+import { useOwnerService } from './../services/owner.service'
 
 
 
@@ -26,21 +25,18 @@ export const OwnerList: FC<Props> = ({
     [],
   )
 
-  const ownerService = OwnerService()
-
-  const [paginate, setPaginate] = useState<{
-    totalPages: number
-  } | null>(null)
+  const ownerService = useOwnerService()
 
   useEffect(() => {
     dispatch(setLoading(true))
     ownerService
-      .getPaginateOwners(10)
-      .then(({ owners, totalPages }) => {
+      .getOwners()
+      .then((owners) => {
         setOwners(owners)
-        setPaginate({ totalPages })
       })
-      .finally(() => dispatch(setLoading(false)))
+      .finally(() => {
+        dispatch(setLoading(false))
+      })
   }, [consult])
 
   const handleDelete = (id: string) => {
@@ -109,14 +105,6 @@ export const OwnerList: FC<Props> = ({
           ))}
         </tbody>
       </Table>
-      {paginate && (
-        <Pagination
-          /* next={handleNext}
-          previous={handlePrevious}
-          */
-          totalPages={paginate.totalPages}
-        ></Pagination>
-      )}
     </>
   )
 }

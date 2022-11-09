@@ -5,8 +5,8 @@ import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { useApartmentService } from '../../apartments/services/apartment.service'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
-import { Owner } from '../interfaces/owner.interface'
-import { OwnerService } from '../services/owner.service'
+import { Owner, OwnerFromForm } from '../interfaces/owner.interface'
+import { useOwnerService } from '../services/owner.service'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -19,18 +19,18 @@ export const OwnerForm: FC<Props> = ({
   closeModal,
 }) => {
   const apartmentService = useApartmentService()
-  const initialValues: Owner = {
+  const initialValues: OwnerFromForm = {
     // Si es string
     name: data?.name || '',
     phone: data?.phone || '',
     email: data?.email || '',
     // Si es number, boolean, etc
-    apartmentId: data?.apartmentId || '',
+    apartmentId: data?.apartment.id || '',
   }
 
   const dispatch = useDispatch()
 
-  const ownerService = OwnerService()
+  const ownerService = useOwnerService()
 
   const handleSubmit = (values: Owner) => {
     // Pone el spinner a andar
@@ -44,12 +44,12 @@ export const OwnerForm: FC<Props> = ({
     createOwnr(values)
   }
 
-  const updateOwnr = (values: Owner) => {
+  const updateOwnr = (values: OwnerFromForm) => {
     ownerService.
     updateOwner(data?.id as string,{
       name: values.name,
       phone: values.phone,
-      apartmentId: values.apartmentId,
+      apartment: values.apartmentId,
       email: values.email,
     })
       .then(() => {
@@ -63,9 +63,8 @@ export const OwnerForm: FC<Props> = ({
   )
   useEffect(() => {
     apartmentService
-      .getPaginateApartments(10)
-      .then((apt) => {
-        setApartments(apt.apartments)
+      .getApartments().then((apt)=>{
+        console.log(apt)
       })
   }, [])
 
