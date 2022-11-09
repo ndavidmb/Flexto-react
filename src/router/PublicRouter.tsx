@@ -6,12 +6,19 @@ import { Register } from '../auth/components/Register'
 import { RootState } from '../shared/store/store'
 
 export const PublicRouter = () => {
-  const { uid } = useSelector(
+  const { role } = useSelector(
     (state: RootState) => state.authState,
   )
-  return uid ? (
-    <Navigate to="../home/owners" />
-  ) : (
+
+  if (role === 'admin') {
+    return <Navigate to="../home/owners" />
+  }
+
+  if (role === 'client') {
+    return <Navigate to="../home/request" />
+  }
+
+  return (
     <Routes>
       <Route index element={<AuthWrapper />} />
       <Route

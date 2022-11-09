@@ -5,19 +5,13 @@ import {
   getDoc,
   updateDoc,
 } from 'firebase/firestore/lite'
-import { useSelector } from 'react-redux'
 import { db } from '../../shared/services/firebase.service'
-import { RootState } from '../../shared/store/store'
 import { Theme } from '../interfaces/theme.interface'
 
 let currentId: string | null = null
 let cacheResponse: Theme | null = null
 
-export function CustomizationService() {
-  const theme = useSelector(
-    (state: RootState) => state.themeState.theme,
-  )
-
+export function useCustomizationService() {
   const getCustomizationById = async (
     id: string,
   ): Promise<Theme> => {

@@ -1,5 +1,6 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
+import { NavigateFunction } from 'react-router-dom'
 import { useAuthController } from '../../../../auth/controllers/auth.controller'
 import { AuthModel } from '../../../../auth/models/auth.model'
 import { AppDispatch, RootState } from '../../store'
@@ -37,7 +38,10 @@ export const emailAndPasswordSignIn = (values: {
   }
 }
 
-export const validateUser = (user: User) => {
+export const validateUser = (
+  user: User,
+  customizationId: string,
+) => {
   return async (dispatch: AppDispatch) => {
     const { displayName, email, photoURL, uid } = user
 
@@ -45,7 +49,11 @@ export const validateUser = (user: User) => {
     authModel.uid = uid
 
     const extraUser = await authModel.getExtraUser()
-    console.log(extraUser)
+
+    if (extraUser.agreement !== customizationId) {
+      dispatch(startLogout(customizationId))
+      return false
+    }
 
     dispatch(
       login({
@@ -57,6 +65,7 @@ export const validateUser = (user: User) => {
         uid,
       }),
     )
+    return true
   }
 }
 

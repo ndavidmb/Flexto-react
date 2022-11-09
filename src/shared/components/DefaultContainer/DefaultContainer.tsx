@@ -21,7 +21,7 @@ export const DefaultContainer: FC<Props> = ({
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (role === undefined) {
+    if (role === null) {
       dispatch(setLoading(true))
       return
     }

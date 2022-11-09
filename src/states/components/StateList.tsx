@@ -65,7 +65,7 @@ export const StateList: FC<Props> = ({
               </th>
               <td>{state.detail}</td>
               <td>
-                <ul>
+                <ul className='list-disc'>
                   {state.state.map((s, estado) => (
                     <li key={s + estado}>{s}</li>
                   ))}
