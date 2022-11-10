@@ -60,11 +60,11 @@ export const ApartmentWrapper = () => {
           />
         </ModalContainer>
       )}
-      <DefaultContainerWithSearch
+      <DefaultContainerWithSearch<Apartment>
         searchOptions={{
           items: allApartments,
           searchKeys: ['tower', 'apartmentNumber'],
-          setApartments,
+          setItems: setApartments,
         }}
         title="Apartamentos"
         action={open}

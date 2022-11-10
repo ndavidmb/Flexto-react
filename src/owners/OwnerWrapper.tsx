@@ -1,16 +1,44 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../shared/components/Modal/Modal'
 import { useModal } from '../shared/hooks/useModal'
+import { setLoading } from '../shared/store/slices/loading/loadingSlice'
 import { OwnerForm } from './components/OwnerForm'
 import { OwnerList } from './components/OwnerList'
 import { Owner } from './interfaces/owner.interface'
+import { useOwnerService } from './services/owner.service'
 
 export const OwnerWrapper = () => {
+  // States
   const [consult, setConsult] = useState(0)
+  const [allOwners, setAllOwners] = useState<Owner[]>([])
+  const [owners, setOwners] = useState<Owner[]>([])
+
+  // Hooks
+  const ownerService = useOwnerService()
+  const dispatch = useDispatch()
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Owner>()
 
+  // Life cycle
+  useEffect(() => {
+    dispatch(setLoading(true))
+    ownerService
+      .getOwners()
+      .then((owners) => {
+        setOwners(owners)
+        setAllOwners(owners)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+      .finally(() => {
+        dispatch(setLoading(false))
+      })
+  }, [consult])
+
+  // Functions
   const open = (data?: Owner) => {
     setData(data)
     openModal()
@@ -30,17 +58,23 @@ export const OwnerWrapper = () => {
           close={closeModal}
           title={`${data ? 'Editar' : 'Crear'} propietario`}
         >
-          <OwnerForm
-            data={data}
-            closeModal={handleClose}
-          />
+          <OwnerForm data={data} closeModal={handleClose} />
         </ModalContainer>
       )}
-      <DefaultContainerWithSearch
+      <DefaultContainerWithSearch<Owner>
+        searchOptions={{
+          items: allOwners,
+          searchKeys: ['name', 'phone', 'email'],
+          setItems: setOwners,
+        }}
         title="Propietarios"
         action={open}
       >
-        <OwnerList openEdit={open} consult={consult} />
+        <OwnerList
+          openEdit={open}
+          owners={owners}
+          setOwners={setOwners}
+        />
       </DefaultContainerWithSearch>
     </>
   )

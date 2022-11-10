@@ -4,25 +4,31 @@ import { ContainerHeader } from '../../styled-components/ContainerHeader'
 import { SearchInput } from '../../styled-components/SearchInput'
 import { DefaultContainer } from '../DefaultContainer/DefaultContainer'
 
-type Props = {
+type SearchKey<T> = {
+  [key in keyof T]: T[key] extends string ? key : never
+}[keyof T]
+
+export type SearchOptions<T> = {
+  searchKeys: SearchKey<T>[]
+  setItems: Dispatch<React.SetStateAction<T[]>>
+  items: T[]
+}
+
+type Props<T> = {
   actionName?: string
   title: string
   children: ReactNode
   action: () => void
-  searchOptions: {
-    searchKeys: string[]
-    setApartments: Dispatch<React.SetStateAction<any[]>>
-    items: any[]
-  }
+  searchOptions: SearchOptions<T>
 }
 
-export const DefaultContainerWithSearch: FC<Props> = ({
+export function DefaultContainerWithSearch<T>({
   children,
   title,
   actionName = 'Crear nuevo',
   action,
   searchOptions,
-}) => {
+}: Props<T>) {
   return (
     <DefaultContainer>
       <ContainerHeader title={title}>

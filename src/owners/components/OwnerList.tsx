@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { Dispatch, FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
@@ -8,51 +8,30 @@ import { TRow } from '../../shared/styled-components/TRow'
 import { Owner } from '../interfaces/owner.interface'
 import { useOwnerService } from './../services/owner.service'
 
-
-
 type Props = {
-  consult: number
+  owners: Owner[]
+  setOwners: Dispatch<React.SetStateAction<Owner[]>>
   openEdit: (data?: Owner) => void
 }
 
 export const OwnerList: FC<Props> = ({
   openEdit: open,
-  consult,
+  owners,
+  setOwners,
 }) => {
   const dispatch = useDispatch()
 
-  const [owners, setOwners] = useState<Owner[]>(
-    [],
-  )
-
   const ownerService = useOwnerService()
-
-  useEffect(() => {
-    dispatch(setLoading(true))
-    ownerService
-      .getOwners()
-      .then((owners) => {
-        setOwners(owners)
-      })
-      .finally(() => {
-        dispatch(setLoading(false))
-      })
-  }, [consult])
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
     ownerService
       .deleteOwner(id)
       .then(() => {
-        setOwners(
-          owners.filter(
-            (owner) => owner.id !== id,
-          ),
-        )
+        setOwners(owners.filter((owner) => owner.id !== id))
       })
       .finally(() => dispatch(setLoading(false)))
   }
-
 
   return (
     <>

@@ -5,7 +5,11 @@ import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { useApartmentService } from '../../apartments/services/apartment.service'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
-import { Owner, OwnerFromForm } from '../interfaces/owner.interface'
+import { emptyFields } from '../../shared/utils/emptyFields'
+import {
+  Owner,
+  OwnerFromForm,
+} from '../interfaces/owner.interface'
 import { useOwnerService } from '../services/owner.service'
 
 // Estos varían en el tipo de la data
@@ -18,66 +22,69 @@ export const OwnerForm: FC<Props> = ({
   data,
   closeModal,
 }) => {
+  const [apartments, setApartments] = useState<Apartment[]>(
+    [],
+  )
+
   const apartmentService = useApartmentService()
+  const ownerService = useOwnerService()
+
   const initialValues: OwnerFromForm = {
     // Si es string
     name: data?.name || '',
     phone: data?.phone || '',
     email: data?.email || '',
     // Si es number, boolean, etc
-    apartmentId: data?.apartment.id || '',
+    apartmentId: data?.apartment?.id || '',
   }
 
   const dispatch = useDispatch()
 
-  const ownerService = useOwnerService()
+  useEffect(() => {
+    apartmentService.getApartments().then((apt) => {
+      setApartments(apt)
+    })
+  }, [])
 
-  const handleSubmit = (values: Owner) => {
+  const handleSubmit = (values: OwnerFromForm) => {
     // Pone el spinner a andar
+    if (emptyFields(values)) {
+      return
+    }
     dispatch(setLoading(true))
 
+    const owner = {
+      name: values.name,
+      phone: values.phone,
+      email: values.email,
+      apartment: apartments.find(
+        (apt) => apt.id === values.apartmentId,
+      )!,
+    }
+
+    console.log(owner)
+
     if (data) {
-      updateOwnr(values)
+      updateOwner(owner)
       return
     }
 
-    createOwnr(values)
+    createOwner(owner)
   }
 
-  const updateOwnr = (values: OwnerFromForm) => {
-    ownerService.
-    updateOwner(data?.id as string,{
-      name: values.name,
-      phone: values.phone,
-      apartment: values.apartmentId,
-      email: values.email,
-    })
+  const updateOwner = (owner: Owner) => {
+    ownerService
+      .updateOwner(data?.id as string, owner)
       .then(() => {
         closeModal(true)
       })
       .finally(() => dispatch(setLoading(false)))
   }
 
-  const [apartments, setApartments] = useState<Apartment[]>(
-    [],
-  )
-  useEffect(() => {
-    apartmentService
-      .getApartments().then((apt)=>{
-        console.log(apt)
-      })
-  }, [])
-
   // Esto llama al service, y agrega un apartamento
-  const createOwnr = (values: Owner) => {
+  const createOwner = (owner: Owner) => {
     ownerService
-      .addOwner({
-        // Se pasa de número a string
-        name: values.name,
-        phone: values.phone,
-        apartmentId: values.apartmentId,
-        email: values.email,
-      })
+      .addOwner(owner)
       .then(() => {
         closeModal(true)
       })
@@ -121,20 +128,26 @@ export const OwnerForm: FC<Props> = ({
         </div>
         <div className="flex flex-col text-gray-900">
           <label
-            htmlFor="apartamentId"
+            htmlFor="apartmentId"
             className="font-semibold p-1"
           >
             Apartamento
           </label>
           <Field
             as="select"
-            id="apartamentId"
-            name="apartamentId"
+            id="apartmentId"
+            name="apartmentId"
             className="border bg-white px-2 py-1"
           >
+            <option value={undefined}>
+              Seleccione una opción
+            </option>
             {apartments.map((apartment) => {
               return (
-                <option value={apartment.id}>
+                <option
+                  value={apartment.id}
+                  key={apartment.id}
+                >
                   {apartment.tower} - &nbsp;
                   {apartment.apartmentNumber}
                 </option>

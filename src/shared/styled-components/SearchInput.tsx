@@ -1,40 +1,47 @@
 import { ChangeEvent, Dispatch, FC, useState } from 'react'
 import { IoSearch } from 'react-icons/io5'
-type Props = {
+import { SearchOptions } from '../components/DefaultContainerWithSearch/DefaultContainerWithSearch'
+type Props<T> = {
   placeholder: string
-  searchOptions: {
-    searchKeys: string[]
-    items: any[]
-    setApartments: Dispatch<React.SetStateAction<any[]>>
-  }
+  searchOptions: SearchOptions<T>
 }
 
-export const SearchInput: FC<Props> = ({
+export function SearchInput<T>({
   placeholder,
   searchOptions,
-}) => {
+}: Props<T>) {
   const [searchValue, setSearchValue] = useState('')
 
   const handleChange = (
     evt: ChangeEvent<HTMLInputElement>,
   ) => {
-    const { value } = evt.target
-
-    console.log(searchOptions.items)
+    const { value: inputValue } = evt.target
 
     const filtered = searchOptions.items.filter((item) => {
       for (const searchKey of searchOptions.searchKeys) {
-        if (item[searchKey].includes(value)) {
+        const itemField = item[searchKey]
+
+        if (
+          typeof itemField === 'string' &&
+          itemField.includes(inputValue)
+        ) {
           return true
+        }
+
+        if (typeof itemField === 'number') {
+          const strField = String(itemField)
+          if (strField.includes(inputValue)) {
+            return true
+          }
         }
       }
 
       return false
     })
 
-    searchOptions.setApartments(filtered)
+    searchOptions.setItems(filtered)
 
-    setSearchValue(value)
+    setSearchValue(inputValue)
   }
 
   return (

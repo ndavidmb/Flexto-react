@@ -9,7 +9,7 @@ import { Apartment } from '../interfaces/apartment.interface'
 import { useApartmentService } from './../services/apartment.service'
 
 type Props = {
-  apartments: Apartment[],
+  apartments: Apartment[]
   setApartments: Dispatch<React.SetStateAction<Apartment[]>>
   openEdit: (data?: Apartment) => void
 }
@@ -17,13 +17,11 @@ type Props = {
 export const ApartmentList: FC<Props> = ({
   openEdit: open,
   apartments,
-  setApartments
+  setApartments,
 }) => {
   const dispatch = useDispatch()
 
   const apartmentService = useApartmentService()
-  
-
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
