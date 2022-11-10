@@ -62,7 +62,7 @@ export const ApartmentWrapper = () => {
       )}
       <DefaultContainerWithSearch<Apartment>
         searchOptions={{
-          items: allApartments,
+          allItems: allApartments,
           searchKeys: ['tower', 'apartmentNumber'],
           setItems: setApartments,
         }}

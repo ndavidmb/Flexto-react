@@ -63,7 +63,7 @@ export const OwnerWrapper = () => {
       )}
       <DefaultContainerWithSearch<Owner>
         searchOptions={{
-          items: allOwners,
+          allItems: allOwners,
           searchKeys: ['name', 'phone', 'email'],
           setItems: setOwners,
         }}

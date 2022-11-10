@@ -11,7 +11,7 @@ type SearchKey<T> = {
 export type SearchOptions<T> = {
   searchKeys: SearchKey<T>[]
   setItems: Dispatch<React.SetStateAction<T[]>>
-  items: T[]
+  allItems: T[]
 }
 
 type Props<T> = {
