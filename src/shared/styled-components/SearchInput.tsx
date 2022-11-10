@@ -12,32 +12,37 @@ export function SearchInput<T>({
 }: Props<T>) {
   const [searchValue, setSearchValue] = useState('')
 
+  const ignoreCase = (str: string, inputValue: string) =>
+    str.toLowerCase().trim().includes(inputValue)
+
   const handleChange = (
     evt: ChangeEvent<HTMLInputElement>,
   ) => {
     const { value: inputValue } = evt.target
 
-    const filtered = searchOptions.items.filter((item) => {
-      for (const searchKey of searchOptions.searchKeys) {
-        const itemField = item[searchKey]
+    const filtered = searchOptions.allItems.filter(
+      (item) => {
+        for (const searchKey of searchOptions.searchKeys) {
+          const itemField = item[searchKey]
 
-        if (
-          typeof itemField === 'string' &&
-          itemField.includes(inputValue)
-        ) {
-          return true
-        }
-
-        if (typeof itemField === 'number') {
-          const strField = String(itemField)
-          if (strField.includes(inputValue)) {
+          if (
+            typeof itemField === 'string' &&
+            ignoreCase(itemField, inputValue)
+          ) {
             return true
           }
-        }
-      }
 
-      return false
-    })
+          if (typeof itemField === 'number') {
+            const strField = String(itemField)
+            if (ignoreCase(strField, inputValue)) {
+              return true
+            }
+          }
+        }
+
+        return false
+      },
+    )
 
     searchOptions.setItems(filtered)
 

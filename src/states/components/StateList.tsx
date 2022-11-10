@@ -1,4 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
@@ -9,31 +15,19 @@ import { State } from '../interfaces/state.interface'
 import { useStateService } from './../services/state.service'
 
 type Props = {
-  consult: number
   openEdit: (data?: State) => void
+  states: State[]
+  setStates: Dispatch<SetStateAction<State[]>>
 }
 
 export const StateList: FC<Props> = ({
   openEdit: open,
-  consult,
+  states,
+  setStates,
 }) => {
   const dispatch = useDispatch()
 
-  const [states, setStates] = useState<State[]>([])
-
   const stateService = useStateService()
-
-  useEffect(() => {
-    dispatch(setLoading(true))
-    stateService
-      .getStates()
-      .then((states) => {
-        setStates(states)
-      })
-      .finally(() => {
-        dispatch(setLoading(false))
-      })
-  }, [consult])
 
   const handleDelete = (id: string) => {
     dispatch(setLoading(true))
@@ -65,7 +59,7 @@ export const StateList: FC<Props> = ({
               </th>
               <td>{state.detail}</td>
               <td>
-                <ul className='list-disc'>
+                <ul className="list-disc">
                   {state.state.map((s, estado) => (
                     <li key={s + estado}>{s}</li>
                   ))}

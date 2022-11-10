@@ -1,4 +1,4 @@
-import { Dispatch, FC, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
@@ -10,7 +10,7 @@ import { useOwnerService } from './../services/owner.service'
 
 type Props = {
   owners: Owner[]
-  setOwners: Dispatch<React.SetStateAction<Owner[]>>
+  setOwners: Dispatch<SetStateAction<Owner[]>>
   openEdit: (data?: Owner) => void
 }
 
