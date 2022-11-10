@@ -13,18 +13,25 @@ export function useOwnerService() {
     await firestore.deleteFirestore(id)
   }
 
-  const updateOwner = async (
-    id: string,
-    owner: Owner,
-  ) => {
+  const updateOwner = async (id: string, owner: Owner) => {
     return await firestore.updateFirestore(id, owner)
   }
 
   const getOwners = async () => {
     const owners = await firestore.getAllFirestore()
 
-
     return owners
+  }
+
+  const getOwnerById = async (id: string) => {
+    const owners = await getOwners()
+    const owner = owners.find((owner) => owner.id === id)
+
+    if (!owner) {
+      throw new Error('Owner not found')
+    }
+
+    return owner
   }
 
   return {
@@ -32,5 +39,6 @@ export function useOwnerService() {
     deleteOwner,
     updateOwner,
     getOwners,
+    getOwnerById,
   }
 }

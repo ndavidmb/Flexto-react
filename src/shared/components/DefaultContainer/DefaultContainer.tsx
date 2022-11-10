@@ -9,10 +9,12 @@ import styles from './DefaultContainer.module.scss'
 
 type Props = {
   children: ReactNode
+  className?: string
 }
 
 export const DefaultContainer: FC<Props> = ({
   children,
+  className = '',
 }) => {
   const { role } = useSelector(
     (state: RootState) => state.authState,
@@ -32,7 +34,7 @@ export const DefaultContainer: FC<Props> = ({
     <main className="h-screen w-full flex">
       <Sidebar />
       <section
-        className={`w-full bg-gray-50 h-full ${styles.container}`}
+        className={`w-full bg-gray-50 h-full ${styles.container} ${className}`}
       >
         {children}
       </section>

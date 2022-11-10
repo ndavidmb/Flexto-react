@@ -4,16 +4,15 @@ type Props = {
   children: ReactNode
   className?: string
 }
-
-export const Card: FC<Props> = ({
+export const PageTitle: FC<Props> = ({
   children,
   className = '',
 }) => {
   return (
-    <div
-      className={`${className} bg-white border-gray-200 shadow p-4 m-3`}
+    <h1
+      className={`text-3xl font-bold text-black ${className}`}
     >
       {children}
-    </div>
+    </h1>
   )
 }

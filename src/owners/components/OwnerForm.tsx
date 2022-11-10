@@ -5,6 +5,7 @@ import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { useApartmentService } from '../../apartments/services/apartment.service'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
+import { Select } from '../../shared/styled-components/Select'
 import { emptyFields } from '../../shared/utils/emptyFields'
 import {
   Owner,
@@ -133,15 +134,11 @@ export const OwnerForm: FC<Props> = ({
           >
             Apartamento
           </label>
-          <Field
-            as="select"
+          <Select
+            formik={true}
             id="apartmentId"
             name="apartmentId"
-            className="border bg-white px-2 py-1"
           >
-            <option value={undefined}>
-              Seleccione una opción
-            </option>
             {apartments.map((apartment) => {
               return (
                 <option
@@ -153,7 +150,7 @@ export const OwnerForm: FC<Props> = ({
                 </option>
               )
             })}
-          </Field>
+          </Select>
         </div>
         <div className="flex flex-col text-gray-900">
           <label

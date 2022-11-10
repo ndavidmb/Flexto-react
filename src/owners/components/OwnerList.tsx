@@ -1,5 +1,11 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  SetStateAction
+} from 'react'
+import { IoSearch } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Table } from '../../shared/styled-components/Table'
@@ -37,8 +43,9 @@ export const OwnerList: FC<Props> = ({
     <>
       <Table>
         <THead>
+          <th scope="col" className="w-1"></th>
           <th scope="col">Nombre</th>
-          <th scope="col">Telefono</th>
+          <th scope="col">Teléfono</th>
           <th scope="col">Apartamento</th>
           <th scope="col">Correo</th>
           <th scope="col">Acción</th>
@@ -46,6 +53,11 @@ export const OwnerList: FC<Props> = ({
         <tbody>
           {owners.map((owner, index) => (
             <TRow index={index} key={owner.id}>
+              <td className="w-1">
+                <Link to={`./${owner.id}`}>
+                  <IoSearch />
+                </Link>
+              </td>
               <th
                 scope="row"
                 className="font-medium text-gray-900 whitespace-nowrap"

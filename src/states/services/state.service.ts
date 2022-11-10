@@ -24,7 +24,6 @@ export function useStateService() {
     const states = await firestore.getAllFirestore()
 
     // Consejo para debug
-    console.log(states)
     return states
   }
 

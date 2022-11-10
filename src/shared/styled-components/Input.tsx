@@ -1,4 +1,4 @@
-import { Field, FormikProps } from 'formik'
+import { Field } from 'formik'
 import { FC } from 'react'
 
 type Props = {
@@ -6,7 +6,6 @@ type Props = {
   type: 'email' | 'password' | 'text' | 'number'
   placeholder: string
   className?: string
-
 }
 
 export const Input: FC<Props> = ({

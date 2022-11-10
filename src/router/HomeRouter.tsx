@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ClientRequestsWrapper } from '../client-requests/ClientRequestsWrapper'
-import { Loading, LoadingSvg } from '../shared/components/Loading/Loading'
+import { LoadingSvg } from '../shared/components/Loading/Loading'
 import { RootState } from '../shared/store/store'
 import { AdminRouter } from './AdminRouter'
 

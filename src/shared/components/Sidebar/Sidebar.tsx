@@ -6,33 +6,39 @@ import {
   IoHandRightOutline,
   IoLogOut,
   IoMail,
-  IoPeople
+  IoPeople,
 } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
 import { startLogout } from '../../store/slices/auth/thunks'
 import { RootState } from '../../store/store'
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
 
-const removeEndOfRoute = (route: string) => {
-  const split = route.split('/')
-  return split.slice(0, split.length - 1).join('/')
-}
+// const removeEndOfRoute = (route: string) => {
+//   const split = route.split('/')
+//   return split.slice(0, split.length - 1).join('/')
+// }
 
 export const Sidebar = () => {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
 
-  const location = useLocation()
+  const { id } = useParams()
+
+  // const location = useLocation()
 
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
-  const route = removeEndOfRoute(location.pathname)
+  // const route = removeEndOfRoute(location.pathname)
 
   const handleLogout = () => {
     dispatch(startLogout(theme?.id ?? ''))
@@ -49,35 +55,35 @@ export const Sidebar = () => {
         <ul className="space-y-2 py-2">
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/owners`}
+            href={`/${id}/home/owners`}
           >
             <IoPeople className="text-xl" />
             Propietarios
           </MenuLink>
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/apartments`}
+            href={`/${id}/home/apartments`}
           >
             <IoBusiness className="text-xl" />
             Apartamentos
           </MenuLink>
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/states`}
+            href={`/${id}/home/states`}
           >
             <IoCheckmarkDoneCircle className="text-xl" />
             Estados
           </MenuLink>
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/access-request`}
+            href={`/${id}/home/access-request`}
           >
             <IoHandRightOutline className="text-xl" />
             Solicitudes de acceso
           </MenuLink>
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/custom`}
+            href={`/${id}/home/custom`}
           >
             <IoBuild className="text-xl" />
             Personalización
@@ -85,7 +91,7 @@ export const Sidebar = () => {
 
           <MenuLink
             permissionsRole="admin"
-            href={`${route}/act`}
+            href={`/${id}/home/act`}
           >
             <IoBuild className="text-xl" />
             Actas
@@ -93,7 +99,7 @@ export const Sidebar = () => {
 
           <MenuLink
             permissionsRole="client"
-            href={`${route}/own-status`}
+            href={`/${id}/home/own-status`}
           >
             <IoAccessibility className="text-xl" />
             Estado
@@ -101,7 +107,7 @@ export const Sidebar = () => {
 
           <MenuLink
             permissionsRole="client"
-            href={`${route}/request`}
+            href={`/${id}/home/request`}
           >
             <IoMail className="text-xl" />
             Enviar petición

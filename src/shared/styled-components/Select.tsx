@@ -1,30 +1,44 @@
 import { Field } from 'formik'
 import {
+  DetailedHTMLProps,
   FC
 } from 'react'
 
 type Props = {
-  name: string
-  children: JSX.Element[]
-}
+  formik?: boolean
+} & DetailedHTMLProps<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  HTMLSelectElement
+>
 
 export const Select: FC<Props> = ({
-  name,
-  children,
+  formik = false,
+  className = '',
+  ...props
 }) => {
+  let customClass = 'border bg-white px-2 py-1 outline-none'
+
+  if (className) {
+    customClass = `${customClass} ${className}`
+  }
+
+  if (formik) {
+    return (
+      <Field {...props} as="select" className={customClass}>
+        <option value={undefined}>
+          ---- Seleccione ----
+        </option>
+        {props.children}
+      </Field>
+    )
+  }
+
   return (
-    <Field
-      as="select"
-      className="border
-          h-8
-          bg-white
-          px-2
-          rounded
-          py-1"
-      name={name}
-      id={name}
-    >
-      {children}
-    </Field>
+    <select {...props} className={customClass}>
+      <option value={undefined}>
+        ---- Seleccione ----
+      </option>
+      {props.children}
+    </select>
   )
 }

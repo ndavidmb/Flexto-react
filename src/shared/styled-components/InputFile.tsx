@@ -1,5 +1,4 @@
 import { FC, useRef, useState } from 'react'
-import { blobToDataUrl } from '../utils/blobToDataUrl'
 
 type Props = {
   id: string
@@ -10,7 +9,7 @@ type Props = {
 export const InputFile: FC<Props> = ({
   id,
   onChange,
-  className,
+  className = '',
 }) => {
   const [selectedFile, setSelectedFile] = useState(
     'No se ha seleccionado ningún archivo',

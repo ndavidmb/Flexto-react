@@ -11,7 +11,7 @@ type Props = {
 export const InputChips: FC<Props> = ({
   id,
   name,
-  className,
+  className = '',
   formik,
 }) => {
   const {

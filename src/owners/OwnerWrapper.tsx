@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useOutlet } from 'react-router-dom'
 import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../shared/components/Modal/Modal'
 import { useModal } from '../shared/hooks/useModal'
@@ -18,6 +19,7 @@ export const OwnerWrapper = () => {
   // Hooks
   const ownerService = useOwnerService()
   const dispatch = useDispatch()
+  const outlet = useOutlet()
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Owner>()
 
@@ -61,21 +63,24 @@ export const OwnerWrapper = () => {
           <OwnerForm data={data} closeModal={handleClose} />
         </ModalContainer>
       )}
-      <DefaultContainerWithSearch<Owner>
-        searchOptions={{
-          allItems: allOwners,
-          searchKeys: ['name', 'phone', 'email'],
-          setItems: setOwners,
-        }}
-        title="Propietarios"
-        action={open}
-      >
-        <OwnerList
-          openEdit={open}
-          owners={owners}
-          setOwners={setOwners}
-        />
-      </DefaultContainerWithSearch>
+
+      {outlet || (
+        <DefaultContainerWithSearch<Owner>
+          searchOptions={{
+            allItems: allOwners,
+            searchKeys: ['name', 'phone', 'email'],
+            setItems: setOwners,
+          }}
+          title="Propietarios"
+          action={open}
+        >
+          <OwnerList
+            openEdit={open}
+            owners={owners}
+            setOwners={setOwners}
+          />
+        </DefaultContainerWithSearch>
+      )}
     </>
   )
 }

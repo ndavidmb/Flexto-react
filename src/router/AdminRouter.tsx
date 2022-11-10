@@ -22,12 +22,13 @@ export const AdminRouter = () => {
         path="apartments"
         element={<ApartmentWrapper />}
       />
-      <Route path="owners" element={<OwnerWrapper />} />
+
+      <Route path="owners" element={<OwnerWrapper />}>
+        <Route path=":ownerId" element={<OwnerDetail />} />
+      </Route>
+
       <Route path="states" element={<StateWrapper />} />
-      <Route
-        path="owner-detail"
-        element={<OwnerDetail />}
-      />
+
       <Route
         path="access-request"
         element={<AccessRequest />}
