@@ -1,8 +1,9 @@
-import { useFirestore } from '../../shared/hooks/useFirestore'
-import { Apartment } from '../interfaces/apartment.interface'
+import { FirestoreTable } from '../../shared/constants/firestore-tables';
+import { useFirestore } from '../../shared/hooks/useFirestore';
+import { Apartment } from '../interfaces/apartment.interface';
 
 export function useApartmentService() {
-  const firestore = useFirestore<Apartment>('apartments')
+  const firestore = useFirestore<Apartment>(FirestoreTable.APARTMENTS);
 
   const addApartment = async (apartment: Apartment) => {
     const docRef = await firestore.addFirestore(apartment)
