@@ -2,22 +2,16 @@ import { Form, Formik, FormikProps } from 'formik'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 import { InputFile } from '../../shared/styled-components/InputFile'
-import { IRegisterForm } from '../interfaces/register-form.interface'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../shared/store/store'
 import { useRegister } from '../hooks/useRegister'
+import { IRegisterForm } from '../interfaces/register-form.interface'
 
 export const Register = () => {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
-
   const {
     handleSubmit,
     initialValue,
     setPhoto,
     registerSchema,
-  } = useRegister(theme)
+  } = useRegister()
 
   return (
     <section className="flex flex-col gap-4 justify-center items-center bg-gray-100 w-full h-screen">
@@ -37,7 +31,7 @@ export const Register = () => {
             touched,
             errors,
           }: FormikProps<IRegisterForm>) => (
-            <>
+            <div className="relative">
               <Form className="flex flex-col gap-4">
                 <div className="flex gap-1">
                   <Input
@@ -95,7 +89,25 @@ export const Register = () => {
                   </Button>
                 </div>
               </Form>
-            </>
+
+              {Object.values(errors).length > 0 && (
+                <div className="absolute w-64 bg-yellow-300 rounded shadow border p-3 right-[-20em] top-[-5em]">
+                  <h2 className="text-yellow-900 font-bold">
+                    Requerimientos:
+                  </h2>
+                  {Object.values(errors).map(
+                    (error, index) => (
+                      <li
+                        className="break-words"
+                        key={index}
+                      >
+                        {error}
+                      </li>
+                    ),
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </Formik>
       </div>

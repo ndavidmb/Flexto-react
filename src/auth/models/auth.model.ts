@@ -33,9 +33,18 @@ export class AuthModel {
   private role: RoleType = 'client'
   uid = ''
 
-  constructor(email: string, password: string) {
+  constructor({
+    agreement,
+    email = '',
+    password = '',
+  }: {
+    agreement: string
+    email: string
+    password: string
+  }) {
     this.email = email
     this.password = password
+    this.uid = agreement
   }
 
   async signIn(): Promise<void> {

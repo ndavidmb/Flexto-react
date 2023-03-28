@@ -1,9 +1,7 @@
-import { Form, Formik } from 'formik'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   IoArrowBack,
-  IoSave,
-  IoTerminal,
+  IoSave
 } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -112,7 +110,7 @@ export const OwnerDetail = () => {
         </div>
 
         <div className="flex gap-1 items-center mt-1">
-          <ButtonLink href="..">
+          <ButtonLink className="flex gap-2" href="..">
             <IoArrowBack />
             Volver
           </ButtonLink>

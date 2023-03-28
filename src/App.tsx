@@ -1,57 +1,63 @@
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 import {
+  Navigate,
   Outlet,
   useNavigate,
-  useParams,
+  useParams
 } from 'react-router-dom'
 import { useCustomizationService } from './customizations/services/customization.service'
 import { Toast } from './shared/components/Toast/Toast'
 import { useUserValidation } from './shared/hooks/useUserValidation'
-import { useAppDispatch } from './shared/store/hooks'
+import {
+  useAppDispatch,
+  useAppSelector
+} from './shared/store/hooks'
 import { setTheme } from './shared/store/slices/theme/themeSlice'
-import { RootState } from './shared/store/store'
 import { addStyle } from './shared/utils/addStyle'
 
-function App() {
-  const { id } = useParams()
+export const App = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { themeState } = useSelector(
-    (state: RootState) => state,
+  const [validationEnds, setValidationEnds] =
+    useState(false)
+  const { id } = useParams()
+  const { theme } = useAppSelector(
+    (state) => state.themeState,
   )
 
-  const dispatch = useAppDispatch()
-  const customizationService = useCustomizationService()
-
-  useUserValidation(dispatch, id || '', navigate)
-
-  useEffect(() => {
-    if (id) {
-      customizationService
-        .getCustomizationById(id)
-        .then((theme) => {
-          if (theme) {
-            dispatch(setTheme(theme))
-            addStyle(theme)
-          }
-        })
-        .catch((err) => {
-          console.error(err)
-          navigate('/NotFound')
-        })
-    }
-  }, [themeState.theme?.id])
-
-  if (themeState.theme) {
-    return (
-      <>
-        <Toast />
-        <Outlet />
-      </>
-    )
+  if (!id) {
+    return <Navigate to="/NotFound" replace />
   }
 
-  return <></>
+  const customizationService = useCustomizationService()
+  const { getAsyncUser } = useUserValidation(id)
+
+  useEffect(() => {
+    customizationService
+      .getCustomizationById(id)
+      .then((theme) => {
+        if (!theme) {
+          return false
+        }
+
+        dispatch(setTheme(theme))
+        addStyle(theme)
+        return getAsyncUser()
+      })
+      .then((userValidationEnds) => {
+        setValidationEnds(userValidationEnds)
+      })
+      .catch(() => {
+        navigate('/NotFound')
+      })
+  }, [])
+
+  return (
+    <div className={!theme || !validationEnds ? 'hidden' : ''}>
+      <Toast />
+      <Outlet />
+    </div>
+  )
 }
 
 export default App

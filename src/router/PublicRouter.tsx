@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AuthWrapper } from '../auth/AuthWrapper'
 import { RecoveryPassword } from '../auth/components/RecoveryPassword'
 import { Register } from '../auth/components/Register'
+import { Loading } from '../shared/components/Loading/Loading'
 import { RootState } from '../shared/store/store'
 
 export const PublicRouter = () => {
@@ -25,7 +26,15 @@ export const PublicRouter = () => {
         path="recovery-password"
         element={<RecoveryPassword />}
       />
-      <Route path="register" element={<Register />} />
+      <Route
+        path="register"
+        element={
+          <>
+            <Register />
+            <Loading />
+          </>
+        }
+      />
       <Route
         path="*"
         element={<Navigate to="/NotFound" replace />}

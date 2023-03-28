@@ -1,15 +1,21 @@
-import { useAuthController } from '../controllers/auth.controller'
-import { useState } from 'react'
-import * as yup from 'yup'
-import { useAppDispatch } from '../../shared/store/hooks'
-import { login } from '../../shared/store/slices/auth/authSlice'
 import { FirebaseError } from 'firebase/app'
-import { ALERT_MESSAGES } from '../../shared/constants/alert-messages.constants'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Theme } from '../../customizations/interfaces/theme.interface'
+import * as yup from 'yup'
+import { ALERT_MESSAGES } from '../../shared/constants/alert-messages.constants'
+import { useAppDispatch } from '../../shared/store/hooks'
+import { IUserPayload } from '../../shared/store/interfaces/auth/auth.interface'
+import { login } from '../../shared/store/slices/auth/authSlice'
+import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
+import { RootState } from '../../shared/store/store'
+import { useAuthController } from '../controllers/auth.controller'
 import { IRegisterForm } from '../interfaces/register-form.interface'
 
-export const useRegister = (theme: Theme | null) => {
+export const useRegister = () => {
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
+  )
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -28,7 +34,7 @@ export const useRegister = (theme: Theme | null) => {
     surnames: yup
       .string()
       .min(2, 'Demasiado corto')
-      .required('Los apellidos son requerido'),
+      .required('Los apellidos son requeridos'),
     email: yup
       .string()
       .email('El correo electrónico no es valido')
@@ -69,6 +75,7 @@ export const useRegister = (theme: Theme | null) => {
       return
     }
 
+    dispatch(setLoading(true))
     authController
       .register({
         email,
@@ -79,7 +86,12 @@ export const useRegister = (theme: Theme | null) => {
       })
       .then((res) => {
         if (res) {
-          dispatch(login(res.user))
+          dispatch(
+            login({
+              ...res.user,
+              agreement: theme?.id,
+            }),
+          )
           navigate('../home/owners')
         }
       })
@@ -89,6 +101,7 @@ export const useRegister = (theme: Theme | null) => {
           console.log(ALERT_MESSAGES[err.code])
         }
       })
+      .finally(() => dispatch(setLoading(false)))
   }
 
   return {

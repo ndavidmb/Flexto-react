@@ -27,7 +27,14 @@ export const Button: FC<Props> = ({
       ? `button ${colorsTypes[color]}`
       : `font-medium hover:underline ${colorsTypes[color]}`
 
-  return (
+  return type === 'submit' ? (
+    <button
+      type={type}
+      className={`${buttonClass} ${className}`}
+    >
+      {children}
+    </button>
+  ) : (
     <button
       type={type}
       onClick={onClick}

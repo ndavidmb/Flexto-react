@@ -9,10 +9,11 @@ export function useAuthController(agreement?: string) {
     email: string
     password: string
   }) => {
-    const authModel = new AuthModel(
-      credentials.email,
-      credentials.password,
-    )
+    const authModel = new AuthModel({
+      agreement: agreement || '',
+      email: credentials.email,
+      password: credentials.password,
+    })
     await authModel.signIn()
     const extraUser = await authModel.getExtraUser()
 
@@ -43,10 +44,11 @@ export function useAuthController(agreement?: string) {
     ok: boolean
     user: IUser
   }> => {
-    const authModel = new AuthModel(
-      registerFb.email,
-      registerFb.password,
-    )
+    const authModel = new AuthModel({
+      agreement: agreement || '',
+      email: registerFb.email,
+      password: registerFb.password,
+    })
 
     let savedUser: User | null = null
     let extraUserId: string | null = null
