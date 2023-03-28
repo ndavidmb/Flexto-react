@@ -5,6 +5,7 @@ import { InputFile } from '../../shared/styled-components/InputFile'
 import { useRegister } from '../hooks/useRegister'
 import { IRegisterForm } from '../interfaces/register-form.interface'
 
+// TODO: Add required to photo
 export const Register = () => {
   const {
     handleSubmit,
@@ -27,10 +28,7 @@ export const Register = () => {
           initialValues={initialValue}
           validationSchema={registerSchema}
         >
-          {({
-            touched,
-            errors,
-          }: FormikProps<IRegisterForm>) => (
+          {({ errors }: FormikProps<IRegisterForm>) => (
             <div className="relative">
               <Form className="flex flex-col gap-4">
                 <div className="flex gap-1">
