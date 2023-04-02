@@ -1,19 +1,13 @@
-import { FC, ReactNode, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { ActList } from '../act/pages/ActList'
 import { ActWrapper } from '../act/ActWrapper'
 import { ApartmentWrapper } from '../apartments/ApartmentWrapper'
 import { AccessRequest } from '../client-requests/components/AccessRequest'
 import { CustomizationWrapper } from '../customizations/CustomizationWrapper'
-import { OwnerDetail } from '../owners/components/OwnerDetail'
 import { OwnerWrapper } from '../owners/OwnerWrapper'
-import { LoadingSvg } from '../shared/components/Loading/Loading'
+import { OwnerDetail } from '../owners/components/OwnerDetail'
 import { StateWrapper } from '../states/StatesWrapper'
-
-const LazyRoute: FC<{
-  children: ReactNode
-}> = ({ children }) => (
-  <Suspense fallback={<LoadingSvg />}>{children}</Suspense>
-)
+import { ActRouter } from '../act/ActRouter'
 
 export const AdminRouter = () => {
   return (
@@ -38,14 +32,7 @@ export const AdminRouter = () => {
         element={<CustomizationWrapper />}
       />
 
-      <Route
-        path="act"
-        element={
-          <LazyRoute>
-            <ActWrapper />
-          </LazyRoute>
-        }
-      />
+      <Route path="act/*" element={<ActRouter />}></Route>
 
       <Route
         path="*"

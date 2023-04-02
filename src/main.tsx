@@ -8,9 +8,7 @@ import { store } from './shared/store/store'
 ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 ).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <AppRouting />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <AppRouting />
+  </Provider>,
 )

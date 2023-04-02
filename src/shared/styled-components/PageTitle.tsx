@@ -9,9 +9,7 @@ export const PageTitle: FC<Props> = ({
   className = '',
 }) => {
   return (
-    <h1
-      className={`text-3xl font-bold text-black ${className}`}
-    >
+    <h1 className={className && ` ${className}`}>
       {children}
     </h1>
   )

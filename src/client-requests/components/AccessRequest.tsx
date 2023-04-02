@@ -33,7 +33,7 @@ export const AccessRequest = () => {
   return (
     <DefaultContainer>
       <div className="">
-        <h1 className="text-3xl font-bold w-52 text-black">
+        <h1 className="w-52">
           Solicitudes de acceso
         </h1>
       </div>

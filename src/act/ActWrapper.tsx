@@ -1,45 +1,26 @@
-import { Form, Formik } from 'formik'
-import jsPDF from 'jspdf'
+import { Outlet } from 'react-router-dom'
 import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
-import { Button } from '../shared/styled-components/Button'
-import { ActFormHeader } from './components/ActFormHeader'
-import { ActFormTable } from './components/ActFormTable'
+import { ActTabs } from './components/ActTabs'
+import { ACT_ROUTES } from './ActRouter'
 
 export const ActWrapper = () => {
-  const handleForm = (values: unknown) => {
-    console.log(values)
-  }
-
-  const handlePdf = () => {
-    // eslint-disable-next-line new-cap
-    const doc = new jsPDF()
-    doc.html(
-      `
-      <div>Hello</div>
-      `,
-      {
-        callback: function (doc) {
-          doc.save()
-        },
-        x: 10,
-        y: 10,
-      },
-    )
-  }
-
   return (
     <DefaultContainer>
-      <div className="w-full flex justify-end px-4 pt-2">
-        <Button onClick={handlePdf} color="primary">
-          Crear PDF
-        </Button>
+      <ActTabs
+        tabs={[
+          {
+            label: 'Actas',
+            redirectTo: ACT_ROUTES.list,
+          },
+          {
+            label: 'Plantillas',
+            redirectTo: ACT_ROUTES.templates,
+          },
+        ]}
+      />
+      <div className="px-4 h-[calc(100%-4.5rem)] py-2">
+        <Outlet />
       </div>
-      <Formik onSubmit={handleForm} initialValues={{}}>
-        <Form>
-          <ActFormHeader />
-        </Form>
-      </Formik>
-      <ActFormTable />
     </DefaultContainer>
   )
 }

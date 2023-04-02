@@ -11,7 +11,7 @@ export const Card: FC<Props> = ({
 }) => {
   return (
     <div
-      className={`${className} bg-white border-gray-200 shadow p-4 m-3`}
+      className={`${className} bg-white border-gray-200 shadow p-4`}
     >
       {children}
     </div>
