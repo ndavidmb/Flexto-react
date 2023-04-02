@@ -8,6 +8,7 @@ import Paragraph from '@editorjs/paragraph'
 import SimpleImage from '@editorjs/simple-image'
 import Quote from '@editorjs/quote'
 import Table from '@editorjs/table'
+import AlignmentTuneTool from 'editorjs-text-alignment-blocktune'
 
 const EDITOR_HOLDER_ID = 'editorjs'
 
@@ -49,15 +50,32 @@ export const ActTextEditor: FC<Props> = ({
         })
       },
       tools: {
-        header: Header,
-        list: List,
-        image: SimpleImage,
+        header: {
+          class: Header,
+          tunes: ['alignmentTool'],
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+        },
+        image: {
+          class: SimpleImage,
+          inlineToolbar: true,
+          tunes: ['alignmentTool'],
+        },
         paragraph: {
           class: Paragraph,
           inlineToolbar: true,
+          tunes: ['alignmentTool'],
         },
         table: Table,
         quote: Quote,
+        alignmentTool: {
+          class: AlignmentTuneTool,
+          config: {
+            default: 'center',
+          },
+        },
       },
     })
   }
