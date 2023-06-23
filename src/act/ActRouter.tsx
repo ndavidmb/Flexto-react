@@ -2,7 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { ActList } from './pages/ActList'
 import { ActWrapper } from './ActWrapper'
 import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
-import { ActTemplatesWrapper } from './pages/ActTemplatesWrapper'
+import { ActDynamicPage } from './pages/ActDynamicPage'
+import { FirestoreTable } from '../shared/constants/firestore-tables'
 
 export const enum ACT_ROUTES {
   list = 'act-list',
@@ -16,11 +17,18 @@ export const ActRouter = () => {
       <Route path="*" element={<ActWrapper />}>
         <Route
           path={ACT_ROUTES.list}
-          element={<ActList />}
+          element={
+            <ActDynamicPage actType={FirestoreTable.ACT} labelsName='acta' />
+          }
         />
         <Route
           path={ACT_ROUTES.templates}
-          element={<ActTemplatesWrapper />}
+          element={
+            <ActDynamicPage
+              actType={FirestoreTable.ACT_TEMPLATES}
+              labelsName='plantilla'
+            />
+          }
         />
         <Route
           path={ACT_ROUTES.templatesDeprecated}

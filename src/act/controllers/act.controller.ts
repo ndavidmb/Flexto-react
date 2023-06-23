@@ -8,12 +8,14 @@ import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 import { ActFormData } from '../interfaces/act-form-data.interface'
 
-export const useActController = () => {
-  const { getAllFirestore, addFirestore, updateFirestore } =
-    useFirestore<ActTemplate>(FirestoreTable.ACT_TEMPLATES)
+export const useActController = (
+  actType:
+    | FirestoreTable.ACT_TEMPLATES
+    | FirestoreTable.ACT,
+) => {
+  const fireStore = useFirestore<ActTemplate>(actType)
+  const fireStoreDocs = useFirestoreDocs()
 
-  const { getUrl, uploadFile, deleteFile } =
-    useFirestoreDocs()
   const dispatch = useDispatch()
 
   const { theme } = useSelector(
@@ -21,13 +23,26 @@ export const useActController = () => {
   )
 
   const getMappedTemplates = async () => {
-    const dbTemplates = await getAllFirestore()
-    return dbTemplates
+    dispatch(setLoading(true))
+    try {
+      const dbTemplates = await fireStore.getAllFirestore()
+      return dbTemplates
+    } catch (err) {
+      console.error(err)
+      return []
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
 
   const addTemplate = async (formData: ActFormData) => {
     dispatch(setLoading(true))
-    const url = await uploadFile(
+
+    if (!formData.documentName.includes('.docx')) {
+      return
+    }
+
+    const url = await fireStoreDocs.uploadFile(
       formData.file,
       formData.documentName,
       CloudStorageFolders.TEMPLATES,
@@ -37,7 +52,7 @@ export const useActController = () => {
       return
     }
 
-    await addFirestore({
+    await fireStore.addFirestore({
       customization: theme.id,
       documentName: formData.documentName,
       templateName: formData.templateName,
@@ -55,20 +70,20 @@ export const useActController = () => {
     dispatch(setLoading(true))
 
     const { id, oldTemplate, formData } = data
-    const url = await uploadFile(
+    const url = await fireStoreDocs.uploadFile(
       formData.file,
       formData.documentName,
       CloudStorageFolders.TEMPLATES,
     )
 
-    await updateFirestore(id, {
+    await fireStore.updateFirestore(id, {
       ...oldTemplate,
       documentUrl: url,
       documentName: formData.documentName,
       templateName: formData.templateName,
     })
 
-    await deleteFile(
+    await fireStoreDocs.deleteFile(
       oldTemplate.documentName,
       CloudStorageFolders.TEMPLATES,
     )
@@ -76,5 +91,16 @@ export const useActController = () => {
     dispatch(setLoading(false))
   }
 
-  return { getMappedTemplates, addTemplate, updateTemplate }
+  const deleteTemplate = async (templateId: string) => {
+    dispatch(setLoading(true))
+    await fireStore.deleteFirestore(templateId)
+    dispatch(setLoading(false))
+  }
+
+  return {
+    getMappedTemplates,
+    addTemplate,
+    updateTemplate,
+    deleteTemplate,
+  }
 }

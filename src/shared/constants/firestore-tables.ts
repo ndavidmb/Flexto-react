@@ -5,4 +5,5 @@ export const enum FirestoreTable {
   REGISTERED_USER = 'registeredUser',
   REQUEST = 'request',
   ACT_TEMPLATES = 'act-templates',
+  ACT = 'act',
 }

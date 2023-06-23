@@ -2,19 +2,19 @@ import { Field, Form, Formik } from 'formik'
 import { FC, useState } from 'react'
 import { Button } from '../../shared/styled-components/Button'
 import { InputFile } from '../../shared/styled-components/InputFile'
-import { useActController } from '../controllers/act.controller'
 import { ActTemplate } from '../interfaces/act-templates.interface'
+import { ActFormData } from '../interfaces/act-form-data.interface'
 
 type TemplateName = Pick<ActTemplate, 'templateName'>
 // Estos varían en el tipo de la data
 type Props = {
+  labelsName: string;
   data?: ActTemplate
-  id?: string
-  closeModal: (refresh?: boolean) => void
+  closeModal: (newTemplate?: ActFormData) => void
 }
 
 export const ActTemplatesForm: FC<Props> = ({
-  id,
+  labelsName,
   data,
   closeModal,
 }) => {
@@ -27,26 +27,14 @@ export const ActTemplatesForm: FC<Props> = ({
     templateName: data?.templateName || '',
   }
 
-  const actController = useActController()
-
   const handleSubmit = async (value: TemplateName) => {
     if (!formValue) {
       return
     }
 
-    const newTemplate = { ...value, ...formValue }
-    // If it is not edit
-    if (id && data) {
-      await actController.updateTemplate({
-        id,
-        formData: newTemplate,
-        oldTemplate: data
-      })
-    } else {
-      await actController.addTemplate(newTemplate)
-    }
+    const newTemplate: ActFormData = { ...value, ...formValue }
 
-    closeModal(true)
+    closeModal(newTemplate)
   }
 
   const setDocument = (
@@ -64,29 +52,37 @@ export const ActTemplatesForm: FC<Props> = ({
       initialValues={initialData}
       onSubmit={handleSubmit}
     >
-      <Form>
+      <Form className="flex flex-col gap-3">
         <div className="flex flex-col text-gray-900">
           <label
             htmlFor="templateName"
             className="font-semibold p-1"
           >
-            Nombre de la plantilla
+            Nombre de la {labelsName}
           </label>
           <Field
             id="templateName"
             name="templateName"
             className="border bg-white px-2 py-1"
-            placeholder="Nombre de la plantilla"
+            placeholder={`Nombre de la ${labelsName}`}
           />
         </div>
 
-        <InputFile
-          className="w-full"
-          id="templateFile"
-          onChange={(value) => {
-            setDocument(value.blob, value.name)
-          }}
-        />
+        <div className='flex flex-col gap-1 w-96'>
+          <label
+            htmlFor="templateFile"
+            className="font-semibold p-1"
+          >
+           Subir {labelsName}
+          </label>
+          <InputFile
+            className="w-full"
+            id="templateFile"
+            onChange={(value) => {
+              setDocument(value.blob, value.name)
+            }}
+          />
+        </div>
 
         <div className="flex flex-row-reverse gap-3 pt-3">
           <Button type="submit" color="primary">

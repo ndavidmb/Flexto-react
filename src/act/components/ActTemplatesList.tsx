@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { BsFileEarmarkPdfFill } from 'react-icons/bs'
+import { AiOutlineFileWord } from 'react-icons/ai'
 import { Button } from '../../shared/styled-components/Button'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
@@ -8,17 +8,21 @@ import { ActTemplate } from '../interfaces/act-templates.interface'
 
 type Props = {
   templates: ActTemplate[]
+  labelsName: string
   editTemplate: (data: ActTemplate) => void
+  deleteTemplate: (templateId: string) => void
 }
 
 export const ActTemplatesList: FC<Props> = ({
   templates,
+  labelsName,
   editTemplate,
+  deleteTemplate,
 }) => {
   return (
     <Table>
       <THead>
-        <th>Nombre de plantilla</th>
+        <th>Nombre de {labelsName}</th>
         <th>PDF</th>
         <th>Acción</th>
       </THead>
@@ -29,11 +33,11 @@ export const ActTemplatesList: FC<Props> = ({
             <td>
               <a
                 href={template.documentUrl}
-                className="flex gap-2 items-center"
+                className="flex gap-1 items-center"
               >
-                <BsFileEarmarkPdfFill
-                  size={24}
-                  color="#b30b00"
+                <AiOutlineFileWord
+                  size={20}
+                  color="#027dd7"
                 />
                 <span className="hover:underline cursor-pointer whitespace-nowrap overflow-ellipsis overflow-hidden sm:max-w-[130px]">
                   {template.documentName}
@@ -43,13 +47,23 @@ export const ActTemplatesList: FC<Props> = ({
 
             <td>
               <div className="flex gap-2">
+                {labelsName === 'plantilla' && (
+                  <Button
+                    onClick={() => editTemplate(template)}
+                    color="link"
+                  >
+                    Actualizar
+                  </Button>
+                )}
+
                 <Button
-                  onClick={() => editTemplate(template)}
+                  onClick={() =>
+                    deleteTemplate(template.id)
+                  }
                   color="link"
                 >
-                  Actualizar
+                  Eliminar
                 </Button>
-                <Button color="link">Eliminar</Button>
               </div>
             </td>
           </TRow>
