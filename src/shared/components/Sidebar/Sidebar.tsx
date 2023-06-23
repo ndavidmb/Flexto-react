@@ -10,7 +10,6 @@ import {
 } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
 import {
-  useLocation,
   useNavigate,
   useParams,
 } from 'react-router-dom'
@@ -20,11 +19,6 @@ import { RootState } from '../../store/store'
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
 
-// const removeEndOfRoute = (route: string) => {
-//   const split = route.split('/')
-//   return split.slice(0, split.length - 1).join('/')
-// }
-
 export const Sidebar = () => {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
@@ -32,13 +26,9 @@ export const Sidebar = () => {
 
   const { id } = useParams()
 
-  // const location = useLocation()
-
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
-
-  // const route = removeEndOfRoute(location.pathname)
 
   const handleLogout = () => {
     dispatch(startLogout(theme?.id ?? ''))
@@ -80,13 +70,6 @@ export const Sidebar = () => {
           >
             <IoHandRightOutline className="text-xl" />
             Solicitudes de acceso
-          </MenuLink>
-          <MenuLink
-            permissionsRole="admin"
-            href={`/${id}/home/custom`}
-          >
-            <IoBuild className="text-xl" />
-            Personalización
           </MenuLink>
 
           <MenuLink

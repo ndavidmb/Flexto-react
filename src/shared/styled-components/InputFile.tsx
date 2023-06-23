@@ -3,7 +3,7 @@ import { FC, useRef, useState } from 'react'
 type Props = {
   id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChange: (value: any) => void
+  onChange: (value: { blob: Blob; name: string }) => void
   className?: string
 }
 export const InputFile: FC<Props> = ({

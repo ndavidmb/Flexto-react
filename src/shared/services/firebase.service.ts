@@ -2,14 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore/lite'
 import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadString,
-} from 'firebase/storage'
+import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBc2Fkk9536EpTPTujmUIFa9WyACoPGEMQ',
@@ -26,7 +19,7 @@ const firebaseConfig = {
 // Initialize Firebase~
 const app = initializeApp(firebaseConfig)
 
-const storage = getStorage(app)
+export const storage = getStorage(app)
 
 export const db = getFirestore(app)
 
@@ -34,18 +27,3 @@ export const authFirebase = getAuth(app)
 
 // TODO: Remove google provider
 export const googleProvider = new GoogleAuthProvider()
-
-export const uploadFile = async (
-  file: Blob,
-  filename: string,
-) => {
-  const storageRef = ref(storage, `pictures/${filename}`)
-  await uploadBytes(storageRef, file)
-  const url = await getDownloadURL(storageRef)
-  return url
-}
-
-export const deleteFile = async (filename: string) => {
-  const desertRef = ref(storage, `pictures/${filename}`)
-  return await deleteObject(desertRef)
-}

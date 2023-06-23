@@ -7,7 +7,7 @@ import { useEditorJsParser } from '../../shared/hooks/useEditorJsParser'
 import { PageTitle } from '../../shared/styled-components/PageTitle'
 import { Card } from '../../shared/styled-components/Card'
 
-export const ActTemplatesList = () => {
+export const ActTemplatesEditor = () => {
   const [data, setData] = useState<OutputData | null>(null)
 
   const pdfPrinter = usePdfPrinter()

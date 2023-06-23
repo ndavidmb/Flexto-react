@@ -17,7 +17,7 @@ export function useFirestore<T>(tableName: string) {
     (state: RootState) => state.themeState,
   )
 
-  const addFirestore = async (data: T) => {
+  const addFirestore = async (data: Omit<T, 'id'>) => {
     const docRef = await addDoc(collection(db, tableName), {
       ...data,
       customization: `customizations/${theme?.id}`,

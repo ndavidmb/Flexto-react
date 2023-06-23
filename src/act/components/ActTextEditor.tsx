@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { FC, useEffect, useRef } from 'react'
 
 import EditorJS, { OutputData } from '@editorjs/editorjs'
@@ -20,9 +20,6 @@ export const ActTextEditor: FC<Props> = ({
   currentData,
 }) => {
   const editorRef = useRef<EditorJS | null>(null)
-  // const [editorData, setEditorData] = useState(
-  //   DEFAULT_INITIAL_DATA,
-  // )
 
   useEffect(() => {
     if (!editorRef.current) {

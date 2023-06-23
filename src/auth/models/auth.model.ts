@@ -17,13 +17,13 @@ import {
 import {
   authFirebase,
   db,
-  deleteFile,
-  uploadFile,
 } from '../../shared/services/firebase.service'
 import {
   IExtraUser,
   RoleType,
 } from '../interfaces/user.interface'
+import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
+import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 
 export class AuthModel {
   private password: string
@@ -110,13 +110,15 @@ export class AuthModel {
     blob: Blob,
     name: string,
   ): Promise<string> {
-    const url = await uploadFile(blob, name)
+    const { uploadFile } = useFirestoreDocs()
+    const url = await uploadFile(blob, name, CloudStorageFolders.PICTURES)
     this.photoUrl = url
     return url
   }
 
   async removeUserImage(name: string) {
-    return await deleteFile(name)
+    const { deleteFile } = useFirestoreDocs()
+    return await deleteFile(name, CloudStorageFolders.PICTURES)
   }
 
   async updateProfile(
