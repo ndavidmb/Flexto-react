@@ -73,6 +73,7 @@ export function useApartmentController() {
             return {
               ...apartment,
               ...owner,
+              ownerId: owner.id,
               hasOwner: true,
             }
           }

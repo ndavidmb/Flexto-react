@@ -12,15 +12,13 @@ export const ButtonLink: FC<Props> = ({
   children,
   className = '',
 }) => {
-  const defaultClass = 'button bg-gray-200 !text-gray-600'
-
   return (
     <Link
       to={href}
       className={
         className
-          ? `${defaultClass} ${className}`
-          : defaultClass
+          ? `button bg-gray-200 !text-gray-600 ${className}`
+          : 'button bg-gray-200 !text-gray-600'
       }
     >
       {children}

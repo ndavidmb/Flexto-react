@@ -5,6 +5,7 @@ import { TRow } from '../../shared/styled-components/TRow'
 import { Table } from '../../shared/styled-components/Table'
 import { Apartment } from '../interfaces/apartment.interface'
 import { ApartmentWithOwner } from './AparmentWithOwner'
+import { Link } from 'react-router-dom'
 
 type Props = {
   apartments: ApartmentWithOwner[]
@@ -34,15 +35,17 @@ export const ApartmentList: FC<Props> = ({
             >
               {apartment.apartmentNumber}
             </th>
-            <td className='uppercase'>{apartment.tower}</td>
+            <td className="uppercase">{apartment.tower}</td>
             <td>
               {apartment.hasOwner ? (
-                <div className='flex flex-col'>
+                <Link
+                  to={`../owners/${apartment.ownerId}`}
+                  className="flex flex-col hover:underline">
                   {apartment.name}
                   <span className="text-sm text-gray-400">
                     {apartment.email}
                   </span>
-                </div>
+                </Link>
               ) : (
                 <div>Sin propietario</div>
               )}

@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import {
-  IoArrowBack,
-  IoSave
-} from 'react-icons/io5'
+import { IoArrowBack, IoSave } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { DefaultContainer } from '../../shared/components/DefaultContainer/DefaultContainer'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
@@ -31,6 +28,7 @@ export const OwnerDetail = () => {
   // React Hooks
   const dispatch = useDispatch()
   const { ownerId } = useParams()
+  const navigate = useNavigate()
 
   // Services
   const ownerService = useOwnerService()
@@ -79,6 +77,10 @@ export const OwnerDetail = () => {
     console.log(selectValues)
   }
 
+  const goBack = () => {
+    navigate(-1)
+  }
+
   const changeSelectedValues = (
     stateIndex: number,
     value: string,
@@ -110,10 +112,13 @@ export const OwnerDetail = () => {
         </div>
 
         <div className="flex gap-1 items-center mt-1">
-          <ButtonLink className="flex gap-2" href="..">
+          <button
+            className="button bg-gray-200 !text-gray-600 flex gap-2"
+            onClick={() => goBack()}
+          >
             <IoArrowBack />
             Volver
-          </ButtonLink>
+          </button>
           <Button
             className="flex gap-2"
             type="button"
