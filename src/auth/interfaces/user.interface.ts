@@ -1,8 +1,8 @@
-export type RoleType = 'admin' | 'client' | null
+import { UserRoles } from "./user-roles.enums"
 
 export interface IUserBase {
   email: string
-  role: RoleType
+  role: UserRoles
 }
 
 export interface IUserWithDisplayName extends IUserBase {
@@ -19,7 +19,6 @@ export interface IUserWithPassword extends IUserBase {
 }
 
 export interface IExtraUser {
-  agreement?: string
-  role: RoleType
+  role: UserRoles
   uid: string
 }

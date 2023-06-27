@@ -1,11 +1,12 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
 import { useAuthController } from '../../../../auth/controllers/auth.controller'
-import { AuthModel } from '../../../../auth/models/auth.model'
 import { AppDispatch, RootState } from '../../store'
 import { setLoading } from '../loading/loadingSlice'
 import { showToast } from '../toast/toastSlice'
 import { login, logout } from './authSlice'
+import { useAuthFacade } from '../../../../auth/facades/auth.facade'
+import { IExtraUser } from '../../../../auth/interfaces/user.interface'
 
 export const emailAndPasswordSignIn = (values: {
   email: string
@@ -39,30 +40,20 @@ export const emailAndPasswordSignIn = (values: {
 
 export const validateUser = (
   user: User,
-  customizationId: string,
+  extraUser: IExtraUser,
 ) => {
-  return async (dispatch: AppDispatch) => {
+  return async (
+    dispatch: AppDispatch,
+    getState: () => RootState,
+  ) => {
     const { displayName, email, photoURL, uid } = user
-
-    const authModel = new AuthModel({
-      agreement: uid,
-      email: email ?? '',
-      password: '',
-    })
-
-    const extraUser = await authModel.getExtraUser()
-
-    if (extraUser.agreement !== customizationId) {
-      dispatch(startLogout(customizationId))
-      return false
-    }
 
     dispatch(
       login({
-        displayName: displayName ?? '',
-        email: email ?? '',
-        photoUrl: photoURL ?? '',
-        agreement: extraUser.agreement,
+        displayName: displayName as string,
+        email: email as string,
+        photoUrl: photoURL as string,
+        // agreement,
         role: extraUser.role,
         uid,
       }),

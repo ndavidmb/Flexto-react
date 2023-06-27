@@ -10,6 +10,7 @@ import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { RootState } from '../../shared/store/store'
 import { useAuthController } from '../controllers/auth.controller'
 import { IRegisterForm } from '../interfaces/register-form.interface'
+import { UserRoles } from '../interfaces/user-roles.enums'
 
 export const useRegister = () => {
   const { theme } = useSelector(
@@ -60,7 +61,7 @@ export const useRegister = () => {
     email: '',
     password: '',
     passwordRepeated: '',
-    role: 'client',
+    role: UserRoles.CLIENT,
   }
 
   const handleSubmit = ({

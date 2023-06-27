@@ -1,8 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Theme } from '../../../../customizations/interfaces/theme.interface'
 
-const initialValue = {
-  theme: null as Theme | null,
+const initialValue: {
+  theme: Theme
+} = {
+  theme: {
+    id: '',
+    menu: ['', ''],
+    menuDark: ['', ''],
+    primary: ['', ''],
+  },
 }
 
 export const themeSlice = createSlice({

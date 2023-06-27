@@ -4,9 +4,11 @@ import { authFirebase } from '../services/firebase.service'
 import { useAppDispatch } from '../store/hooks'
 import { logout } from '../store/slices/auth/authSlice'
 import { validateUser } from '../store/slices/auth/thunks'
+import { useAuthFacade } from '../../auth/facades/auth.facade'
 
 export const useUserValidation = (id: string) => {
   const dispatch = useAppDispatch()
+  const authFacade = useAuthFacade()
   const navigate = useNavigate()
 
   const handleUser = async (user: User | null) => {
@@ -16,8 +18,9 @@ export const useUserValidation = (id: string) => {
       return
     }
 
+    const extraUser = await authFacade.getExtraUser()
     const isValidUser = await dispatch(
-      validateUser(user, id),
+      validateUser(user, extraUser),
     )
 
     if (!isValidUser) {

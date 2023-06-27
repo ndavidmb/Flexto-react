@@ -11,11 +11,13 @@ import {
 import { useSelector } from 'react-redux'
 import { db } from '../services/firebase.service'
 import { RootState } from '../store/store'
+import { useParams } from 'react-router-dom'
 
 export function useFirestore<T>(tableName: string) {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
+  const { id } = useParams()
 
   const addFirestore = async (data: Omit<T, 'id'>) => {
     const docRef = await addDoc(collection(db, tableName), {
@@ -31,23 +33,24 @@ export function useFirestore<T>(tableName: string) {
 
   const updateFirestore = async (id: string, data: T) => {
     const ref = doc(db, `${tableName}/${id}`)
-
+    const customization = `customizations/${theme.id || id}`
     return await updateDoc(ref, {
       ...data,
-      customization: `customizations/${theme?.id}`,
+      customization,
     })
   }
 
   const getAllFirestore = async () => {
-    if (!theme?.id) {
+    if (!theme.id && !id) {
       return []
     }
+    const customization = `customizations/${id || theme.id}`
     const q = query(
       collection(db, tableName),
       where(
         'customization',
         '==',
-        `customizations/${theme.id}`,
+        customization,
       ),
     )
 

@@ -3,13 +3,14 @@ import {
   IState,
   IUserPayload,
 } from '../../interfaces/auth/auth.interface'
+import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 
 const initialValue: IState = {
   uid: '',
   email: '',
   displayName: '',
   photoUrl: '',
-  role: null,
+  role: UserRoles.CLIENT,
   agreement: '',
 }
 
@@ -30,7 +31,7 @@ export const authSlice = createSlice({
       state.email = ''
       state.displayName = ''
       state.photoUrl = ''
-      state.role = null
+      state.role = UserRoles.CLIENT
       state.agreement = ''
     },
   },
