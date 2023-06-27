@@ -42,11 +42,11 @@ export const useActController = (
       return
     }
 
-    const url = await fireStoreDocs.uploadFile(
-      formData.file,
-      formData.documentName,
-      CloudStorageFolders.TEMPLATES,
-    )
+    const url = await fireStoreDocs.uploadFile({
+      file: formData.file,
+      filename: formData.documentName,
+      filepath: CloudStorageFolders.TEMPLATES,
+    })
 
     if (!theme?.id) {
       return
@@ -70,11 +70,11 @@ export const useActController = (
     dispatch(setLoading(true))
 
     const { id, oldTemplate, formData } = data
-    const url = await fireStoreDocs.uploadFile(
-      formData.file,
-      formData.documentName,
-      CloudStorageFolders.TEMPLATES,
-    )
+    const url = await fireStoreDocs.uploadFile({
+      file: formData.file,
+      filename: formData.documentName,
+      filepath: CloudStorageFolders.TEMPLATES,
+    })
 
     await fireStore.updateFirestore(id, {
       ...oldTemplate,

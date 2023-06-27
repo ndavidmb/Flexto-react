@@ -37,7 +37,6 @@ export function useAuthController(agreement?: string) {
     return await AuthModel.logOut()
   }
 
-  // TODO: Add Loading
   const register = async (
     registerFb: IRegisterFirebase,
   ): Promise<{

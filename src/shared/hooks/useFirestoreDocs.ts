@@ -21,25 +21,35 @@ export const useFirestoreDocs = () => {
     return url
   }
 
-  const uploadFile = async (
-    file: Blob,
-    filename: string,
+  const uploadFile = async (uploadData: {
+    file: Blob
+    filename: string
     filepath: CloudStorageFolders
-  ) => {
-    const storageRef = ref(storage, `${filepath}/${filename}`)
+  }) => {
+    const { file, filename, filepath } = uploadData
+    const storageRef = ref(
+      storage,
+      `${filepath}/${filename}`,
+    )
     await uploadBytes(storageRef, file)
     const url = await getDownloadURL(storageRef)
     return url
   }
 
-  const deleteFile = async (filename: string, filepath: CloudStorageFolders) => {
-    const desertRef = ref(storage, `${filepath}/${filename}`)
+  const deleteFile = async (
+    filename: string,
+    filepath: CloudStorageFolders,
+  ) => {
+    const desertRef = ref(
+      storage,
+      `${filepath}/${filename}`,
+    )
     return await deleteObject(desertRef)
   }
 
   return {
     deleteFile,
     uploadFile,
-    getUrl
+    getUrl,
   }
 }

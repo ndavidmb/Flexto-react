@@ -11,10 +11,11 @@ import { useSelector } from 'react-redux'
 import {
   authFirebase,
   db,
-  uploadFile,
 } from '../../shared/services/firebase.service'
 import { RootState } from '../../shared/store/store'
 import { RoleType } from '../interfaces/user.interface'
+import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
+import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 
 export const signIn = async (credentials: {
   email: string
@@ -58,6 +59,9 @@ export function useAuthService() {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
+
+  const { uploadFile } = useFirestoreDocs()
+
   const registerUserFirebase = async (user: {
     email: string
     password: string
@@ -76,10 +80,12 @@ export function useAuthService() {
       )
 
       if (authFirebase.currentUser) {
-        const url = await uploadFile(
-          user.photo.blob,
-          user.photo.name,
-        )
+        const url = await uploadFile({
+          file: user.photo.blob,
+          filename: user.photo.name,
+          filepath: CloudStorageFolders.PICTURES,
+        })
+
         return Promise.all([
           updateProfile(authFirebase.currentUser, {
             displayName: user.displayName,

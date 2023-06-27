@@ -111,14 +111,21 @@ export class AuthModel {
     name: string,
   ): Promise<string> {
     const { uploadFile } = useFirestoreDocs()
-    const url = await uploadFile(blob, name, CloudStorageFolders.PICTURES)
+    const url = await uploadFile({
+      file: blob,
+      filename: name,
+      filepath: CloudStorageFolders.PICTURES,
+    })
     this.photoUrl = url
     return url
   }
 
   async removeUserImage(name: string) {
     const { deleteFile } = useFirestoreDocs()
-    return await deleteFile(name, CloudStorageFolders.PICTURES)
+    return await deleteFile(
+      name,
+      CloudStorageFolders.PICTURES,
+    )
   }
 
   async updateProfile(
