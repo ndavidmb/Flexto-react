@@ -1,10 +1,12 @@
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { State } from '../../states/interfaces/state.interface'
-
-export interface Owner {
+export interface BasicOwner {
   name: string
   phone: string
   email: string
+}
+
+export interface Owner extends BasicOwner {
   apartment: Apartment
   id?: string
 }

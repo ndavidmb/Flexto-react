@@ -1,4 +1,4 @@
-import { Dispatch, FC, ReactNode } from 'react'
+import { Dispatch, ReactNode } from 'react'
 import { Button } from '../../styled-components/Button'
 import { ContainerHeader } from '../../styled-components/ContainerHeader'
 import { SearchInput } from '../../styled-components/SearchInput'

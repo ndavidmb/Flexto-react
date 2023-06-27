@@ -1,80 +1,71 @@
-import { Dispatch, FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
+import { FC } from 'react'
 import { Button } from '../../shared/styled-components/Button'
-import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
+import { Table } from '../../shared/styled-components/Table'
 import { Apartment } from '../interfaces/apartment.interface'
-import { useApartmentService } from './../services/apartment.service'
+import { ApartmentWithOwner } from './AparmentWithOwner'
 
 type Props = {
-  apartments: Apartment[]
-  setApartments: Dispatch<React.SetStateAction<Apartment[]>>
+  apartments: ApartmentWithOwner[]
   openEdit: (data?: Apartment) => void
+  handleDelete: (id: string) => void
 }
 
 export const ApartmentList: FC<Props> = ({
   openEdit: open,
   apartments,
-  setApartments,
+  handleDelete,
 }) => {
-  const dispatch = useDispatch()
-
-  const apartmentService = useApartmentService()
-
-  const handleDelete = (id: string) => {
-    dispatch(setLoading(true))
-    apartmentService
-      .deleteApartment(id)
-      .then(() => {
-        setApartments(
-          apartments.filter(
-            (apartment) => apartment.id !== id,
-          ),
-        )
-      })
-      .finally(() => dispatch(setLoading(false)))
-  }
-
   return (
-    <>
-      <Table>
-        <THead>
-          <th scope="col">Apartamento</th>
-          <th scope="col">Torre</th>
-          <th scope="col">Acción</th>
-        </THead>
-        <tbody>
-          {apartments.map((apartment, index) => (
-            <TRow index={index} key={apartment.id}>
-              <th
-                scope="row"
-                className="font-medium text-gray-900 whitespace-nowrap"
+    <Table>
+      <THead>
+        <th scope="col">Apartamento</th>
+        <th scope="col">Torre</th>
+        <th scope="col">Propietario</th>
+        <th scope="col">Acción</th>
+      </THead>
+      <tbody>
+        {apartments.map((apartment, index) => (
+          <TRow index={index} key={apartment.id}>
+            <th
+              scope="row"
+              className="font-medium text-gray-900 whitespace-nowrap"
+            >
+              {apartment.apartmentNumber}
+            </th>
+            <td className='uppercase'>{apartment.tower}</td>
+            <td>
+              {apartment.hasOwner ? (
+                <div className='flex flex-col'>
+                  {apartment.name}
+                  <span className="text-sm text-gray-400">
+                    {apartment.email}
+                  </span>
+                </div>
+              ) : (
+                <div>Sin propietario</div>
+              )}
+            </td>
+            <td className="flex gap-2">
+              <Button
+                color="link"
+                onClick={() => open(apartment)}
               >
-                {apartment.apartmentNumber}
-              </th>
-              <td>{apartment.tower}</td>
-              <td className="flex gap-2">
-                <Button
-                  color="link"
-                  onClick={() => open(apartment)}
-                >
-                  Editar
-                </Button>
-                <Button
-                  color="link"
-                  onClick={() =>
-                    handleDelete(apartment.id as string)
-                  }
-                >
-                  Eliminar
-                </Button>
-              </td>
-            </TRow>
-          ))}
-        </tbody>
-      </Table>
-    </>
+                Editar
+              </Button>
+              <Button
+                color="link"
+                onClick={() =>
+                  handleDelete(apartment.id as string)
+                }
+              >
+                Eliminar
+              </Button>
+            </td>
+          </TRow>
+        ))}
+      </tbody>
+    </Table>
   )
 }

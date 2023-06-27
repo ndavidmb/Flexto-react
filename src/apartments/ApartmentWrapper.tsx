@@ -1,38 +1,32 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../shared/components/Modal/Modal'
 import { useModal } from '../shared/hooks/useModal'
-import { setLoading } from '../shared/store/slices/loading/loadingSlice'
 import { ApartmentForm } from './components/ApartmentForm'
 import { ApartmentList } from './components/ApartmentList'
+import { useApartmentController } from './controllers/apartment.controller'
 import { Apartment } from './interfaces/apartment.interface'
-import { useApartmentService } from './services/apartment.service'
+import { ApartmentWithOwner } from './components/AparmentWithOwner'
 
 export const ApartmentWrapper = () => {
   const [consult, setConsult] = useState(0)
   const [allApartments, setAllApartments] = useState<
-    Apartment[]
+    ApartmentWithOwner[]
   >([])
 
-  const [apartments, setApartments] = useState<Apartment[]>(
-    [],
-  )
+  const [apartments, setApartments] = useState<
+    ApartmentWithOwner[]
+  >([])
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Apartment>()
 
-  const dispatch = useDispatch()
-  const apartmentService = useApartmentService()
+  const apartmentService = useApartmentController()
 
   useEffect(() => {
-    dispatch(setLoading(true))
-    apartmentService
-      .getApartments()
-      .then((apartments) => {
-        setApartments(apartments)
-        setAllApartments(apartments)
-      })
-      .finally(() => dispatch(setLoading(false)))
+    apartmentService.getApartments().then((apartments) => {
+      setApartments(apartments)
+      setAllApartments(apartments)
+    })
   }, [consult])
 
   const open = (data?: Apartment) => {
@@ -45,6 +39,17 @@ export const ApartmentWrapper = () => {
       setConsult(consult + 1)
     }
     closeModal()
+  }
+
+  const handleDelete = (id: string) => {
+    apartmentService.deleteApartment(id).then((deleted) => {
+      if (deleted) {
+        const apartmentsWithoutDeleted = apartments.filter(
+          (apartment) => apartment.id !== id,
+        )
+        setApartments(apartmentsWithoutDeleted)
+      }
+    })
   }
 
   return (
@@ -60,10 +65,16 @@ export const ApartmentWrapper = () => {
           />
         </ModalContainer>
       )}
-      <DefaultContainerWithSearch<Apartment>
+      <DefaultContainerWithSearch<ApartmentWithOwner>
         searchOptions={{
           allItems: allApartments,
-          searchKeys: ['tower', 'apartmentNumber'],
+          searchKeys: [
+            'tower',
+            'apartmentNumber',
+            'name',
+            'phone',
+            'email',
+          ],
           setItems: setApartments,
         }}
         title="Apartamentos"
@@ -72,7 +83,7 @@ export const ApartmentWrapper = () => {
         <ApartmentList
           openEdit={open}
           apartments={apartments}
-          setApartments={setApartments}
+          handleDelete={handleDelete}
         />
       </DefaultContainerWithSearch>
     </>

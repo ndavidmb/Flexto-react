@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
 import { Apartment } from '../interfaces/apartment.interface'
-import { useApartmentService } from '../services/apartment.service'
+import { useApartmentController } from '../controllers/apartment.controller'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -24,7 +24,7 @@ export const ApartmentForm: FC<Props> = ({
 
   const dispatch = useDispatch()
 
-  const apartmentService = useApartmentService()
+  const apartmentService = useApartmentController()
 
   const handleSubmit = (values: Apartment) => {
     // Pone el spinner a andar
