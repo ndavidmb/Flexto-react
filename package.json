@@ -17,6 +17,7 @@
     "@editorjs/simple-image": "^1.5.1",
     "@editorjs/table": "^2.2.1",
     "@reduxjs/toolkit": "1.8.3",
+    "browser-image-compression": "^2.0.2",
     "editorjs-html": "^3.4.2",
     "editorjs-text-alignment-blocktune": "^1.0.3",
     "firebase": "9.9.3",
@@ -42,16 +43,16 @@
     "eslint": "8.19.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-standard": "17.0.0",
-    "eslint-config-standard-typescript-prettier": "6.0.0",
+    "eslint-config-standard-typescript-prettier": "^1.0.2",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-n": "15.2.4",
-    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-node": "^1.0.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-promise": "6.0.0",
     "postcss": "^8.4.16",
     "prettier": "2.7.1",
     "tailwindcss": "^3.1.8",
     "typescript": "4.6.4",
-    "vite": "3.0.7"
+    "vite": "^3.2.7"
   }
 }

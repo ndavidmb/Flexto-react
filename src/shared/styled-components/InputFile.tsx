@@ -1,4 +1,5 @@
 import { FC, useRef, useState } from 'react'
+import { resizeImage } from '../utils/resizeImage'
 
 type Props = {
   id: string
@@ -18,9 +19,15 @@ export const InputFile: FC<Props> = ({
 
   const handleChanged = () => {
     const files = inputEl.current?.files
+
     if (files && files[0]) {
-      onChange({ blob: files[0], name: files[0].name })
-      setSelectedFile(files[0].name)
+      resizeImage(files[0]).then((compressed) => {
+        onChange({
+          blob: compressed,
+          name: compressed.name,
+        })
+        setSelectedFile(compressed.name)
+      })
     }
   }
 

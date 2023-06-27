@@ -40,17 +40,19 @@ export const useAuthService = () => {
     )
   }
 
-  const getExtraUser = async () => {
+  const getExtraUser = async (uid: string) => {
     const registeredUsers =
       await firestoreRegisteredUser.getAllFirestore()
 
-    if (registeredUsers.length > 1) {
+    const currentUsers = registeredUsers.filter(user => user.uid === uid)
+
+    if (currentUsers.length > 1) {
       throw new Error(
         'Should exist just one user with the uid',
       )
     }
 
-    return registeredUsers[0]
+    return currentUsers[0]
   }
 
   const uploadUserImage = async (

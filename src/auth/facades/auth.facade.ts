@@ -77,7 +77,7 @@ export const useAuthFacade = () => {
       credentials.password,
     )
 
-    const extraUser = await authService.getExtraUser()
+    const extraUser = await authService.getExtraUser(user.uid)
 
     if (extraUser) {
       return {

@@ -11,6 +11,7 @@ import { RootState } from '../../shared/store/store'
 import { useAuthController } from '../controllers/auth.controller'
 import { IRegisterForm } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
+import { showToast } from '../../shared/store/slices/toast/toastSlice'
 
 export const useRegister = () => {
   const { theme } = useSelector(
@@ -72,6 +73,13 @@ export const useRegister = () => {
     role,
   }: IRegisterForm) => {
     if (!photo) {
+      dispatch(
+        showToast({
+          title: 'La imagen es requerida',
+          details: [],
+          type: 'info',
+        }),
+      )
       return
     }
 
@@ -90,16 +98,28 @@ export const useRegister = () => {
             login({
               ...res.user,
               agreement: theme.id,
-              isLogged: true
+              isLogged: true,
             }),
           )
-          navigate('../home/owners')
+
+          if (role === UserRoles.ADMIN) {
+            navigate('../home/owners')
+          }
+
+          if(role === UserRoles.CLIENT) {
+            navigate('../home/request')
+          }
         }
       })
       .catch((err) => {
         if (err instanceof FirebaseError) {
-          // TODO: Alert to show exact error
-          console.log(ALERT_MESSAGES[err.code])
+          dispatch(
+            showToast({
+              title: 'Error al crear el usuario',
+              details: [ALERT_MESSAGES[err.code]],
+              type: 'error',
+            }),
+          )
         }
       })
       .finally(() => dispatch(setLoading(false)))

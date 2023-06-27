@@ -22,7 +22,7 @@ export const useUserValidation = (id: string) => {
       return
     }
 
-    const extraUser = await authFacade.getExtraUser()
+    const extraUser = await authFacade.getExtraUser(user.uid)
     const isValidUser = await dispatch(
       validateUser(user, extraUser, id),
     )
