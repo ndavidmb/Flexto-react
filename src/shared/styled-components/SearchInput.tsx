@@ -11,9 +11,22 @@ export function SearchInput<T>({
   searchOptions,
 }: Props<T>) {
   const [searchValue, setSearchValue] = useState('')
+  const removeAccents = (str: string) =>
+    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
-  const ignoreCase = (str: string, inputValue: string) =>
-    str.toLowerCase().trim().includes(inputValue)
+  const ignoreCase = (
+    objectSearchableField: string,
+    inputValue: string,
+  ) => {
+    const cleanField = removeAccents(objectSearchableField)
+      .toLowerCase()
+      .trim()
+    const cleanInput = removeAccents(inputValue)
+      .toLowerCase()
+      .trim()
+
+    return cleanField.includes(cleanInput)
+  }
 
   const handleChange = (
     evt: ChangeEvent<HTMLInputElement>,
