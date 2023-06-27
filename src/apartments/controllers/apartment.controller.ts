@@ -24,10 +24,21 @@ export function useApartmentController() {
     return docRef
   }
 
-  const deleteApartment = async (id: string) => {
+  const deleteApartment = async (
+    apartment: ApartmentWithOwner,
+  ) => {
     dispatch(setLoading(true))
     try {
-      await firestoreApartments.deleteFirestore(id)
+      await firestoreApartments.deleteFirestore(
+        apartment.id as string,
+      )
+
+      if (apartment.hasOwner) {
+        await firestoreOwners.deleteFirestore(
+          apartment.ownerId as string,
+        )
+      }
+
       return true
     } catch (err) {
       dispatch(

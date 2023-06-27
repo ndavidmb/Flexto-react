@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 type Props = {
   apartments: ApartmentWithOwner[]
   openEdit: (data?: Apartment) => void
-  handleDelete: (id: string) => void
+  handleDelete: (apartment: ApartmentWithOwner) => void
 }
 
 export const ApartmentList: FC<Props> = ({
@@ -60,7 +60,7 @@ export const ApartmentList: FC<Props> = ({
               <Button
                 color="link"
                 onClick={() =>
-                  handleDelete(apartment.id as string)
+                  handleDelete(apartment)
                 }
               >
                 Eliminar

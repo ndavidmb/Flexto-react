@@ -41,11 +41,11 @@ export const ApartmentWrapper = () => {
     closeModal()
   }
 
-  const handleDelete = (id: string) => {
-    apartmentService.deleteApartment(id).then((deleted) => {
+  const handleDelete = (tableApartment: ApartmentWithOwner) => {
+    apartmentService.deleteApartment(tableApartment).then((deleted) => {
       if (deleted) {
         const apartmentsWithoutDeleted = apartments.filter(
-          (apartment) => apartment.id !== id,
+          (apartment) => apartment.id !== tableApartment.id,
         )
         setApartments(apartmentsWithoutDeleted)
       }
