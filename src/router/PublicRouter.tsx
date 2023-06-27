@@ -5,17 +5,18 @@ import { RecoveryPassword } from '../auth/components/RecoveryPassword'
 import { Register } from '../auth/components/Register'
 import { Loading } from '../shared/components/Loading/Loading'
 import { RootState } from '../shared/store/store'
+import { UserRoles } from '../auth/interfaces/user-roles.enums'
 
 export const PublicRouter = () => {
-  const { role } = useSelector(
+  const { role, isLogged } = useSelector(
     (state: RootState) => state.authState,
   )
 
-  if (role === 'admin') {
+  if (role === UserRoles.ADMIN && isLogged) {
     return <Navigate to="../home/owners" />
   }
 
-  if (role === 'client') {
+  if (role === UserRoles.CLIENT && isLogged) {
     return <Navigate to="../home/request" />
   }
 

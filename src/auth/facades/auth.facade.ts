@@ -3,6 +3,7 @@ import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthService } from '../services/auth.service'
+import { FirebaseError } from 'firebase/app'
 
 export const useAuthFacade = () => {
   const authService = useAuthService()
@@ -67,10 +68,39 @@ export const useAuthFacade = () => {
     }
   }
 
+  const signIn = async (
+    credentials: { email: string; password: string },
+    agreement: string,
+  ) => {
+    const { user } = await authService.signIn(
+      credentials.email,
+      credentials.password,
+    )
+
+    const extraUser = await authService.getExtraUser()
+
+    if (extraUser) {
+      return {
+        ok: true,
+        agreement,
+        uid: extraUser.uid,
+        role: extraUser.role,
+        email: user.email as string,
+        displayName: user.displayName as string,
+        photoUrl: user.photoURL as string,
+      }
+    }
+    authService.logOut()
+    throw new FirebaseError(
+      'custom-error',
+      'invalid agreement',
+    )
+  }
+
   return {
     registerUser,
+    signIn,
     logOut: authService.logOut,
-    signIn: authService.signIn,
-    getExtraUser: authService.getExtraUser
+    getExtraUser: authService.getExtraUser,
   }
 }

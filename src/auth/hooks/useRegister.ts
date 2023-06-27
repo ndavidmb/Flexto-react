@@ -24,7 +24,7 @@ export const useRegister = () => {
     name: string
   }>(null)
 
-  const authController = useAuthController(theme?.id ?? '')
+  const authController = useAuthController()
 
   const registerSchema = yup.object().shape({
     name: yup
@@ -89,7 +89,8 @@ export const useRegister = () => {
           dispatch(
             login({
               ...res.user,
-              agreement: theme?.id,
+              agreement: theme.id,
+              isLogged: true
             }),
           )
           navigate('../home/owners')

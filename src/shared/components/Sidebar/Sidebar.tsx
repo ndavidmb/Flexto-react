@@ -8,31 +8,18 @@ import {
   IoMail,
   IoPeople,
 } from 'react-icons/io5'
-import { useSelector } from 'react-redux'
-import {
-  useNavigate,
-  useParams,
-} from 'react-router-dom'
-import { useAppDispatch } from '../../store/hooks'
-import { startLogout } from '../../store/slices/auth/thunks'
-import { RootState } from '../../store/store'
+import { useParams } from 'react-router-dom'
+import { useAuthController } from '../../../auth/controllers/auth.controller'
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
 
 export const Sidebar = () => {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
-
   const { id } = useParams()
 
-  const dispatch = useAppDispatch()
+  const authController = useAuthController(id)
 
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    dispatch(startLogout(theme?.id ?? ''))
-    navigate(`/${theme?.id}/auth`)
+  const handleLogout = async () => {
+    authController.logOut()
   }
 
   return (

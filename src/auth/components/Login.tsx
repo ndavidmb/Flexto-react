@@ -1,19 +1,19 @@
 import { Form, Formik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../shared/store/hooks'
-import { emailAndPasswordSignIn } from '../../shared/store/slices/auth/thunks'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
+import { useAuthController } from '../controllers/auth.controller'
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const authController = useAuthController()
 
-  const handleSubmit = (values: {
+  const handleSubmit = async (values: {
     email: string
     password: string
   }) => {
-    dispatch(emailAndPasswordSignIn(values))
+    await authController.signIn(values)
   }
 
   const handleRegister = () => {

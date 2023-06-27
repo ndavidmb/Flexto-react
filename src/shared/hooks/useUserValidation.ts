@@ -2,9 +2,13 @@ import { onAuthStateChanged, User } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { authFirebase } from '../services/firebase.service'
 import { useAppDispatch } from '../store/hooks'
-import { logout } from '../store/slices/auth/authSlice'
+import {
+  login,
+  logout,
+} from '../store/slices/auth/authSlice'
 import { validateUser } from '../store/slices/auth/thunks'
 import { useAuthFacade } from '../../auth/facades/auth.facade'
+import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 
 export const useUserValidation = (id: string) => {
   const dispatch = useAppDispatch()
@@ -20,11 +24,19 @@ export const useUserValidation = (id: string) => {
 
     const extraUser = await authFacade.getExtraUser()
     const isValidUser = await dispatch(
-      validateUser(user, extraUser),
+      validateUser(user, extraUser, id),
     )
 
     if (!isValidUser) {
       navigate(`${id}/auth`)
+    }
+
+    if (extraUser.role === UserRoles.ADMIN) {
+      navigate(`${id}/home/owners`)
+    }
+
+    if (extraUser.role === UserRoles.CLIENT) {
+      navigate(`${id}/home/request`)
     }
   }
 

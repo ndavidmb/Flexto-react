@@ -21,4 +21,5 @@ export interface IUserWithPassword extends IUserBase {
 export interface IExtraUser {
   role: UserRoles
   uid: string
+  customization: string
 }

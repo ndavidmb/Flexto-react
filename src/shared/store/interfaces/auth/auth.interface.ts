@@ -3,6 +3,7 @@ import {
 } from '../../../../auth/interfaces/user.interface'
 
 export interface IState extends IUser {
+  isLogged: boolean
   agreement?: string
 }
 

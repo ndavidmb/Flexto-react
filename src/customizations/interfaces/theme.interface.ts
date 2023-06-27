@@ -1,5 +1,5 @@
 export interface Theme {
-  id?: string
+  id: string
   menu: [string, string]
   primary: [string, string]
   menuDark: [string, string]
