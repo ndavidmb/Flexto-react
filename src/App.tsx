@@ -25,7 +25,7 @@ export const App = () => {
       .setup()
       .then((theme) => {
         if (theme) {
-          return userValidation.getAsyncUser()
+          userValidation.getAsyncUser()
         }
       })
       .finally(() => {

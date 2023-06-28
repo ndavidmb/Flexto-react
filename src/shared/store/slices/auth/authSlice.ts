@@ -12,7 +12,8 @@ const initialValue: IState = {
   photoUrl: '',
   role: UserRoles.CLIENT,
   agreement: '',
-  isLogged: false
+  isLogged: false,
+  approved: false
 }
 
 export const authSlice = createSlice({
@@ -26,6 +27,7 @@ export const authSlice = createSlice({
       state.photoUrl = payload.photoUrl
       state.agreement = payload.agreement
       state.role = payload.role
+      state.approved = payload.approved
       state.isLogged = true
     },
     logout: (state) => {
@@ -35,6 +37,7 @@ export const authSlice = createSlice({
       state.photoUrl = ''
       state.role = UserRoles.CLIENT
       state.agreement = ''
+      state.approved = false
       state.isLogged = false
     },
   },

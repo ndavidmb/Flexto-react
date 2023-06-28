@@ -13,10 +13,10 @@ export const Loading: FC = () => {
 export const LoadingSvg = () => (
   <>
     <div
-      className={`absolute h-screen w-full background-blur z-50`}
+      className={`absolute h-screen w-full background-blur z-50 top-0 left-0`}
     ></div>
     <div
-      className="absolute flex items-center justify-center h-screen w-full z-50"
+      className="absolute flex items-center justify-center h-screen w-full z-50 top-0 left-0"
       role="status"
     >
       <svg

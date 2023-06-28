@@ -1,24 +1,13 @@
-import { FirebaseError } from 'firebase/app'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
-import { ALERT_MESSAGES } from '../../shared/constants/alert-messages.constants'
 import { useAppDispatch } from '../../shared/store/hooks'
-import { login } from '../../shared/store/slices/auth/authSlice'
-import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
-import { RootState } from '../../shared/store/store'
+import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { useAuthController } from '../controllers/auth.controller'
 import { IRegisterForm } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
-import { showToast } from '../../shared/store/slices/toast/toastSlice'
 
 export const useRegister = () => {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const [photo, setPhoto] = useState<null | {
     blob: Blob
@@ -65,7 +54,7 @@ export const useRegister = () => {
     role: UserRoles.CLIENT,
   }
 
-  const handleSubmit = ({
+  const handleSubmit = async ({
     email,
     name,
     surnames,
@@ -83,46 +72,13 @@ export const useRegister = () => {
       return
     }
 
-    dispatch(setLoading(true))
-    authController
-      .register({
-        email,
-        password,
-        displayName: `${name} ${surnames}`,
-        photo,
-        role,
-      })
-      .then((res) => {
-        if (res) {
-          dispatch(
-            login({
-              ...res.user,
-              agreement: theme.id,
-              isLogged: true,
-            }),
-          )
-
-          if (role === UserRoles.ADMIN) {
-            navigate('../home/owners')
-          }
-
-          if(role === UserRoles.CLIENT) {
-            navigate('../home/request')
-          }
-        }
-      })
-      .catch((err) => {
-        if (err instanceof FirebaseError) {
-          dispatch(
-            showToast({
-              title: 'Error al crear el usuario',
-              details: [ALERT_MESSAGES[err.code]],
-              type: 'error',
-            }),
-          )
-        }
-      })
-      .finally(() => dispatch(setLoading(false)))
+    await authController.register({
+      email,
+      password,
+      displayName: `${name} ${surnames}`,
+      photo,
+      role,
+    })
   }
 
   return {

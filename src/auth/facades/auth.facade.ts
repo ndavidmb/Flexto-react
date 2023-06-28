@@ -1,12 +1,14 @@
+import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthService } from '../services/auth.service'
-import { FirebaseError } from 'firebase/app'
+import { useRequestService } from '../../client-requests/services/request.service'
 
 export const useAuthFacade = () => {
   const authService = useAuthService()
+  const requestService = useRequestService()
 
   const registerUser = async (
     registerFb: IRegisterFirebase,
@@ -38,8 +40,22 @@ export const useAuthFacade = () => {
       const { id } = await authService.createUserExtra({
         role: UserRoles.CLIENT,
         uid: newUserInstance.uid,
+        accepted: false,
       })
       extraUserId = id
+
+      await requestService.createAccessRequest({
+        uid: newUserInstance.uid,
+        email: newUserInstance.email as string,
+        displayName: newUserInstance.displayName as string,
+      })
+
+      // This is necessary to create the user and can keep for the notification
+      await authService.logOut()
+      await authService.signIn(
+        registerFb.email,
+        registerFb.password,
+      )
 
       return {
         ok: true,
@@ -50,6 +66,7 @@ export const useAuthFacade = () => {
             newUserInstance.displayName as string,
           photoUrl,
           role: UserRoles.CLIENT,
+          approved: false,
         },
       }
     } catch (err) {
@@ -77,7 +94,9 @@ export const useAuthFacade = () => {
       credentials.password,
     )
 
-    const extraUser = await authService.getExtraUser(user.uid)
+    const extraUser = await authService.getExtraUser(
+      user.uid,
+    )
 
     if (extraUser) {
       return {
@@ -88,9 +107,10 @@ export const useAuthFacade = () => {
         email: user.email as string,
         displayName: user.displayName as string,
         photoUrl: user.photoURL as string,
+        approved: extraUser.accepted,
       }
     }
-    authService.logOut()
+
     throw new FirebaseError(
       'custom-error',
       'invalid agreement',

@@ -79,7 +79,6 @@ export const useAuthService = () => {
     photoURL: string,
   ) => {
     if (authFirebase.currentUser) {
-      console.log(displayName, photoURL)
       return await updateProfile(authFirebase.currentUser, {
         displayName,
         photoURL,

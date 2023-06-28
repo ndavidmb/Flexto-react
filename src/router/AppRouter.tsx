@@ -20,10 +20,6 @@ export const AppRouting = () => {
             index
             element={<Navigate to="auth" replace />}
           />
-          <Route
-            path="*"
-            element={<Navigate to="auth" replace />}
-          />
         </Route>
       </Routes>
     </BrowserRouter>

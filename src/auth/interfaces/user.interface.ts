@@ -9,9 +9,16 @@ export interface IUserWithDisplayName extends IUserBase {
   displayName: string
 }
 
+export interface IUserRequest {
+  uid: string
+  email: string
+  displayName: string
+}
+
 export interface IUser extends IUserWithDisplayName {
   uid: string
   photoUrl: string
+  approved: boolean
 }
 
 export interface IUserWithPassword extends IUserBase {
@@ -21,5 +28,6 @@ export interface IUserWithPassword extends IUserBase {
 export interface IExtraUser {
   role: UserRoles
   uid: string
+  accepted: boolean
   customization?: string
 }

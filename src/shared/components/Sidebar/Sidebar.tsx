@@ -16,7 +16,7 @@ import { Avatar } from '../Avatar'
 export const Sidebar = () => {
   const { id } = useParams()
 
-  const authController = useAuthController(id)
+  const authController = useAuthController()
 
   const handleLogout = async () => {
     authController.logOut()

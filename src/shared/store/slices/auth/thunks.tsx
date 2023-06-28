@@ -15,6 +15,7 @@ export const validateUser = (
 
     dispatch(
       login({
+        approved: extraUser.accepted,
         displayName: displayName as string,
         email: email as string,
         photoUrl: photoURL as string,
@@ -28,7 +29,7 @@ export const validateUser = (
   }
 }
 
-export const startLogout = (agreement: string) => {
+export const startLogout = () => {
   return async (dispatch: AppDispatch) => {
     dispatch(logout())
   }

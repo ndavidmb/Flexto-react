@@ -4,6 +4,7 @@ import {
 
 export interface IState extends IUser {
   isLogged: boolean
+  approved: boolean
   agreement?: string
 }
 

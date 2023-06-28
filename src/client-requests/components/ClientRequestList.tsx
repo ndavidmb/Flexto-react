@@ -23,7 +23,6 @@ export const ClientRequestList = () => {
     firestore.getAllFirestore().then((clients) => {
       // 3. // clientRequests = []
       setClientRequests(clients)
-      console.log(clients)
       // 4 clientRequests = [info]
     })
     // 2. clientRequests = []
