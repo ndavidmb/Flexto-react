@@ -1,9 +1,10 @@
 import {
   BrowserRouter,
-  Navigate, Route,
-  Routes
+  Navigate,
+  Route,
+  Routes,
 } from 'react-router-dom'
-import App from '../App'
+import { App } from '../App'
 import { NotFound } from '../shared/components/NotFound'
 import { HomeRouter } from './HomeRouter'
 import { PublicRouter } from './PublicRouter'

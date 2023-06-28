@@ -1,40 +1,56 @@
-import { onAuthStateChanged, User } from 'firebase/auth'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
+  ReplaySubject,
+  Subscription,
   audit,
   concat,
   first,
-  ReplaySubject
 } from 'rxjs'
-import { useAuthFacade } from '../../auth/facades/auth.facade'
-import { UserRoles } from '../../auth/interfaces/user-roles.enums'
+import { useThemeController } from './useTheme'
+import { User, onAuthStateChanged } from 'firebase/auth'
 import { authFirebase } from '../services/firebase.service'
+import { useEffect, useState } from 'react'
 import { isRegistering$ } from '../services/register.service'
 import { useAppDispatch } from '../store/hooks'
+import { useAuthFacade } from '../../auth/facades/auth.facade'
+import { useNavigate } from 'react-router-dom'
 import { logout } from '../store/slices/auth/authSlice'
 import { validateUser } from '../store/slices/auth/thunks'
+import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 
-export const useUserValidation = (id: string) => {
+export const useSetup = (id: string) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const themeController = useThemeController(id)
   const dispatch = useAppDispatch()
   const authFacade = useAuthFacade()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const loggedInSubject = new ReplaySubject<User | null>(1)
+    let sub: Subscription
+    const loggedInSubject = new ReplaySubject<User | null>(
+      1,
+    )
+    setup(loggedInSubject)
+      .then((subs) => (sub = subs))
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [])
+
+  const setup = async (
+    loggedInSubject: ReplaySubject<User | null>,
+  ) => {
+    await themeController.setup()
+
     onAuthStateChanged(authFirebase, loggedInSubject)
 
-    const sub = concat(
+    return concat(
       loggedInSubject.pipe(first()),
       loggedInSubject.pipe(audit(() => isRegistering$)),
     ).subscribe((user) => {
+      console.log(user);
       handleUser(user)
     })
-
-    return () => {
-      sub.unsubscribe()
-    }
-  }, [])
+  }
 
   const handleUser = async (user: User | null) => {
     if (!user) {
@@ -72,4 +88,6 @@ export const useUserValidation = (id: string) => {
       navigate(`/${id}/home/request`)
     }
   }
+
+  return { isLoading }
 }

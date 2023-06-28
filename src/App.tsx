@@ -1,41 +1,26 @@
-import { useEffect, useState } from 'react'
 import {
   Navigate,
   Outlet,
-  useParams
+  useParams,
 } from 'react-router-dom'
 import { Toast } from './shared/components/Toast/Toast'
-import { useThemeController } from './shared/hooks/useTheme'
-import { useUserValidation } from './shared/hooks/useUserValidation'
+import { useEffect, useMemo } from 'react'
+import { useSetup } from './shared/hooks/useSetup'
+
+const id = 'JlBKitVmfWwm58ZHHs15'
 
 export const App = () => {
-  const [isLoading, setIsLoading] = useState(true)
+  // const { id } = useParams()
 
-  const { id } = useParams()
+  // if (!id) {
+  //   return <Navigate to="/NotFound" />
+  // }
 
-  if (!id) {
-    return <Navigate to="/NotFound" replace />
-  }
-
-  const userValidation = useUserValidation(id)
-  const themeController = useThemeController(id)
+  useSetup(id)
 
   useEffect(() => {
-    themeController
-      .setup()
-      .then((theme) => {
-        if (theme) {
-          userValidation.getAsyncUser()
-        }
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    console.log('rendered')
   }, [])
-
-  if (isLoading) {
-    return <></>
-  }
 
   return (
     <>
@@ -44,5 +29,3 @@ export const App = () => {
     </>
   )
 }
-
-export default App
