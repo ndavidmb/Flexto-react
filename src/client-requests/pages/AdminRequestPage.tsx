@@ -75,7 +75,6 @@ export const AdminRequestPage = () => {
     <>
       <AdminRequestList
         adminRequests={adminRequests}
-        setAdminRequests={setAdminRequests}
         handleAcceptRequest={handleAcceptRequest}
         handleDenyRequest={handleDenyRequest}
         handleDelete={handleDelete}

@@ -141,7 +141,7 @@ export const OwnerDetail = () => {
           <tbody>
             {owner?.states.map((state, index) => {
               return (
-                <TRow index={index}>
+                <TRow index={index} key={state.id}>
                   <th scope="row">{state.affair}</th>
                   <td>{state.detail}</td>
                   <td>
