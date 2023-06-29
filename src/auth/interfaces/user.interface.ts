@@ -18,7 +18,6 @@ export interface IUserRequest {
 export interface IUser extends IUserWithDisplayName {
   uid: string
   photoUrl: string
-  approved: boolean
 }
 
 export interface IUserWithPassword extends IUserBase {

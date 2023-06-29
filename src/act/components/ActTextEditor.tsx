@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import { FC, useEffect, useRef } from 'react'
 
 import EditorJS, { OutputData } from '@editorjs/editorjs'

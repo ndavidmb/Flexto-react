@@ -1,35 +1,40 @@
 import { FirebaseError } from 'firebase/app'
-import { useSelector } from 'react-redux'
+import { User } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { ALERT_MESSAGES } from '../../shared/constants/alert-messages.constants'
 import { useAppDispatch } from '../../shared/store/hooks'
-import { login } from '../../shared/store/slices/auth/authSlice'
-import { startLogout } from '../../shared/store/slices/auth/thunks'
+import {
+  IUserState,
+  USER_APPROVED_STATES,
+} from '../../shared/store/interfaces/auth/auth.interface'
+import {
+  login,
+  logout,
+} from '../../shared/store/slices/auth/authSlice'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { RootState } from '../../shared/store/store'
 import { useAuthFacade } from '../facades/auth.facade'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
-import { setLoginEnds } from '../../shared/services/register.service'
+import { UserRoles } from '../interfaces/user-roles.enums'
 
-export function useAuthController() {
-  const { theme } = useSelector(
-    (state: RootState) => state.themeState,
-  )
+export function useAuthController(themeId: string) {
   const authFacade = useAuthFacade()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
-  const signIn = async (credentials: {
+  const signInWithEmailAndPassword = async (credentials: {
     email: string
     password: string
   }) => {
     dispatch(setLoading(true))
     try {
-      const loggedUser = await authFacade.signIn(
-        credentials,
-        theme.id,
-      )
-      dispatch(login({ ...loggedUser, isLogged: true }))
+      const extraUser =
+        await authFacade.signInWithEmailAndPassword(
+          credentials,
+          themeId,
+        )
+      dispatch(login(extraUser))
+      getRedirectPath(extraUser)
     } catch (err) {
       if (err instanceof FirebaseError) {
         dispatch(
@@ -39,20 +44,53 @@ export function useAuthController() {
             details: ['Usuario o contraseña invalida'],
           }),
         )
-        dispatch(startLogout())
+        logOut()
       }
     } finally {
       dispatch(setLoading(false))
-      setLoginEnds()
+    }
+  }
+
+  const signInFirebase = async (user: User | null) => {
+    if (!user) {
+      navigate(`/${themeId}/auth`)
+      return
+    }
+
+    dispatch(setLoading(true))
+    try {
+      const extraUser = await authFacade.getExtraUser(
+        themeId,
+        user,
+      )
+      dispatch(login(extraUser))
+      getRedirectPath(extraUser)
+    } catch (err) {
+      if (err instanceof FirebaseError) {
+        dispatch(
+          showToast({
+            type: 'error',
+            title: 'Error en el ingreso',
+            details: [
+              'No se pudo autenticar correctamente',
+            ],
+          }),
+        )
+        logOut()
+      }
+    } finally {
+      dispatch(setLoading(false))
     }
   }
 
   const logOut = async () => {
+    dispatch(setLoading(true))
     try {
-      dispatch(startLogout())
-      return await authFacade.logOut()
+      dispatch(logout())
+      await authFacade.logOut()
+      navigate(`/${themeId}/auth`)
     } finally {
-      setLoginEnds()
+      dispatch(setLoading(false))
     }
   }
 
@@ -70,10 +108,11 @@ export function useAuthController() {
       dispatch(
         login({
           ...res.user,
-          agreement: theme.id,
-          isLogged: true,
+          agreement: themeId,
+          userState: USER_APPROVED_STATES.PENDING,
         }),
       )
+      navigate(`/${themeId}/home/wait-approved`)
     } catch (err) {
       if (err instanceof FirebaseError) {
         dispatch(
@@ -86,9 +125,31 @@ export function useAuthController() {
       }
     } finally {
       dispatch(setLoading(false))
-      setLoginEnds()
     }
   }
 
-  return { signIn, logOut, register }
+  const getRedirectPath = (user: IUserState) => {
+    console.log(themeId)
+    if (user.userState === USER_APPROVED_STATES.PENDING) {
+      navigate(`/${themeId}/home/wait-approved`)
+      return
+    }
+
+    if (user.role === UserRoles.CLIENT) {
+      navigate(`/${themeId}/home/request`)
+      return
+    }
+
+    if (user.role === UserRoles.ADMIN) {
+      navigate(`/${themeId}/home/owners`)
+    }
+  }
+
+  return {
+    signInWithEmailAndPassword,
+    logOut,
+    register,
+    getRedirectPath,
+    signInFirebase,
+  }
 }

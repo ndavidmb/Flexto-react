@@ -1,9 +1,9 @@
 import { AiOutlineWarning } from 'react-icons/ai'
 import { Button } from '../../shared/styled-components/Button'
-import { useAuthController } from '../controllers/auth.controller'
+import { useAuthDefaultController } from '../hooks/auth-theme.controller'
 
 export const AuthWaitApproved = () => {
-  const authController = useAuthController()
+  const { authController } = useAuthDefaultController()
 
   const handleLogout = () => {
     authController.logOut()

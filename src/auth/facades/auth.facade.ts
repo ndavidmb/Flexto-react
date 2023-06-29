@@ -5,6 +5,10 @@ import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthService } from '../services/auth.service'
 import { useRequestService } from '../../client-requests/services/request.service'
+import {
+  IUserState,
+  USER_APPROVED_STATES,
+} from '../../shared/store/interfaces/auth/auth.interface'
 
 export const useAuthFacade = () => {
   const authService = useAuthService()
@@ -50,13 +54,6 @@ export const useAuthFacade = () => {
         displayName: newUserInstance.displayName as string,
       })
 
-      // This is necessary to create the user and can keep for the notification
-      await authService.logOut()
-      await authService.signIn(
-        registerFb.email,
-        registerFb.password,
-      )
-
       return {
         ok: true,
         user: {
@@ -66,7 +63,6 @@ export const useAuthFacade = () => {
             newUserInstance.displayName as string,
           photoUrl,
           role: UserRoles.CLIENT,
-          approved: false,
         },
       }
     } catch (err) {
@@ -85,29 +81,25 @@ export const useAuthFacade = () => {
     }
   }
 
-  const signIn = async (
-    credentials: { email: string; password: string },
+  const getExtraUser = async (
     agreement: string,
+    user: User,
   ) => {
-    const { user } = await authService.signIn(
-      credentials.email,
-      credentials.password,
-    )
-
     const extraUser = await authService.getExtraUser(
       user.uid,
     )
 
     if (extraUser) {
       return {
-        ok: true,
-        agreement,
         uid: extraUser.uid,
-        role: extraUser.role,
         email: user.email as string,
         displayName: user.displayName as string,
         photoUrl: user.photoURL as string,
-        approved: extraUser.accepted,
+        role: extraUser.role,
+        agreement,
+        userState: extraUser.accepted
+          ? USER_APPROVED_STATES.APPROVED
+          : USER_APPROVED_STATES.PENDING,
       }
     }
 
@@ -117,10 +109,22 @@ export const useAuthFacade = () => {
     )
   }
 
+  const signInWithEmailAndPassword = async (
+    credentials: { email: string; password: string },
+    agreement: string,
+  ): Promise<IUserState> => {
+    const { user } = await authService.signIn(
+      credentials.email,
+      credentials.password,
+    )
+
+    return getExtraUser(agreement, user)
+  }
+
   return {
     registerUser,
-    signIn,
+    signInWithEmailAndPassword,
     logOut: authService.logOut,
-    getExtraUser: authService.getExtraUser,
+    getExtraUser,
   }
 }

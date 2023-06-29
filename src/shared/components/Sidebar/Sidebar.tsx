@@ -9,14 +9,15 @@ import {
   IoPeople,
 } from 'react-icons/io5'
 import { useParams } from 'react-router-dom'
-import { useAuthController } from '../../../auth/controllers/auth.controller'
+
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
+import { useAuthDefaultController } from '../../../auth/hooks/auth-theme.controller'
 
 export const Sidebar = () => {
   const { id } = useParams()
 
-  const authController = useAuthController()
+  const { authController } = useAuthDefaultController()
 
   const handleLogout = async () => {
     authController.logOut()

@@ -8,6 +8,11 @@ import { App } from '../App'
 import { NotFound } from '../shared/components/NotFound'
 import { HomeRouter } from './HomeRouter'
 import { PublicRouter } from './PublicRouter'
+import { createContext } from 'react'
+
+const AuthContext = createContext({
+  
+})
 
 export const AppRouting = () => {
   return (

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import * as yup from 'yup'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { useAuthController } from '../controllers/auth.controller'
+
 import { IRegisterForm } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
+import { useAuthDefaultController } from './auth-theme.controller'
 
 export const useRegister = () => {
   const dispatch = useAppDispatch()
@@ -14,7 +15,7 @@ export const useRegister = () => {
     name: string
   }>(null)
 
-  const authController = useAuthController()
+  const { authController } = useAuthDefaultController()
 
   const registerSchema = yup.object().shape({
     name: yup

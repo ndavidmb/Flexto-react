@@ -4,23 +4,36 @@ import {
   useParams,
 } from 'react-router-dom'
 import { Toast } from './shared/components/Toast/Toast'
-import { useEffect, useMemo } from 'react'
-import { useSetup } from './shared/hooks/useSetup'
-
-const id = 'JlBKitVmfWwm58ZHHs15'
+import { useEffect, useState } from 'react'
+import { useFbAuth } from './auth/hooks/useFbAuth'
+import { useThemeController } from './shared/hooks/useTheme'
 
 export const App = () => {
-  // const { id } = useParams()
+  const { id } = useParams()
+  const [loading, setLoading] = useState(true)
 
-  // if (!id) {
-  //   return <Navigate to="/NotFound" />
-  // }
+  if (!id) {
+    return <Navigate to="/NotFound" />
+  }
 
-  useSetup(id)
+  const themeController = useThemeController(id)
+  const { getCurrentUser, getRedirectPath } = useFbAuth(id)
 
   useEffect(() => {
-    console.log('rendered')
+    // Setup theme
+    themeController
+      .setup()
+      .then(() => getCurrentUser())
+      .then((user) => getRedirectPath(user))
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
+
+  if (loading) {
+    // TODO: Loading auth screen
+    return <></>
+  }
 
   return (
     <>

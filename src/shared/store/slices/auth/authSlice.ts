@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
-  IState,
+  IUserState,
   IUserPayload,
+  USER_APPROVED_STATES,
 } from '../../interfaces/auth/auth.interface'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 
-const initialValue: IState = {
+const initialValue: IUserState = {
   uid: '',
   email: '',
   displayName: '',
   photoUrl: '',
   role: UserRoles.CLIENT,
   agreement: '',
-  isLogged: false,
-  approved: false
+  userState: USER_APPROVED_STATES.NO_LOGGED,
 }
 
 export const authSlice = createSlice({
@@ -27,8 +27,7 @@ export const authSlice = createSlice({
       state.photoUrl = payload.photoUrl
       state.agreement = payload.agreement
       state.role = payload.role
-      state.approved = payload.approved
-      state.isLogged = true
+      state.userState = payload.userState
     },
     logout: (state) => {
       state.uid = ''
@@ -37,10 +36,16 @@ export const authSlice = createSlice({
       state.photoUrl = ''
       state.role = UserRoles.CLIENT
       state.agreement = ''
-      state.approved = false
-      state.isLogged = false
+      state.userState = USER_APPROVED_STATES.NO_LOGGED
+    },
+
+    registerProcess: (state) => {
+      state = {
+        ...state,
+        userState: USER_APPROVED_STATES.PENDING,
+      }
     },
   },
 })
 
-export const { login, logout } = authSlice.actions
+export const { login, logout, registerProcess } = authSlice.actions
