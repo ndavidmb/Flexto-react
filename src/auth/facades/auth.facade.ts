@@ -121,10 +121,19 @@ export const useAuthFacade = () => {
     return getExtraUser(agreement, user)
   }
 
+  const activateUserAccount = async (uid: string) => {
+    const extraUser = await authService.getExtraUser(uid)
+    await authService.updateExtraUser(extraUser.id!, {
+      ...extraUser,
+      accepted: true,
+    })
+  }
+
   return {
     registerUser,
     signInWithEmailAndPassword,
     logOut: authService.logOut,
     getExtraUser,
+    activateUserAccount,
   }
 }

@@ -13,8 +13,8 @@ export const ContainerHeader: FC<Props> = ({
   className = '',
 }) => {
   return (
-    <div className={`flex gap-2 items-center h-20 px-8 ${className}`}>
-      <PageTitle className="w-52">{title}</PageTitle>
+    <div className={`flex gap-2 justify-between items-center h-20 px-8 ${className}`}>
+      <PageTitle>{title}</PageTitle>
 
       {children}
     </div>

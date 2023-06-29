@@ -17,14 +17,6 @@ import { ClientRequestList } from './components/ClientRequestList'
  * }
  */
 
-
 export const ClientRequestsWrapper = () => {
-  return (
-    <DefaultContainer>
-      <div className="w-full flex flex-col items-center mb-4 justify-center">
-        <ContainerHeader title="Realizar petición" />
-        <ClientRequestList></ClientRequestList>
-      </div>
-    </DefaultContainer>
-  )
+  return <ClientRequestList></ClientRequestList>
 }

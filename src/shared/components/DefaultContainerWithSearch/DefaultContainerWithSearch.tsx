@@ -15,30 +15,38 @@ export type SearchOptions<T> = {
 }
 
 type Props<T> = {
-  actionName?: string
   title: string
   children: ReactNode
-  action: () => void
   searchOptions: SearchOptions<T>
+  action?: () => void
+  actionName?: string
 }
 
 export function DefaultContainerWithSearch<T>({
   children,
   title,
-  actionName = 'Crear nuevo',
-  action,
   searchOptions,
+  action,
+  actionName = 'Crear nuevo',
 }: Props<T>) {
   return (
     <DefaultContainer>
       <ContainerHeader title={title}>
-        <Button color="primary" onClick={() => action()}>
-          {actionName}
-        </Button>
-        <SearchInput
-          searchOptions={searchOptions}
-          placeholder="Buscar"
-        />
+        <div className='flex gap-2 justify-end items-center'>
+          {action && (
+            <Button
+              color="primary"
+              onClick={() => action()}
+            >
+              {actionName}
+            </Button>
+          )}
+
+          <SearchInput
+            searchOptions={searchOptions}
+            placeholder="Buscar"
+          />
+        </div>
       </ContainerHeader>
       <div className="px-4">{children}</div>
     </DefaultContainer>

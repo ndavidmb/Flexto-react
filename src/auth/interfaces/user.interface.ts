@@ -29,4 +29,5 @@ export interface IExtraUser {
   uid: string
   accepted: boolean
   customization?: string
+  id?: string
 }

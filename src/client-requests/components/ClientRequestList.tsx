@@ -4,9 +4,11 @@ import { useFirestore } from '../../shared/hooks/useFirestore'
 import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
-import { ClientRequest, TYPE_DICT } from '../interfaces/client-request.interface'
-
-
+import {
+  ClientRequest,
+  REQUEST_TYPE_DICT,
+} from '../interfaces/client-request.interface'
+import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 
 export const ClientRequestList = () => {
   // React hooks
@@ -33,9 +35,19 @@ export const ClientRequestList = () => {
     FirestoreTable.REQUEST,
   )
 
+  const handleClick = () => {}
+
   // TEMPLATE
   return (
-    <>
+    <DefaultContainerWithSearch<ClientRequest>
+      action={handleClick}
+      title="Solicitudes de acceso"
+      searchOptions={{
+        searchKeys: ['description', 'idPublicArea'],
+        allItems: clientRequests,
+        setItems: setClientRequests,
+      }}
+    >
       <Table>
         <THead>
           <th scope="col">Tipo</th>
@@ -50,15 +62,19 @@ export const ClientRequestList = () => {
                 scope="row"
                 className="font-medium text-gray-900 whitespace-nowrap"
               >
-                {TYPE_DICT[clientRequest.type]}
+                {REQUEST_TYPE_DICT[clientRequest.type]}
               </th>
               <td>{clientRequest.description}</td>
               <td>{clientRequest.dateDetail.date}</td>
-              <td>{clientRequest.approved ? "Aprobado" : "Denegado"}</td>
+              <td>
+                {clientRequest.approved
+                  ? 'Aprobado'
+                  : 'Denegado'}
+              </td>
             </TRow>
           ))}
         </tbody>
       </Table>
-    </>
+    </DefaultContainerWithSearch>
   )
 }

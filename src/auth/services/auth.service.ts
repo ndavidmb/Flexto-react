@@ -44,7 +44,9 @@ export const useAuthService = () => {
     const registeredUsers =
       await firestoreRegisteredUser.getAllFirestore()
 
-    const currentUsers = registeredUsers.filter(user => user.uid === uid)
+    const currentUsers = registeredUsers.filter(
+      (user) => user.uid === uid,
+    )
 
     if (currentUsers.length > 1) {
       throw new Error(
@@ -103,6 +105,13 @@ export const useAuthService = () => {
     )
   }
 
+  const updateExtraUser = async (
+    uid: string,
+    updatedUser: IExtraUser,
+  ) => {
+    await firestoreRegisteredUser.updateFirestore(uid, updatedUser)
+  }
+
   const logOut = async () => {
     return await authFirebase.signOut()
   }
@@ -116,6 +125,7 @@ export const useAuthService = () => {
     removeUserImage,
     uploadUserImage,
     updateUserProfile,
+    updateExtraUser,
     signIn,
     logOut,
   }

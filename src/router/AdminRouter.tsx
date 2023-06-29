@@ -2,12 +2,13 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { ActList } from '../act/pages/ActList'
 import { ActWrapper } from '../act/ActWrapper'
 import { ApartmentWrapper } from '../apartments/ApartmentWrapper'
-import { AccessRequest } from '../client-requests/components/AccessRequest'
+import { AdminRequestList } from '../client-requests/components/AdminRequestList'
 import { CustomizationWrapper } from '../customizations/CustomizationWrapper'
 import { OwnerWrapper } from '../owners/OwnerWrapper'
 import { OwnerDetail } from '../owners/components/OwnerDetail'
 import { StateWrapper } from '../states/StatesWrapper'
 import { ActRouter } from '../act/ActRouter'
+import { AdminRequestPage } from '../client-requests/pages/AdminRequestPage'
 
 export const AdminRouter = () => {
   return (
@@ -24,8 +25,8 @@ export const AdminRouter = () => {
       <Route path="states" element={<StateWrapper />} />
 
       <Route
-        path="access-request"
-        element={<AccessRequest />}
+        path="admin-request"
+        element={<AdminRequestPage />}
       />
       <Route
         path="custom"

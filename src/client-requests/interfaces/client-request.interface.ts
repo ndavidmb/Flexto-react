@@ -17,7 +17,7 @@ export interface ClientRequest {
   approved: boolean
 }
 
-export const TYPE_DICT = {
+export const REQUEST_TYPE_DICT = {
   1: 'Acta',
   2: 'Espacio público',
   3: 'Acceso',

@@ -76,7 +76,7 @@ export function SearchInput<T>({
         rounded
         px-4
         py-1
-        h-7
+        h-8
         border"
         type="text"
         onChange={handleChange}

@@ -54,7 +54,7 @@ export const Sidebar = () => {
           </MenuLink>
           <MenuLink
             permissionsRole="admin"
-            href={`/${id}/home/access-request`}
+            href={`/${id}/home/admin-request`}
           >
             <IoHandRightOutline className="text-xl" />
             Solicitudes de acceso
