@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
-import { useAuthDefaultController } from '../../../auth/hooks/auth-theme.controller'
+import { useAuthDefaultController } from '../../../auth/hooks/useAuthDefaultController'
 
 export const Sidebar = () => {
   const { id } = useParams()

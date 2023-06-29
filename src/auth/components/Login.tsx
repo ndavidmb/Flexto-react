@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
-import { useAuthDefaultController } from '../hooks/auth-theme.controller'
+import { useAuthDefaultController } from '../hooks/useAuthDefaultController'
 
 export const Login = () => {
   const navigate = useNavigate()

@@ -5,7 +5,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 
 import { IRegisterForm } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
-import { useAuthDefaultController } from './auth-theme.controller'
+import { useAuthDefaultController } from './useAuthDefaultController'
 
 export const useRegister = () => {
   const dispatch = useAppDispatch()

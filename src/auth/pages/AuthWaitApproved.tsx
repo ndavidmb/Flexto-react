@@ -1,6 +1,6 @@
 import { AiOutlineWarning } from 'react-icons/ai'
 import { Button } from '../../shared/styled-components/Button'
-import { useAuthDefaultController } from '../hooks/auth-theme.controller'
+import { useAuthDefaultController } from '../hooks/useAuthDefaultController'
 
 export const AuthWaitApproved = () => {
   const { authController } = useAuthDefaultController()
