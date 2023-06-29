@@ -53,7 +53,7 @@ export function useAuthController(themeId: string) {
 
   const signInFirebase = async (user: User | null) => {
     if (!user) {
-      navigate(`/${themeId}/auth`)
+      navigate(`/${themeId}/auth`, { replace: true })
       return
     }
 
@@ -88,7 +88,9 @@ export function useAuthController(themeId: string) {
     try {
       dispatch(logout())
       await authFacade.logOut()
-      navigate(`/${themeId}/auth`)
+      navigate(`/${themeId}/auth`, {
+        replace: true,
+      })
     } finally {
       dispatch(setLoading(false))
     }
@@ -112,7 +114,9 @@ export function useAuthController(themeId: string) {
           userState: USER_APPROVED_STATES.PENDING,
         }),
       )
-      navigate(`/${themeId}/home/wait-approved`)
+      navigate(`/${themeId}/home/wait-approved`, {
+        replace: true,
+      })
     } catch (err) {
       if (err instanceof FirebaseError) {
         dispatch(
@@ -129,19 +133,24 @@ export function useAuthController(themeId: string) {
   }
 
   const getRedirectPath = (user: IUserState) => {
-    console.log(themeId)
     if (user.userState === USER_APPROVED_STATES.PENDING) {
-      navigate(`/${themeId}/home/wait-approved`)
+      navigate(`/${themeId}/home/wait-approved`, {
+        replace: true,
+      })
       return
     }
 
     if (user.role === UserRoles.CLIENT) {
-      navigate(`/${themeId}/home/request`)
+      navigate(`/${themeId}/home/request`, {
+        replace: true,
+      })
       return
     }
 
     if (user.role === UserRoles.ADMIN) {
-      navigate(`/${themeId}/home/owners`)
+      navigate(`/${themeId}/home/owners`, {
+        replace: true,
+      })
     }
   }
 
