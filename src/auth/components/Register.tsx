@@ -4,6 +4,7 @@ import { Input } from '../../shared/styled-components/Input'
 import { InputFile } from '../../shared/styled-components/InputFile'
 import { useRegister } from '../hooks/useRegister'
 import { IRegisterForm } from '../interfaces/register-form.interface'
+import { useNavigate } from 'react-router-dom'
 
 // TODO: Add required to photo
 export const Register = () => {
@@ -13,6 +14,12 @@ export const Register = () => {
     setPhoto,
     registerSchema,
   } = useRegister()
+
+  const navigate = useNavigate()
+
+  const handleBack = () => {
+    navigate(-1)
+  }
 
   return (
     <section className="flex flex-col gap-4 justify-center items-center bg-gray-100 w-full h-screen">
@@ -82,7 +89,11 @@ export const Register = () => {
                   <Button type="submit" color="primary">
                     Registrarse
                   </Button>
-                  <Button type="button" color="secondary">
+                  <Button
+                    onClick={handleBack}
+                    type="button"
+                    color="secondary"
+                  >
                     Volver
                   </Button>
                 </div>
