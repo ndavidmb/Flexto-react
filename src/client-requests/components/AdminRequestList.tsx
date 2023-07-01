@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react'
+import { FC, useEffect, useState } from 'react'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
@@ -14,7 +8,6 @@ import {
   AdminRequest,
   AdminRequestVm,
   REQUEST_STATES_DICT,
-  RequestStates,
 } from '../interfaces/request.interface'
 import { AdminRequestActions } from './AdminRequestActions'
 import { AdminRequestState } from './AdminRequestState'
@@ -44,6 +37,7 @@ export const AdminRequestList: FC<Props> = ({
         ...request,
         username: request.user.displayName,
         email: request.user.email,
+        phoneNumber: request.user.phoneNumber,
         state: REQUEST_STATES_DICT[request.approved],
         strType: REQUEST_TYPE_DICT[request.type],
       }),
@@ -62,6 +56,7 @@ export const AdminRequestList: FC<Props> = ({
           'description',
           'email',
           'username',
+          'phoneNumber',
           'strType',
           'state',
         ],
@@ -72,7 +67,7 @@ export const AdminRequestList: FC<Props> = ({
         <THead>
           <th className="w-32">Tipo</th>
           <th>Descripción</th>
-          <th>Estado</th>
+          <th>Fecha</th>
           <th>Usuario</th>
           <th>Acciones</th>
         </THead>
@@ -81,23 +76,38 @@ export const AdminRequestList: FC<Props> = ({
             <TRow index={index} key={request.id}>
               <td className="w-32">
                 {REQUEST_TYPE_DICT[request.type]}
-              </td>
-              <td>
-                <p>{request.description}</p>
-                <span className="text-xs">
-                  Fecha: {request.dateDetail.date}
-                </span>
-              </td>
-              <td>
                 <AdminRequestState
                   currentState={request.approved}
                 />
               </td>
               <td>
+                <p>{request.description}</p>
+              </td>
+              <td>
+                <ul>
+                  <li>
+                    Solicitud del {request.dateDetail.date}
+                  </li>
+                  {request.dateDetail.startHour && (
+                    <li>
+                      Hora de inicio{' '}
+                      {request.dateDetail.startHour}
+                    </li>
+                  )}
+                  {request.dateDetail.endHour && (
+                    <li>
+                      Hora de inicio{' '}
+                      {request.dateDetail.endHour}
+                    </li>
+                  )}
+                </ul>
+              </td>
+              <td>
                 <div className="flex flex-col">
                   {request.user.displayName}
-                  <small className="text-sm text-gray-400">
-                    {request.user.email}
+                  <small className="text-sm flex flex-col text-gray-400">
+                    {request.user.email} <br />
+                    Cel. {request.user.phoneNumber}
                   </small>
                 </div>
               </td>

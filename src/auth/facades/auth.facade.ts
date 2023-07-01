@@ -1,14 +1,15 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
-import { IRegisterFirebase } from '../interfaces/register-form.interface'
-import { UserRoles } from '../interfaces/user-roles.enums'
-import { IUser } from '../interfaces/user.interface'
-import { useAuthService } from '../services/auth.service'
 import { useRequestService } from '../../client-requests/services/request.service'
 import {
   IUserState,
   USER_APPROVED_STATES,
 } from '../../shared/store/interfaces/auth/auth.interface'
+import { IRegisterFirebase } from '../interfaces/register-form.interface'
+import { UserRoles } from '../interfaces/user-roles.enums'
+import { IUser } from '../interfaces/user.interface'
+import { useAuthService } from '../services/auth.service'
+import { RequestType } from '../../client-requests/interfaces/client-request.interface'
 
 export const useAuthFacade = () => {
   const authService = useAuthService()
@@ -45,13 +46,17 @@ export const useAuthFacade = () => {
         role: UserRoles.CLIENT,
         uid: newUserInstance.uid,
         accepted: false,
+        phoneNumber: registerFb.phoneNumber.toString(),
+        apartmentId: '',
       })
       extraUserId = id
 
-      await requestService.createAccessRequest({
+      await requestService.createRequest({
+        requestType: RequestType.ACCESS,
         uid: newUserInstance.uid,
         email: newUserInstance.email as string,
         displayName: newUserInstance.displayName as string,
+        description: registerFb.requestDescription,
       })
 
       return {

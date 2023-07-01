@@ -1,4 +1,4 @@
-import { UserRoles } from "./user-roles.enums"
+import { UserRoles } from './user-roles.enums'
 
 export interface IUserBase {
   email: string
@@ -13,6 +13,7 @@ export interface IUserRequest {
   uid: string
   email: string
   displayName: string
+  phoneNumber: string
 }
 
 export interface IUser extends IUserWithDisplayName {
@@ -28,6 +29,8 @@ export interface IExtraUser {
   role: UserRoles
   uid: string
   accepted: boolean
+  phoneNumber: string
+  apartmentId: string
   customization?: string
   id?: string
 }

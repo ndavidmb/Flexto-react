@@ -30,6 +30,9 @@ export const useRegister = () => {
       .string()
       .email('El correo electrónico no es valido')
       .required('El email es requerido'),
+    phoneNumber: yup
+      .number()
+      .required('El número de contacto es requerido'),
     password: yup
       .string()
       .matches(
@@ -44,6 +47,11 @@ export const useRegister = () => {
         'Las contraseñas no coinciden',
       )
       .required('Por favor confirme la contraseña'),
+    requestDescription: yup
+      .string()
+      .required(
+        'El detalle es importante para poder informar al administrador cual va a ser el uso del usuario',
+      ),
   })
 
   const initialValue: IRegisterForm = {
@@ -52,6 +60,8 @@ export const useRegister = () => {
     email: '',
     password: '',
     passwordRepeated: '',
+    phoneNumber: '',
+    requestDescription: '',
     role: UserRoles.CLIENT,
   }
 
@@ -61,6 +71,8 @@ export const useRegister = () => {
     surnames,
     password,
     role,
+    phoneNumber,
+    requestDescription,
   }: IRegisterForm) => {
     if (!photo) {
       dispatch(
@@ -76,9 +88,11 @@ export const useRegister = () => {
     await authController.register({
       email,
       password,
+      phoneNumber,
       displayName: `${name} ${surnames}`,
       photo,
       role,
+      requestDescription,
     })
   }
 

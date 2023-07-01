@@ -7,8 +7,11 @@ import { AdminRequestList } from '../components/AdminRequestList'
 import { useRequestController } from '../controllers/request.controller'
 import { Button } from '../../shared/styled-components/Button'
 import { BiRefresh } from 'react-icons/bi'
+import { useModal } from '../../shared/hooks/useModal'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
 
 export const AdminRequestPage = () => {
+  const { isOpen, openModal, closeModal } = useModal()
   const [adminRequests, setAdminRequests] = useState<
     AdminRequest[]
   >([])
@@ -73,6 +76,14 @@ export const AdminRequestPage = () => {
 
   return (
     <>
+      {isOpen && (
+        <ModalContainer
+          close={closeModal}
+          title="Vincular nuevo usuario a un apartamento"
+        >
+
+        </ModalContainer>
+      )}
       <AdminRequestList
         adminRequests={adminRequests}
         handleAcceptRequest={handleAcceptRequest}

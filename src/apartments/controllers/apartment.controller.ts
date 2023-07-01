@@ -119,10 +119,17 @@ export function useApartmentController() {
     }
   }
 
+  const getAvailableApartments = async () => {
+    const apartments =
+      await firestoreApartments.getAllFirestore()
+    return apartments.filter((apartment) => apartment.owner !== '')
+  }
+
   return {
     addApartment,
     deleteApartment,
     updateApartment,
     getApartments,
+    getAvailableApartments,
   }
 }

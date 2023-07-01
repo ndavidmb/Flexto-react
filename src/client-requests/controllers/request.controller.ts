@@ -1,20 +1,15 @@
-import { useAuthFacade } from '../../auth/facades/auth.facade'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import {
-  REQUEST_TYPE_DICT,
-  RequestType,
-} from '../interfaces/client-request.interface'
+import { useRequestFacade } from '../facades/request.facade'
+import { REQUEST_TYPE_DICT } from '../interfaces/client-request.interface'
 import {
   AdminRequest,
   RequestStates,
 } from '../interfaces/request.interface'
-import { useRequestService } from '../services/request.service'
 
 export const useRequestController = () => {
-  const requestService = useRequestService()
-  const authFacade = useAuthFacade()
+  const requestFacade = useRequestFacade()
   const dispatch = useAppDispatch()
 
   const getAdminRequest = async (): Promise<
@@ -22,9 +17,7 @@ export const useRequestController = () => {
   > => {
     dispatch(setLoading(true))
     try {
-      const adminRequests =
-        await requestService.getAdminRequest()
-      return adminRequests
+      return await requestFacade.getAdminRequest()
     } catch (err) {
       console.error(err)
       dispatch(
@@ -49,27 +42,12 @@ export const useRequestController = () => {
   ) => {
     dispatch(setLoading(true))
     try {
-      await requestService.changeRequestState(
+      await requestFacade.changeRequestState(
         newState,
         request,
       )
-      if (
-        request.type === RequestType.ACCESS &&
-        newState === RequestStates.ACCEPTED
-      ) {
-        await authFacade.activateUserAccount(
-          request.user.uid,
-        )
-      }
     } catch (err) {
       console.error(err)
-
-      // Restart request state
-      await requestService.changeRequestState(
-        RequestStates.PENDING,
-        request,
-      )
-
       dispatch(
         showToast({
           details: [
@@ -89,7 +67,7 @@ export const useRequestController = () => {
   const deleteRequest = async (request: AdminRequest) => {
     dispatch(setLoading(true))
     try {
-      requestService.deleteRequest(request.id!)
+      requestFacade.deleteRequest(request.id!)
       return true
     } catch (err) {
       console.error(err)

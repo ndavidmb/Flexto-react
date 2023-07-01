@@ -32,4 +32,14 @@ export interface AdminRequestVm extends AdminRequest {
   state: string
   email: string
   username: string
+  phoneNumber: string
+}
+
+export interface ClientRequestDTO extends IUserRequest {
+  description: string
+  requestType: RequestType
+
+  // Default void
+  startHour?: string
+  endHour?: string
 }

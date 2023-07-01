@@ -6,15 +6,16 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (value: { blob: Blob; name: string }) => void
   className?: string
+  placeholder?: string
 }
 export const InputFile: FC<Props> = ({
   id,
   onChange,
   className = '',
+  placeholder = 'No se ha seleccionado ningún archivo',
 }) => {
-  const [selectedFile, setSelectedFile] = useState(
-    'No se ha seleccionado ningún archivo',
-  )
+  const [selectedFile, setSelectedFile] =
+    useState(placeholder)
   const inputEl = useRef<HTMLInputElement | null>(null)
 
   const handleChanged = () => {

@@ -6,6 +6,7 @@ import { RequestType } from '../interfaces/client-request.interface'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import {
   AdminRequest,
+  ClientRequestDTO,
   RequestStates,
 } from '../interfaces/request.interface'
 import { IUserRequest } from '../../auth/interfaces/user.interface'
@@ -18,19 +19,26 @@ export const useRequestService = () => {
     (state: RootState) => state.themeState,
   )
 
-  const createAccessRequest = async (
-    user: IUserRequest,
+  const createRequest = async (
+    req: ClientRequestDTO,
   ) => {
     const createdRequest = await firestore.addFirestore({
-      type: RequestType.ACCESS,
-      description: 'Solicitud de acceso',
+      type: req.requestType,
+      description: req.description,
       customization: theme.id,
       approved: RequestStates.PENDING,
-      user,
+      user: {
+        displayName: req.displayName,
+        email: req.email,
+        uid: req.uid,
+        phoneNumber: req.phoneNumber
+      },
       dateDetail: {
         date: getFormattedDate(new Date()),
-        startHour: '',
-        endHour: '',
+
+        // Related to rent something
+        startHour: req.startHour ?? '',
+        endHour: req.endHour ?? '',
       },
     })
     return createdRequest
@@ -56,7 +64,7 @@ export const useRequestService = () => {
   }
 
   return {
-    createAccessRequest,
+    createRequest,
     getAdminRequest,
     changeRequestState,
     deleteRequest,
