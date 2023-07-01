@@ -17,9 +17,7 @@ export const useRequestRepository = () => {
     (state: RootState) => state.themeState,
   )
 
-  const createRequest = async (
-    req: ClientRequestDTO,
-  ) => {
+  const createRequest = async (req: ClientRequestDTO) => {
     const createdRequest = await firestore.addFirestore({
       type: req.requestType,
       description: req.description,
@@ -29,7 +27,7 @@ export const useRequestRepository = () => {
         displayName: req.displayName,
         email: req.email,
         uid: req.uid,
-        phoneNumber: req.phoneNumber
+        phoneNumber: req.phoneNumber,
       },
       dateDetail: {
         date: getFormattedDate(new Date()),
@@ -52,7 +50,13 @@ export const useRequestRepository = () => {
     request: AdminRequest,
   ) => {
     await firestore.updateFirestore(request.id as string, {
-      ...request,
+      customization: request.customization,
+      dateDetail: request.dateDetail,
+      description: request.description,
+      type: request.type,
+      user: request.user,
+      id: request.id,
+      // Updated
       approved: newState,
     })
   }

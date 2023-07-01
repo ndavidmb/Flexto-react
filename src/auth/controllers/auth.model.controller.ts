@@ -11,13 +11,11 @@ import { IUser } from '../interfaces/user.interface'
 import { useAuthRepository } from '../repositories/auth.repository'
 import { useRequestRepository } from '../../client-requests/repositories/request.repository'
 import { RequestType } from '../../client-requests/interfaces/client-request.interface'
-import { useAuthQueryController } from './auth.query.controller'
 import { RegisterError } from '../errors/register.error'
 
 export const useAuthModelController = () => {
   const authRepository = useAuthRepository()
   const requestRepository = useRequestRepository()
-  const authQueryController = useAuthQueryController()
 
   const registerUser = async (
     registerFb: IRegisterFirebase,
@@ -27,7 +25,7 @@ export const useAuthModelController = () => {
   }> => {
     try {
       const { newUserInstance, photoUrl } =
-        await authQueryController.createUser(registerFb)
+        await authRepository.createCompleteUser(registerFb)
 
       await requestRepository.createRequest({
         requestType: RequestType.ACCESS,
@@ -51,7 +49,7 @@ export const useAuthModelController = () => {
       }
     } catch (err) {
       if (err instanceof RegisterError) {
-        authQueryController.deleteUser(err.fallbackData)
+        authRepository.deleteAppUser(err.fallbackData)
       }
 
       throw err

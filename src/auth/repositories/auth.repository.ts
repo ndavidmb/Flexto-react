@@ -6,12 +6,16 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth'
-import { authFirebase } from '../../shared/services/firebase.service'
-import { useFirestore } from '../../shared/hooks/useFirestore'
-import { FirestoreTable } from '../../shared/constants/firestore-tables'
-import { IExtraUser } from '../interfaces/user.interface'
-import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
+import { FirestoreTable } from '../../shared/constants/firestore-tables'
+import { useFirestore } from '../../shared/hooks/useFirestore'
+import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
+import { authFirebase } from '../../shared/services/firebase.service'
+import { RegisterError } from '../errors/register.error'
+import { RegisterFallback } from '../interfaces/register-fallback.interface'
+import { IRegisterFirebase } from '../interfaces/register-form.interface'
+import { UserRoles } from '../interfaces/user-roles.enums'
+import { IExtraUser } from '../interfaces/user.interface'
 
 export const useAuthRepository = () => {
   const firestoreRegisteredUser = useFirestore<IExtraUser>(
@@ -109,17 +113,97 @@ export const useAuthRepository = () => {
     uid: string,
     updatedUser: IExtraUser,
   ) => {
-    await firestoreRegisteredUser.updateFirestore(uid, updatedUser)
+    await firestoreRegisteredUser.updateFirestore(
+      uid,
+      updatedUser,
+    )
   }
 
   const logOut = async () => {
     return await authFirebase.signOut()
   }
 
+  const createCompleteUser = async (
+    registerFb: IRegisterFirebase,
+  ) => {
+    let newUserInstance: User | null = null
+    let extraUserId: string | null = null
+
+    try {
+      const { user: newUser } = await createUser({
+        email: registerFb.email,
+        password: registerFb.password,
+      })
+
+      newUserInstance = newUser
+      const photoUrl = await uploadUserImage(
+        registerFb.photo.blob,
+        newUserInstance.uid,
+      )
+
+      await updateUserProfile(
+        registerFb.displayName,
+        photoUrl,
+      )
+
+      const { id } = await createUserExtra({
+        role: UserRoles.CLIENT,
+        uid: newUserInstance.uid,
+        accepted: false,
+        phoneNumber: registerFb.phoneNumber.toString(),
+        apartmentId: '',
+      })
+      extraUserId = id
+
+      return { extraUserId, newUserInstance, photoUrl }
+    } catch (err) {
+      throw new RegisterError(
+        'Error al crear el registro',
+        { extraUserId, newUserInstance },
+      )
+    }
+  }
+
+  const deleteAppUser = async ({
+    newUserInstance,
+    extraUserId,
+  }: RegisterFallback) => {
+    if (newUserInstance) {
+      await Promise.all([
+        deleteFirebaseUser(newUserInstance),
+        removeUserImage(newUserInstance.uid),
+      ])
+    }
+
+    if (extraUserId) {
+      await deleteUserExtra(extraUserId)
+    }
+  }
+
+  const activateUserAccount = async (uid: string) => {
+    const extraUser = await getExtraUser(uid)
+    await updateExtraUser(extraUser.id!, {
+      ...extraUser,
+      accepted: true,
+    })
+  }
+
+  const updateUserApartment = async (
+    uid: string,
+    apartmentId: string,
+  ) => {
+    const extraUser = await getExtraUser(uid)
+    await updateExtraUser(extraUser.id!, {
+      ...extraUser,
+      apartmentId,
+    })
+  }
+
   return {
     createUser,
     createUserExtra,
     deleteUserExtra,
+    deleteAppUser,
     deleteFirebaseUser,
     getExtraUser,
     removeUserImage,
@@ -128,5 +212,8 @@ export const useAuthRepository = () => {
     updateExtraUser,
     signIn,
     logOut,
+    updateUserApartment,
+    activateUserAccount,
+    createCompleteUser,
   }
 }

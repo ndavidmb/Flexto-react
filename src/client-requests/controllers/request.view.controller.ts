@@ -7,6 +7,7 @@ import {
   AdminRequest,
   RequestStates,
 } from '../interfaces/request.interface'
+import { Apartment } from '../../apartments/interfaces/apartment.interface'
 
 export const useRequestViewController = () => {
   const requestModelController = useRequestModelController()
@@ -87,9 +88,36 @@ export const useRequestViewController = () => {
     }
   }
 
+  const acceptAccessRequest = async (
+    apartment: Apartment,
+    request: AdminRequest,
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      await requestModelController.acceptAccessRequest(
+        request,
+        apartment,
+      )
+      return true
+    } catch (err) {
+      dispatch(
+        showToast({
+          title: `No se pudo vincular el apartamento al usuario ${request.user.displayName}`,
+          details: [
+            'Por favor intente mas tarde o contacte con soporte',
+          ],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
+    updateOwnerApartment: acceptAccessRequest,
   }
 }

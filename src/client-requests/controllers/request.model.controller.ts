@@ -1,5 +1,5 @@
-import { useAuthModelController } from '../../auth/controllers/auth.model.controller'
-import { useAuthQueryController } from '../../auth/controllers/auth.query.controller'
+import { useApartmentController } from '../../apartments/controllers/apartment.controller'
+import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { useAuthRepository } from '../../auth/repositories/auth.repository'
 import { RequestType } from '../interfaces/client-request.interface'
 import {
@@ -10,7 +10,8 @@ import { useRequestRepository } from '../repositories/request.repository'
 
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
-  const authQueryController = useAuthQueryController()
+  const authRepository = useAuthRepository()
+  const apartmentController = useApartmentController()
 
   const getAdminRequest = async () => {
     return await requestRepository.getAdminRequest()
@@ -29,15 +30,6 @@ export const useRequestModelController = () => {
         newState,
         request,
       )
-
-      if (
-        request.type === RequestType.ACCESS &&
-        newState === RequestStates.ACCEPTED
-      ) {
-        await authQueryController.activateUserAccount(
-          request.user.uid,
-        )
-      }
     } catch (err) {
       await requestRepository.changeRequestState(
         RequestStates.PENDING,
@@ -64,10 +56,54 @@ export const useRequestModelController = () => {
     })
   }
 
+  const acceptAccessRequest = async (
+    request: AdminRequest,
+    apartment: Apartment,
+  ) => {
+    try {
+      await authRepository.updateUserApartment(
+        request.user.uid,
+        apartment.id!,
+      )
+
+      await apartmentController.updateApartment(
+        apartment.id!,
+        {
+          ...apartment,
+          owner: request.user.uid,
+        },
+      )
+
+      await changeRequestState(
+        RequestStates.ACCEPTED,
+        request,
+      )
+
+      await authRepository.activateUserAccount(
+        request.user.uid,
+      )
+    } catch (err) {
+      // Restore to initial if fails
+      await authRepository.updateUserApartment(
+        request.user.uid,
+        '',
+      )
+      await apartmentController.updateApartment(
+        apartment.id!,
+        {
+          ...apartment,
+          owner: '',
+        },
+      )
+      throw err
+    }
+  }
+
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
     createAccessRequest,
+    acceptAccessRequest,
   }
 }

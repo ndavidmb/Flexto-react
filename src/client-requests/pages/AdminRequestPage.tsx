@@ -9,29 +9,36 @@ import { Button } from '../../shared/styled-components/Button'
 import { BiRefresh } from 'react-icons/bi'
 import { useModal } from '../../shared/hooks/useModal'
 import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { AdminRequestConnectOwnerForm } from '../components/AdminRequestConnectOwnerForm'
+import { Apartment } from '../../apartments/interfaces/apartment.interface'
 
 export const AdminRequestPage = () => {
-  const { isOpen, openModal, closeModal } = useModal()
+  const { isOpen, openModal, closeModal, setData, data } =
+    useModal<AdminRequest>()
   const [adminRequests, setAdminRequests] = useState<
     AdminRequest[]
   >([])
 
-  const requestController = useRequestViewController()
+  const requestViewController = useRequestViewController()
 
   useEffect(() => {
-    requestController.getAdminRequest().then((adminReq) => {
-      setAdminRequests(adminReq)
-    })
+    requestViewController
+      .getAdminRequest()
+      .then((adminReq) => {
+        setAdminRequests(adminReq)
+      })
   }, [])
 
   const handleRefresh = () => {
-    requestController.getAdminRequest().then((adminReq) => {
-      setAdminRequests(adminReq)
-    })
+    requestViewController
+      .getAdminRequest()
+      .then((adminReq) => {
+        setAdminRequests(adminReq)
+      })
   }
 
   const handleDenyRequest = (request: AdminRequest) => {
-    requestController
+    requestViewController
       .changeRequestState(RequestStates.REJECTED, request)
       .then(() =>
         refreshState(request.id!, RequestStates.REJECTED),
@@ -39,15 +46,12 @@ export const AdminRequestPage = () => {
   }
 
   const handleAcceptRequest = (request: AdminRequest) => {
-    requestController
-      .changeRequestState(RequestStates.ACCEPTED, request)
-      .then(() =>
-        refreshState(request.id!, RequestStates.ACCEPTED),
-      )
+    openModal()
+    setData(request)
   }
 
   const handleDelete = (request: AdminRequest) => {
-    requestController
+    requestViewController
       .deleteRequest(request)
       .then((successfully) => {
         if (successfully) {
@@ -74,14 +78,32 @@ export const AdminRequestPage = () => {
     setAdminRequests(newRequests)
   }
 
+  const handleCloseModal = (apartment?: Apartment) => {
+    if (!apartment) {
+      closeModal()
+      return
+    }
+
+    requestViewController
+      .updateOwnerApartment(apartment, data!)
+      .then((successfully) => {
+        if (successfully) {
+          refreshState(data!.id!, RequestStates.ACCEPTED)
+        }
+      })
+      .finally(() => closeModal())
+  }
+
   return (
     <>
       {isOpen && (
         <ModalContainer
           close={closeModal}
-          title="Vincular nuevo usuario a un apartamento"
+          title="Vincular apartamento"
         >
-
+          <AdminRequestConnectOwnerForm
+            closeModal={handleCloseModal}
+          />
         </ModalContainer>
       )}
       <AdminRequestList
