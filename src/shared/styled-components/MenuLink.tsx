@@ -1,13 +1,13 @@
 import { ReactNode, FC } from 'react'
 import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { RoleType } from '../../auth/interfaces/user.interface'
 import { RootState } from '../store/store'
+import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 
 type Props = {
   href: string
   children: ReactNode
-  permissionsRole: RoleType
+  permissionsRole: UserRoles
 }
 
 export const MenuLink: FC<Props> = ({

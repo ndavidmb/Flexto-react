@@ -1,6 +1,6 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
-import { useRequestService } from '../../client-requests/services/request.service'
+import { useRequestModelController } from '../../client-requests/controllers/request.model.controller'
 import {
   IUserState,
   USER_APPROVED_STATES,
@@ -8,12 +8,16 @@ import {
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
-import { useAuthService } from '../services/auth.service'
+import { useAuthRepository } from '../repositories/auth.repository'
+import { useRequestRepository } from '../../client-requests/repositories/request.repository'
 import { RequestType } from '../../client-requests/interfaces/client-request.interface'
+import { useAuthQueryController } from './auth.query.controller'
+import { RegisterError } from '../errors/register.error'
 
-export const useAuthFacade = () => {
-  const authService = useAuthService()
-  const requestService = useRequestService()
+export const useAuthModelController = () => {
+  const authRepository = useAuthRepository()
+  const requestRepository = useRequestRepository()
+  const authQueryController = useAuthQueryController()
 
   const registerUser = async (
     registerFb: IRegisterFirebase,
@@ -21,42 +25,17 @@ export const useAuthFacade = () => {
     ok: boolean
     user: IUser
   }> => {
-    let newUserInstance: User | null = null
-    let extraUserId: string | null = null
-
     try {
-      const { user: newUser } =
-        await authService.createUser({
-          email: registerFb.email,
-          password: registerFb.password,
-        })
+      const { newUserInstance, photoUrl } =
+        await authQueryController.createUser(registerFb)
 
-      newUserInstance = newUser
-      const photoUrl = await authService.uploadUserImage(
-        registerFb.photo.blob,
-        newUserInstance.uid,
-      )
-
-      await authService.updateUserProfile(
-        registerFb.displayName,
-        photoUrl,
-      )
-
-      const { id } = await authService.createUserExtra({
-        role: UserRoles.CLIENT,
-        uid: newUserInstance.uid,
-        accepted: false,
-        phoneNumber: registerFb.phoneNumber.toString(),
-        apartmentId: '',
-      })
-      extraUserId = id
-
-      await requestService.createRequest({
+      await requestRepository.createRequest({
         requestType: RequestType.ACCESS,
         uid: newUserInstance.uid,
         email: newUserInstance.email as string,
         displayName: newUserInstance.displayName as string,
         description: registerFb.requestDescription,
+        phoneNumber: registerFb.phoneNumber,
       })
 
       return {
@@ -71,15 +50,8 @@ export const useAuthFacade = () => {
         },
       }
     } catch (err) {
-      if (newUserInstance) {
-        await Promise.all([
-          authService.deleteFirebaseUser(newUserInstance),
-          authService.removeUserImage(newUserInstance.uid),
-        ])
-      }
-
-      if (extraUserId) {
-        await authService.deleteUserExtra(extraUserId)
+      if (err instanceof RegisterError) {
+        authQueryController.deleteUser(err.fallbackData)
       }
 
       throw err
@@ -90,7 +62,7 @@ export const useAuthFacade = () => {
     agreement: string,
     user: User,
   ) => {
-    const extraUser = await authService.getExtraUser(
+    const extraUser = await authRepository.getExtraUser(
       user.uid,
     )
 
@@ -118,7 +90,7 @@ export const useAuthFacade = () => {
     credentials: { email: string; password: string },
     agreement: string,
   ): Promise<IUserState> => {
-    const { user } = await authService.signIn(
+    const { user } = await authRepository.signIn(
       credentials.email,
       credentials.password,
     )
@@ -126,19 +98,10 @@ export const useAuthFacade = () => {
     return getExtraUser(agreement, user)
   }
 
-  const activateUserAccount = async (uid: string) => {
-    const extraUser = await authService.getExtraUser(uid)
-    await authService.updateExtraUser(extraUser.id!, {
-      ...extraUser,
-      accepted: true,
-    })
-  }
-
   return {
     registerUser,
     signInWithEmailAndPassword,
-    logOut: authService.logOut,
+    logOut: authRepository.logOut,
     getExtraUser,
-    activateUserAccount,
   }
 }

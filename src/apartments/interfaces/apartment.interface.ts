@@ -1,6 +1,6 @@
 export interface Apartment {
   tower: string
   apartmentNumber: string
-  owner: string
+  owner?: string
   id?: string
 }

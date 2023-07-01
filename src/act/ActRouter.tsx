@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { ActList } from './pages/ActList'
 import { ActWrapper } from './ActWrapper'
 import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
 import { ActDynamicPage } from './pages/ActDynamicPage'

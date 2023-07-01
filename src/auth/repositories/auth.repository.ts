@@ -13,7 +13,7 @@ import { IExtraUser } from '../interfaces/user.interface'
 import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 
-export const useAuthService = () => {
+export const useAuthRepository = () => {
   const firestoreRegisteredUser = useFirestore<IExtraUser>(
     FirestoreTable.REGISTERED_USER,
   )

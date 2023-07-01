@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 import { MenuLink } from '../../styled-components/MenuLink'
 import { Avatar } from '../Avatar'
 import { useAuthDefaultController } from '../../../auth/hooks/useAuthDefaultController'
+import { UserRoles } from '../../../auth/interfaces/user-roles.enums'
 
 export const Sidebar = () => {
   const { id } = useParams()
@@ -32,28 +33,28 @@ export const Sidebar = () => {
         <Avatar />
         <ul className="space-y-2 py-2">
           <MenuLink
-            permissionsRole="admin"
+            permissionsRole={UserRoles.ADMIN}
             href={`/${id}/home/owners`}
           >
             <IoPeople className="text-xl" />
             Propietarios
           </MenuLink>
           <MenuLink
-            permissionsRole="admin"
+            permissionsRole={UserRoles.ADMIN}
             href={`/${id}/home/apartments`}
           >
             <IoBusiness className="text-xl" />
             Apartamentos
           </MenuLink>
           <MenuLink
-            permissionsRole="admin"
+            permissionsRole={UserRoles.ADMIN}
             href={`/${id}/home/states`}
           >
             <IoCheckmarkDoneCircle className="text-xl" />
             Estados
           </MenuLink>
           <MenuLink
-            permissionsRole="admin"
+            permissionsRole={UserRoles.ADMIN}
             href={`/${id}/home/admin-request`}
           >
             <IoHandRightOutline className="text-xl" />
@@ -61,7 +62,7 @@ export const Sidebar = () => {
           </MenuLink>
 
           <MenuLink
-            permissionsRole="admin"
+            permissionsRole={UserRoles.ADMIN}
             href={`/${id}/home/act`}
           >
             <IoBuild className="text-xl" />
@@ -69,7 +70,7 @@ export const Sidebar = () => {
           </MenuLink>
 
           <MenuLink
-            permissionsRole="client"
+            permissionsRole={UserRoles.CLIENT}
             href={`/${id}/home/own-status`}
           >
             <IoAccessibility className="text-xl" />
@@ -77,7 +78,7 @@ export const Sidebar = () => {
           </MenuLink>
 
           <MenuLink
-            permissionsRole="client"
+            permissionsRole={UserRoles.CLIENT}
             href={`/${id}/home/request`}
           >
             <IoMail className="text-xl" />

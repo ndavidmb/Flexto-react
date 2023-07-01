@@ -1,10 +1,10 @@
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { authFirebase } from '../../shared/services/firebase.service'
 
-import { useAuthController } from '../controllers/auth.controller'
+import { useAuthViewController } from '../controllers/auth.view.controller'
 
 export const useFbAuth = (id: string) => {
-  const authController = useAuthController(id)
+  const authController = useAuthViewController(id)
 
   const getCurrentUser = (): Promise<User | null> => {
     return new Promise((resolve) => {

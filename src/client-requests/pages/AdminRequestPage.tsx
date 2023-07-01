@@ -4,7 +4,7 @@ import {
   RequestStates,
 } from '../interfaces/request.interface'
 import { AdminRequestList } from '../components/AdminRequestList'
-import { useRequestController } from '../controllers/request.controller'
+import { useRequestViewController } from '../controllers/request.view.controller'
 import { Button } from '../../shared/styled-components/Button'
 import { BiRefresh } from 'react-icons/bi'
 import { useModal } from '../../shared/hooks/useModal'
@@ -16,7 +16,7 @@ export const AdminRequestPage = () => {
     AdminRequest[]
   >([])
 
-  const requestController = useRequestController()
+  const requestController = useRequestViewController()
 
   useEffect(() => {
     requestController.getAdminRequest().then((adminReq) => {

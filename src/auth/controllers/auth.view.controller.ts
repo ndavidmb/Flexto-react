@@ -13,12 +13,12 @@ import {
 } from '../../shared/store/slices/auth/authSlice'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { useAuthFacade } from '../facades/auth.facade'
+import { useAuthModelController } from './auth.model.controller'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 
-export function useAuthController(themeId: string) {
-  const authFacade = useAuthFacade()
+export function useAuthViewController(themeId: string) {
+  const authModelController = useAuthModelController()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -29,7 +29,7 @@ export function useAuthController(themeId: string) {
     dispatch(setLoading(true))
     try {
       const extraUser =
-        await authFacade.signInWithEmailAndPassword(
+        await authModelController.signInWithEmailAndPassword(
           credentials,
           themeId,
         )
@@ -59,7 +59,7 @@ export function useAuthController(themeId: string) {
 
     dispatch(setLoading(true))
     try {
-      const extraUser = await authFacade.getExtraUser(
+      const extraUser = await authModelController.getExtraUser(
         themeId,
         user,
       )
@@ -87,7 +87,7 @@ export function useAuthController(themeId: string) {
     dispatch(setLoading(true))
     try {
       dispatch(logout())
-      await authFacade.logOut()
+      await authModelController.logOut()
       navigate(`/${themeId}/auth`, {
         replace: true,
       })
@@ -102,7 +102,7 @@ export function useAuthController(themeId: string) {
     dispatch(setLoading(true))
 
     try {
-      const res = await authFacade.registerUser(registerFb)
+      const res = await authModelController.registerUser(registerFb)
       if (!res) {
         return
       }

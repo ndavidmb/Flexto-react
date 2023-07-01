@@ -2,16 +2,14 @@ import { useSelector } from 'react-redux'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { RootState } from '../../shared/store/store'
-import { RequestType } from '../interfaces/client-request.interface'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import {
   AdminRequest,
   ClientRequestDTO,
   RequestStates,
 } from '../interfaces/request.interface'
-import { IUserRequest } from '../../auth/interfaces/user.interface'
 
-export const useRequestService = () => {
+export const useRequestRepository = () => {
   const firestore = useFirestore<AdminRequest>(
     FirestoreTable.REQUEST,
   )

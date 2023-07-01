@@ -1,15 +1,15 @@
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { useRequestFacade } from '../facades/request.facade'
+import { useRequestModelController } from './request.model.controller'
 import { REQUEST_TYPE_DICT } from '../interfaces/client-request.interface'
 import {
   AdminRequest,
   RequestStates,
 } from '../interfaces/request.interface'
 
-export const useRequestController = () => {
-  const requestFacade = useRequestFacade()
+export const useRequestViewController = () => {
+  const requestModelController = useRequestModelController()
   const dispatch = useAppDispatch()
 
   const getAdminRequest = async (): Promise<
@@ -17,7 +17,7 @@ export const useRequestController = () => {
   > => {
     dispatch(setLoading(true))
     try {
-      return await requestFacade.getAdminRequest()
+      return await requestModelController.getAdminRequest()
     } catch (err) {
       console.error(err)
       dispatch(
@@ -42,7 +42,7 @@ export const useRequestController = () => {
   ) => {
     dispatch(setLoading(true))
     try {
-      await requestFacade.changeRequestState(
+      await requestModelController.changeRequestState(
         newState,
         request,
       )
@@ -67,7 +67,7 @@ export const useRequestController = () => {
   const deleteRequest = async (request: AdminRequest) => {
     dispatch(setLoading(true))
     try {
-      requestFacade.deleteRequest(request.id!)
+      requestModelController.deleteRequest(request.id!)
       return true
     } catch (err) {
       console.error(err)
