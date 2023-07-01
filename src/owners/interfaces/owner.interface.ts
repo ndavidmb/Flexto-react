@@ -1,4 +1,8 @@
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import {
+  IExtraUser,
+  IUser,
+} from '../../auth/interfaces/user.interface'
 import { State } from '../../states/interfaces/state.interface'
 export interface BasicOwner {
   name: string
@@ -21,3 +25,5 @@ export interface OwnerFromForm {
 export interface OwnerWithStates extends Owner {
   states: State[]
 }
+
+export interface OwnerDTO extends IUser, IExtraUser {}

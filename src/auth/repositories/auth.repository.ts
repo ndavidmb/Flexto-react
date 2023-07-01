@@ -7,8 +7,6 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
-import { FirestoreTable } from '../../shared/constants/firestore-tables'
-import { useFirestore } from '../../shared/hooks/useFirestore'
 import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
 import { authFirebase } from '../../shared/services/firebase.service'
 import { RegisterError } from '../errors/register.error'
@@ -18,9 +16,9 @@ import { UserRoles } from '../interfaces/user-roles.enums'
 import { IExtraUser } from '../interfaces/user.interface'
 
 export const useAuthRepository = () => {
-  const firestoreRegisteredUser = useFirestore<IExtraUser>(
-    FirestoreTable.REGISTERED_USER,
-  )
+  // const firestoreRegisteredUser = useFirestore<IExtraUser>(
+  //   FirestoreTable.REGISTERED_USER,
+  // )
   const firestoreDocs = useFirestoreDocs()
 
   const createUser = async (user: {
@@ -34,32 +32,32 @@ export const useAuthRepository = () => {
     )
   }
 
-  const createUserExtra = async (user: IExtraUser) => {
-    return await firestoreRegisteredUser.addFirestore(user)
-  }
+  // const createUserExtra = async (user: IExtraUser) => {
+  //   return await firestoreRegisteredUser.addFirestore(user)
+  // }
 
-  const deleteUserExtra = async (extraUserId: string) => {
-    return await firestoreRegisteredUser.deleteFirestore(
-      extraUserId,
-    )
-  }
+  // const deleteUserExtra = async (extraUserId: string) => {
+  //   return await firestoreRegisteredUser.deleteFirestore(
+  //     extraUserId,
+  //   )
+  // }
 
-  const getExtraUser = async (uid: string) => {
-    const registeredUsers =
-      await firestoreRegisteredUser.getAllFirestore()
+  // const getExtraUser = async (uid: string) => {
+  //   const registeredUsers =
+  //     await firestoreRegisteredUser.getAllFirestore()
 
-    const currentUsers = registeredUsers.filter(
-      (user) => user.uid === uid,
-    )
+  //   const currentUsers = registeredUsers.filter(
+  //     (user) => user.uid === uid,
+  //   )
 
-    if (currentUsers.length > 1) {
-      throw new Error(
-        'Should exist just one user with the uid',
-      )
-    }
+  //   if (currentUsers.length > 1) {
+  //     throw new Error(
+  //       'Should exist just one user with the uid',
+  //     )
+  //   }
 
-    return currentUsers[0]
-  }
+  //   return currentUsers[0]
+  // }
 
   const uploadUserImage = async (
     blob: Blob,
@@ -109,15 +107,15 @@ export const useAuthRepository = () => {
     )
   }
 
-  const updateExtraUser = async (
-    uid: string,
-    updatedUser: IExtraUser,
-  ) => {
-    await firestoreRegisteredUser.updateFirestore(
-      uid,
-      updatedUser,
-    )
-  }
+  // const updateExtraUser = async (
+  //   uid: string,
+  //   updatedUser: IExtraUser,
+  // ) => {
+  //   await firestoreRegisteredUser.updateFirestore(
+  //     uid,
+  //     updatedUser,
+  //   )
+  // }
 
   const logOut = async () => {
     return await authFirebase.signOut()
@@ -127,7 +125,7 @@ export const useAuthRepository = () => {
     registerFb: IRegisterFirebase,
   ) => {
     let newUserInstance: User | null = null
-    let extraUserId: string | null = null
+    // let extraUserId: string | null = null
 
     try {
       const { user: newUser } = await createUser({
@@ -146,27 +144,17 @@ export const useAuthRepository = () => {
         photoUrl,
       )
 
-      const { id } = await createUserExtra({
-        role: UserRoles.CLIENT,
-        uid: newUserInstance.uid,
-        accepted: false,
-        phoneNumber: registerFb.phoneNumber.toString(),
-        apartmentId: '',
-      })
-      extraUserId = id
-
-      return { extraUserId, newUserInstance, photoUrl }
+      return { newUserInstance, photoUrl }
     } catch (err) {
       throw new RegisterError(
         'Error al crear el registro',
-        { extraUserId, newUserInstance },
+        { newUserInstance },
       )
     }
   }
 
   const deleteAppUser = async ({
     newUserInstance,
-    extraUserId,
   }: RegisterFallback) => {
     if (newUserInstance) {
       await Promise.all([
@@ -174,46 +162,36 @@ export const useAuthRepository = () => {
         removeUserImage(newUserInstance.uid),
       ])
     }
-
-    if (extraUserId) {
-      await deleteUserExtra(extraUserId)
-    }
   }
 
-  const activateUserAccount = async (uid: string) => {
-    const extraUser = await getExtraUser(uid)
-    await updateExtraUser(extraUser.id!, {
-      ...extraUser,
-      accepted: true,
-    })
-  }
+  // const activateUserAccount = async (uid: string) => {
+  //   const extraUser = await getExtraUser(uid)
+  //   await updateExtraUser(extraUser.id!, {
+  //     ...extraUser,
+  //     accepted: true,
+  //   })
+  // }
 
-  const updateUserApartment = async (
-    uid: string,
-    apartmentId: string,
-  ) => {
-    const extraUser = await getExtraUser(uid)
-    await updateExtraUser(extraUser.id!, {
-      ...extraUser,
-      apartmentId,
-    })
-  }
+  // const updateUserApartment = async (
+  //   uid: string,
+  //   apartmentId: string,
+  // ) => {
+  //   const extraUser = await getExtraUser(uid)
+  //   await updateExtraUser(extraUser.id!, {
+  //     ...extraUser,
+  //     apartmentId,
+  //   })
+  // }
 
   return {
     createUser,
-    createUserExtra,
-    deleteUserExtra,
     deleteAppUser,
     deleteFirebaseUser,
-    getExtraUser,
     removeUserImage,
     uploadUserImage,
     updateUserProfile,
-    updateExtraUser,
     signIn,
     logOut,
-    updateUserApartment,
-    activateUserAccount,
     createCompleteUser,
   }
 }

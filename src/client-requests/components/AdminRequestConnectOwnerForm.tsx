@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useApartmentController } from '../../apartments/controllers/apartment.controller'
+import { useApartmentViewController } from '../../apartments/controllers/apartment.view.controller'
 import { Select } from '../../shared/styled-components/Select'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { Label } from '../../shared/styled-components/Label'
@@ -16,7 +16,7 @@ export const AdminRequestConnectOwnerForm: FC<Props> = ({
   const [availableApartments, setAvailableApartments] =
     useState<Apartment[]>([])
 
-  const apartmentController = useApartmentController()
+  const apartmentController = useApartmentViewController()
 
   useEffect(() => {
     apartmentController
@@ -54,7 +54,7 @@ export const AdminRequestConnectOwnerForm: FC<Props> = ({
         className="w-full"
       >
         {availableApartments.map((apartment) => (
-          <option className='uppercase' value={apartment.id} key={apartment.id}>
+          <option value={apartment.id} key={apartment.id}>
             {apartment.tower} - &nbsp;
             {apartment.apartmentNumber}
           </option>

@@ -1,6 +1,7 @@
-import { useApartmentController } from '../../apartments/controllers/apartment.controller'
+import { useApartmentViewController } from '../../apartments/controllers/apartment.view.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
-import { useAuthRepository } from '../../auth/repositories/auth.repository'
+import { OwnerDTO } from '../../owners/interfaces/owner.interface'
+import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { RequestType } from '../interfaces/client-request.interface'
 import {
   AdminRequest,
@@ -10,8 +11,8 @@ import { useRequestRepository } from '../repositories/request.repository'
 
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
-  const authRepository = useAuthRepository()
-  const apartmentController = useApartmentController()
+  const ownerRepository = useOwnerRepository()
+  const apartmentController = useApartmentViewController()
 
   const getAdminRequest = async () => {
     return await requestRepository.getAdminRequest()
@@ -60,34 +61,37 @@ export const useRequestModelController = () => {
     request: AdminRequest,
     apartment: Apartment,
   ) => {
+    let owner: OwnerDTO | null = null
+
     try {
-      await authRepository.updateUserApartment(
+      owner = await ownerRepository.getOwnerByUid(
         request.user.uid,
-        apartment.id!,
       )
 
-      await apartmentController.updateApartment(
-        apartment.id!,
-        {
+      await Promise.all([
+        ownerRepository.updateOwner(owner.id!, {
+          ...owner,
+          apartmentId: apartment.id!,
+        }),
+        apartmentController.updateApartment(apartment.id!, {
           ...apartment,
           owner: request.user.uid,
-        },
-      )
-
-      await changeRequestState(
-        RequestStates.ACCEPTED,
-        request,
-      )
-
-      await authRepository.activateUserAccount(
-        request.user.uid,
-      )
+        }),
+        changeRequestState(RequestStates.ACCEPTED, request),
+        ownerRepository.activateOwnerAccount(
+          owner.id!,
+          owner,
+        ),
+      ])
     } catch (err) {
       // Restore to initial if fails
-      await authRepository.updateUserApartment(
-        request.user.uid,
-        '',
-      )
+      if (owner) {
+        await ownerRepository.updateOwner(owner.id!, {
+          ...owner,
+          apartmentId: '',
+        })
+      }
+
       await apartmentController.updateApartment(
         apartment.id!,
         {

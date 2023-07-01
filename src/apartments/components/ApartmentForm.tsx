@@ -1,10 +1,8 @@
 import { Field, Form, Formik } from 'formik'
 import { FC } from 'react'
-import { useDispatch } from 'react-redux'
-import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
+import { useApartmentViewController } from '../controllers/apartment.view.controller'
 import { Apartment } from '../interfaces/apartment.interface'
-import { useApartmentController } from '../controllers/apartment.controller'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -22,14 +20,9 @@ export const ApartmentForm: FC<Props> = ({
     apartmentNumber: data?.apartmentNumber || '',
   }
 
-  const dispatch = useDispatch()
-
-  const apartmentService = useApartmentController()
+  const apartmentViewController = useApartmentViewController()
 
   const handleSubmit = (values: Apartment) => {
-    // Pone el spinner a andar
-    dispatch(setLoading(true))
-
     if (data) {
       updateApt(values)
       return
@@ -39,26 +32,25 @@ export const ApartmentForm: FC<Props> = ({
   }
 
   const updateApt = (values: Apartment) => {
-    apartmentService
+    apartmentViewController
       .updateApartment(data?.id as string, values)
       .then(() => {
         closeModal(true)
       })
-      .finally(() => dispatch(setLoading(false)))
   }
 
   // Esto llama al service, y agrega un apartamento
   const createApt = (values: Apartment) => {
-    apartmentService
+    apartmentViewController
       .addApartment({
         // Se pasa de número a string
         apartmentNumber: values.apartmentNumber,
         tower: values.tower,
+        owner: "",
       })
       .then(() => {
         closeModal(true)
       })
-      .finally(() => dispatch(setLoading(false)))
   }
 
   return (

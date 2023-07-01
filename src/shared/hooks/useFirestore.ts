@@ -1,4 +1,7 @@
 import {
+  DocumentData,
+  Query,
+  QueryConstraint,
   addDoc,
   collection,
   deleteDoc,
@@ -40,22 +43,53 @@ export function useFirestore<T>(tableName: string) {
     })
   }
 
-  const getAllFirestore = async () => {
+  const getAllFirestore = async (
+    extraFilters?: QueryConstraint[],
+  ) => {
     if (!theme.id && !id) {
       return []
     }
     const customization = `customizations/${id || theme.id}`
-    const q = query(
-      collection(db, tableName),
-      where(
-        'customization',
-        '==',
-        customization,
-      ),
-    )
+    const q = extraFilters
+      ? query(
+          collection(db, tableName),
+          where('customization', '==', customization),
+          ...extraFilters,
+        )
+      : query(
+          collection(db, tableName),
+          where('customization', '==', customization),
+        )
 
     const documentSnapshots = await getDocs(q)
 
+    const dataList = documentSnapshots.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as T),
+    )
+
+    return dataList
+  }
+
+  const getByParam = async (
+    key: keyof T,
+    valueToCompare: unknown,
+  ) => {
+    if (!theme.id && !id) {
+      return []
+    }
+    const customization = `customizations/${id || theme.id}`
+
+    const q = query(
+      collection(db, tableName),
+      where('customization', '==', customization),
+      where(key as string, '==', valueToCompare),
+    )
+
+    const documentSnapshots = await getDocs(q)
     const dataList = documentSnapshots.docs.map(
       (doc) =>
         ({
@@ -72,5 +106,6 @@ export function useFirestore<T>(tableName: string) {
     updateFirestore,
     deleteFirestore,
     addFirestore,
+    getByParam,
   }
 }

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useOutlet } from 'react-router-dom'
 import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../shared/components/Modal/Modal'
 import { useModal } from '../shared/hooks/useModal'
-import { setLoading } from '../shared/store/slices/loading/loadingSlice'
 import { OwnerForm } from './components/OwnerForm'
 import { OwnerList } from './components/OwnerList'
+import { useOwnerViewController } from './controllers/owner.view.controller'
 import { Owner } from './interfaces/owner.interface'
-import { useOwnerService } from './services/owner.service'
 
 export const OwnerWrapper = () => {
   // States
@@ -17,27 +15,17 @@ export const OwnerWrapper = () => {
   const [owners, setOwners] = useState<Owner[]>([])
 
   // Hooks
-  const ownerService = useOwnerService()
-  const dispatch = useDispatch()
+  const ownerViewController = useOwnerViewController()
   const outlet = useOutlet()
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Owner>()
 
   // Life cycle
   useEffect(() => {
-    dispatch(setLoading(true))
-    ownerService
-      .getOwners()
-      .then((owners) => {
-        setOwners(owners)
-        setAllOwners(owners)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-      .finally(() => {
-        dispatch(setLoading(false))
-      })
+    ownerViewController.getOwners().then((owners) => {
+      setOwners(owners)
+      setAllOwners(owners)
+    })
   }, [consult])
 
   // Functions

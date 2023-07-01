@@ -12,9 +12,11 @@ import { useAuthRepository } from '../repositories/auth.repository'
 import { useRequestRepository } from '../../client-requests/repositories/request.repository'
 import { RequestType } from '../../client-requests/interfaces/client-request.interface'
 import { RegisterError } from '../errors/register.error'
+import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 
 export const useAuthModelController = () => {
   const authRepository = useAuthRepository()
+  const ownerRepository = useOwnerRepository()
   const requestRepository = useRequestRepository()
 
   const registerUser = async (
@@ -23,11 +25,23 @@ export const useAuthModelController = () => {
     ok: boolean
     user: IUser
   }> => {
+    let extraUserId: string | null = null
     try {
       const { newUserInstance, photoUrl } =
         await authRepository.createCompleteUser(registerFb)
 
-      await requestRepository.createRequest({
+      await ownerRepository.createOwner({
+        role: UserRoles.CLIENT,
+        uid: newUserInstance.uid,
+        accepted: false,
+        phoneNumber: registerFb.phoneNumber.toString(),
+        apartmentId: '',
+        displayName: newUserInstance.displayName as string,
+        email: newUserInstance.email as string,
+        photoUrl: newUserInstance.photoURL as string,
+      })
+
+      const { id } = await requestRepository.createRequest({
         requestType: RequestType.ACCESS,
         uid: newUserInstance.uid,
         email: newUserInstance.email as string,
@@ -36,6 +50,7 @@ export const useAuthModelController = () => {
         phoneNumber: registerFb.phoneNumber,
       })
 
+      extraUserId = id
       return {
         ok: true,
         user: {
@@ -50,6 +65,9 @@ export const useAuthModelController = () => {
     } catch (err) {
       if (err instanceof RegisterError) {
         authRepository.deleteAppUser(err.fallbackData)
+        if (extraUserId) {
+          ownerRepository.deleteOwner(extraUserId)
+        }
       }
 
       throw err
@@ -60,10 +78,9 @@ export const useAuthModelController = () => {
     agreement: string,
     user: User,
   ) => {
-    const extraUser = await authRepository.getExtraUser(
+    const extraUser = await ownerRepository.getOwnerByUid(
       user.uid,
     )
-
     if (extraUser) {
       return {
         uid: extraUser.uid,

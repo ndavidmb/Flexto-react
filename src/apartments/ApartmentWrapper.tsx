@@ -4,7 +4,7 @@ import { ModalContainer } from '../shared/components/Modal/Modal'
 import { useModal } from '../shared/hooks/useModal'
 import { ApartmentForm } from './components/ApartmentForm'
 import { ApartmentList } from './components/ApartmentList'
-import { useApartmentController } from './controllers/apartment.controller'
+import { useApartmentViewController } from './controllers/apartment.view.controller'
 import { Apartment } from './interfaces/apartment.interface'
 import { ApartmentWithOwner } from './components/AparmentWithOwner'
 
@@ -20,10 +20,10 @@ export const ApartmentWrapper = () => {
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Apartment>()
 
-  const apartmentService = useApartmentController()
+  const apartmentViewController = useApartmentViewController()
 
   useEffect(() => {
-    apartmentService.getApartments().then((apartments) => {
+    apartmentViewController.getApartments().then((apartments) => {
       setApartments(apartments)
       setAllApartments(apartments)
     })
@@ -42,7 +42,7 @@ export const ApartmentWrapper = () => {
   }
 
   const handleDelete = (tableApartment: ApartmentWithOwner) => {
-    apartmentService.deleteApartment(tableApartment).then((deleted) => {
+    apartmentViewController.deleteApartment(tableApartment).then((deleted) => {
       if (deleted) {
         const apartmentsWithoutDeleted = apartments.filter(
           (apartment) => apartment.id !== tableApartment.id,
