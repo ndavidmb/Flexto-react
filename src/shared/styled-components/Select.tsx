@@ -1,11 +1,9 @@
 import { Field } from 'formik'
-import {
-  DetailedHTMLProps,
-  FC
-} from 'react'
+import { DetailedHTMLProps, FC } from 'react'
 
 type Props = {
   formik?: boolean
+  allowUndefined?: boolean
 } & DetailedHTMLProps<
   React.SelectHTMLAttributes<HTMLSelectElement>,
   HTMLSelectElement
@@ -14,6 +12,7 @@ type Props = {
 export const Select: FC<Props> = ({
   formik = false,
   className = '',
+  allowUndefined = true,
   ...props
 }) => {
   let customClass = 'border bg-white px-2 py-1 outline-none'
@@ -25,9 +24,12 @@ export const Select: FC<Props> = ({
   if (formik) {
     return (
       <Field {...props} as="select" className={customClass}>
-        <option value={undefined}>
-          ---- Seleccione ----
-        </option>
+        {allowUndefined && (
+          <option value={undefined}>
+            ---- Seleccione ----
+          </option>
+        )}
+
         {props.children}
       </Field>
     )
@@ -35,9 +37,12 @@ export const Select: FC<Props> = ({
 
   return (
     <select {...props} className={customClass}>
-      <option value={undefined}>
-        ---- Seleccione ----
-      </option>
+      {allowUndefined && (
+        <option value={undefined}>
+          ---- Seleccione ----
+        </option>
+      )}
+
       {props.children}
     </select>
   )

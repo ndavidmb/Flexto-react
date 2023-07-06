@@ -5,8 +5,14 @@ import { RootState } from '../../shared/store/store'
 import { ClientRequestList } from '../components/ClientRequestList'
 import { useRequestClientViewController } from '../controllers/request-client.view.controller'
 import { AdminRequest } from '../interfaces/request.interface'
+import { useModal } from '../../shared/hooks/useModal'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { ClientRequestStateForm } from '../components/ClientRequestStateForm'
+import { ClientRequestForm } from '../components/ClientRequestForm'
 
 export const ClientRequestPage = () => {
+  const { closeModal, openModal, setData, data, isOpen } =
+    useModal()
   const [requestStates, setRequestStates] = useState<
     AdminRequest[]
   >([])
@@ -30,24 +36,32 @@ export const ClientRequestPage = () => {
   }, [])
 
   return (
-    <DefaultContainerWithSearch
-      title="Solicitudes"
-      actionName="Crear solicitud"
-      action={() => {
-        console.log('open modal')
-      }}
-      searchOptions={{
-        allItems: requestAllStates,
-        searchKeys: ['description'],
-        setItems: setRequestStates,
-      }}
-    >
-      <ClientRequestList
-        requests={requestStates}
-        cancelRequest={() => {
-          console.log('canceled')
+    <>
+      {isOpen && (
+        <ModalContainer
+          close={closeModal}
+          title="Crear solicitud"
+        >
+          <ClientRequestForm />
+        </ModalContainer>
+      )}
+      <DefaultContainerWithSearch
+        title="Solicitudes"
+        actionName="Crear solicitud"
+        action={openModal}
+        searchOptions={{
+          allItems: requestAllStates,
+          searchKeys: ['description'],
+          setItems: setRequestStates,
         }}
-      />
-    </DefaultContainerWithSearch>
+      >
+        <ClientRequestList
+          requests={requestStates}
+          cancelRequest={() => {
+            console.log('canceled')
+          }}
+        />
+      </DefaultContainerWithSearch>
+    </>
   )
 }

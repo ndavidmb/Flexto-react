@@ -1,7 +1,7 @@
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { useStateRepository } from '../repositories/state.repository'
 
-const useStateModelController = () => {
+export const useStateModelController = () => {
   const stateRepository = useStateRepository()
   const ownerRepository = useOwnerRepository()
 
