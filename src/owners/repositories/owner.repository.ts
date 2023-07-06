@@ -3,6 +3,7 @@ import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { OwnerDTO } from '../interfaces/owner.interface'
+import { State } from '../../states/interfaces/state.interface'
 
 export const useOwnerRepository = () => {
   const firestore = useFirestore<OwnerDTO>(
@@ -10,8 +11,15 @@ export const useOwnerRepository = () => {
   )
 
   const getAllOwners = async () => {
-    return firestore.getAllFirestore([
+    return await firestore.getAllFirestore([
       where('role', '==', UserRoles.CLIENT),
+    ])
+  }
+
+  const getOwnersByState = async (stateId: string) => {
+    return await firestore.getAllFirestore([
+      where('role', '==', UserRoles.CLIENT),
+      where('states', 'array-contains', stateId),
     ])
   }
 
@@ -45,23 +53,13 @@ export const useOwnerRepository = () => {
     await firestore.updateFirestore(id, updatedUser)
   }
 
-  // const updateUserApartment = async (
-  //   uid: string,
-  //   apartmentId: string,
-  // ) => {
-  //   const extraUser = await getExtraUser(uid)
-  //   await updateExtraUser(extraUser.id!, {
-  //     ...extraUser,
-  //     apartmentId,
-  //   })
-  // }
-
   return {
     getOwnerByUid,
     getAllOwners,
     activateOwnerAccount,
     deleteOwner,
     createOwner,
+    getOwnersByState,
     updateOwner,
   }
 }

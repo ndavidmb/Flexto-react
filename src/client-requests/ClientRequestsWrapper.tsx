@@ -1,6 +1,6 @@
 import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
 import { ContainerHeader } from '../shared/styled-components/ContainerHeader'
-import { ClientRequestList } from './components/ClientRequestList'
+import { ClientRequestPage } from './pages/ClientRequestPage'
 
 /**
  * Va a tener dos components <ClientRequestList /> y <ClientRequestForm />
@@ -18,5 +18,5 @@ import { ClientRequestList } from './components/ClientRequestList'
  */
 
 export const ClientRequestsWrapper = () => {
-  return <ClientRequestList></ClientRequestList>
+  return <ClientRequestPage></ClientRequestPage>
 }

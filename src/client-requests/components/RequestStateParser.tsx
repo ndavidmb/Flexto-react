@@ -3,7 +3,7 @@ import { RequestStates } from '../interfaces/request.interface'
 
 type Props = { currentState: RequestStates }
 
-export const AdminRequestState: FC<Props> = ({
+export const RequestStateParser: FC<Props> = ({
   currentState,
 }) => {
   if (currentState === RequestStates.PENDING) {

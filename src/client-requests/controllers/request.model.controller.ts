@@ -103,11 +103,21 @@ export const useRequestModelController = () => {
     }
   }
 
+  const getOwnerRequest = async (uid: string) => {
+    try {
+      return await requestRepository.getOwnerRequests(uid)
+    } catch (err) {
+      console.log(err)
+      return []
+    }
+  }
+
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
     createAccessRequest,
     acceptAccessRequest,
+    getOwnerRequest,
   }
 }

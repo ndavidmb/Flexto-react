@@ -8,6 +8,7 @@ import {
   ClientRequestDTO,
   RequestStates,
 } from '../interfaces/request.interface'
+import { where } from 'firebase/firestore/lite'
 
 export const useRequestRepository = () => {
   const firestore = useFirestore<AdminRequest>(
@@ -65,10 +66,17 @@ export const useRequestRepository = () => {
     await firestore.deleteFirestore(id)
   }
 
+  const getOwnerRequests = async (uid: string) => {
+    return await firestore.getAllFirestore([
+      where('user.uid', '==', uid),
+    ])
+  }
+
   return {
     createRequest,
     getAdminRequest,
     changeRequestState,
     deleteRequest,
+    getOwnerRequests,
   }
 }

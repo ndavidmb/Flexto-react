@@ -15,6 +15,7 @@ type Props = {
   closeModal: (refresh?: boolean) => void
 }
 
+// TODO: Solucionar bug the eliminar el estado del chips
 // Esto varía dependiendo de los datos que necesite llenar
 export const StateForm: FC<Props> = ({
   data,
@@ -52,6 +53,8 @@ export const StateForm: FC<Props> = ({
       .updateState(data?.id as string, {
         affair: values.affair,
         detail: values.detail,
+        maxAvailability: 0,
+        owners: [],
         state: values.state
           .split(',')
           .map((state) => state.trim()),
@@ -67,6 +70,8 @@ export const StateForm: FC<Props> = ({
     const stateForService: State = {
       affair: values.affair,
       detail: values.detail,
+      maxAvailability: 0,
+      owners: [],
       state: values.state
         .split(',')
         .map((state) => state.trim()),

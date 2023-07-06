@@ -1,80 +1,72 @@
-import { useEffect, useState } from 'react'
-import { FirestoreTable } from '../../shared/constants/firestore-tables'
-import { useFirestore } from '../../shared/hooks/useFirestore'
-import { Table } from '../../shared/styled-components/Table'
+import { FC } from 'react'
 import { THead } from '../../shared/styled-components/THead'
+import { Table } from '../../shared/styled-components/Table'
+import { AdminRequest } from '../interfaces/request.interface'
 import { TRow } from '../../shared/styled-components/TRow'
-import {
-  ClientRequest,
-  REQUEST_TYPE_DICT,
-} from '../interfaces/client-request.interface'
-import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
+import { Button } from '../../shared/styled-components/Button'
+import { REQUEST_TYPE_DICT } from '../interfaces/client-request.interface'
+import { RequestStateParser } from './RequestStateParser'
 
-export const ClientRequestList = () => {
-  // React hooks
-  // clientRequests = []
-  const [clientRequests, setClientRequests] = useState<
-    ClientRequest[]
-  >([])
-  // clientRequests = []
-  // Ciclos de vida del componente
+type Props = {
+  requests: AdminRequest[]
+  cancelRequest: (request: AdminRequest) => void
+}
 
-  // OnInit Component
-  useEffect(() => {
-    // 1. clientRequests = []
-    firestore.getAllFirestore().then((clients) => {
-      // 3. // clientRequests = []
-      setClientRequests(clients)
-      // 4 clientRequests = [info]
-    })
-    // 2. clientRequests = []
-  }, [])
-
-  // Custom Hooks
-  const firestore = useFirestore<ClientRequest>(
-    FirestoreTable.REQUEST,
-  )
-
-  const handleClick = () => {}
-
-  // TEMPLATE
+export const ClientRequestList: FC<Props> = ({
+  requests,
+  cancelRequest,
+}) => {
   return (
-    <DefaultContainerWithSearch<ClientRequest>
-      action={handleClick}
-      title="Solicitudes de acceso"
-      searchOptions={{
-        searchKeys: ['description', 'idPublicArea'],
-        allItems: clientRequests,
-        setItems: setClientRequests,
-      }}
-    >
-      <Table>
-        <THead>
-          <th scope="col">Tipo</th>
-          <th scope="col">Descripción</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Estado</th>
-        </THead>
-        <tbody>
-          {clientRequests.map((clientRequest, index) => (
-            <TRow index={index} key={clientRequest.id}>
-              <th
-                scope="row"
-                className="font-medium text-gray-900 whitespace-nowrap"
+    <Table>
+      <THead>
+        <th scope="col">Tipo</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Acción</th>
+      </THead>
+      <tbody>
+        {requests.map((request, index) => (
+          <TRow index={index} key={request.id}>
+            <th
+              scope="row"
+              className="font-medium text-gray-900 whitespace-nowrap"
+            >
+              {REQUEST_TYPE_DICT[request.type]}
+              <RequestStateParser
+                currentState={request.approved}
+              />
+            </th>
+            <td>{request.description}</td>
+            <td>
+              <ul>
+                <li>
+                  Solicitud del {request.dateDetail.date}
+                </li>
+                {request.dateDetail.startHour && (
+                  <li>
+                    Hora de inicio{' '}
+                    {request.dateDetail.startHour}
+                  </li>
+                )}
+                {request.dateDetail.endHour && (
+                  <li>
+                    Hora de inicio{' '}
+                    {request.dateDetail.endHour}
+                  </li>
+                )}
+              </ul>
+            </td>
+            <td className="flex gap-2">
+              <Button
+                color="primary"
+                onClick={() => cancelRequest(request)}
               >
-                {REQUEST_TYPE_DICT[clientRequest.type]}
-              </th>
-              <td>{clientRequest.description}</td>
-              <td>{clientRequest.dateDetail.date}</td>
-              <td>
-                {clientRequest.approved
-                  ? 'Aprobado'
-                  : 'Denegado'}
-              </td>
-            </TRow>
-          ))}
-        </tbody>
-      </Table>
-    </DefaultContainerWithSearch>
+                Cancelar solicitud
+              </Button>
+            </td>
+          </TRow>
+        ))}
+      </tbody>
+    </Table>
   )
 }

@@ -10,7 +10,7 @@ import {
   REQUEST_STATES_DICT,
 } from '../interfaces/request.interface'
 import { AdminRequestActions } from './AdminRequestActions'
-import { AdminRequestState } from './AdminRequestState'
+import { RequestStateParser } from './RequestStateParser'
 
 type Props = {
   adminRequests: AdminRequest[]
@@ -76,7 +76,7 @@ export const AdminRequestList: FC<Props> = ({
             <TRow index={index} key={request.id}>
               <td className="w-32">
                 {REQUEST_TYPE_DICT[request.type]}
-                <AdminRequestState
+                <RequestStateParser
                   currentState={request.approved}
                 />
               </td>
