@@ -5,6 +5,7 @@ import { AdminRequestPage } from '../client-requests/pages/AdminRequestPage'
 import { CustomizationWrapper } from '../customizations/CustomizationWrapper'
 import { OwnerWrapper } from '../owners/OwnerWrapper'
 import { OwnerDetail } from '../owners/components/OwnerDetail'
+import { PublicSpacesPage } from '../public-spaces/pages/PublicSpacesPage'
 import { StateWrapper } from '../states/StatesWrapper'
 
 export const AdminRouter = () => {
@@ -20,6 +21,10 @@ export const AdminRouter = () => {
       </Route>
 
       <Route path="states" element={<StateWrapper />} />
+      <Route
+        path="public-spaces"
+        element={<PublicSpacesPage />}
+      />
 
       <Route
         path="admin-request"

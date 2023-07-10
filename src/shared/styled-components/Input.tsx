@@ -16,6 +16,7 @@ export const Input: FC<Props> = ({
 }) => {
   return (
     <Field
+      id={name}
       className={`
         ${className}
           border
