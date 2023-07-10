@@ -17,19 +17,24 @@ export const useApartmentModelController = () => {
 
     const apartmentsWithOwners = apartments.map(
       (apartment) => {
+        const withoutOwner = {
+          ...apartment,
+          phone: '',
+          email: '',
+          name: '',
+          hasOwner: false,
+        }
         if (!apartment.owner) {
-          return {
-            ...apartment,
-            phone: '',
-            email: '',
-            name: '',
-            hasOwner: false,
-          }
+          return withoutOwner
         }
 
         const owner = owners.find(
           (o) => o.uid === apartment.owner,
         )
+
+        if (!owner) {
+          return withoutOwner
+        }
 
         return {
           ...apartment,
