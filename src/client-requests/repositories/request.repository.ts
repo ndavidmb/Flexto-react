@@ -31,7 +31,7 @@ export const useRequestRepository = () => {
         phoneNumber: req.phoneNumber,
       },
       dateDetail: {
-        date: getFormattedDate(new Date()),
+        date: req.date,
 
         // Related to rent something
         startHour: req.startHour ?? '',

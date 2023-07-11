@@ -1,4 +1,4 @@
-import { DynamicObject } from '../../shared/interfaces/dynamic-object.interface'
+import { DynamicDays } from '../../shared/interfaces/dynamic-object.interface'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
@@ -37,7 +37,7 @@ export const usePublicSpacesViewController = () => {
 
   const createPublicSpace = async (
     space: PlainPublicSpace,
-    days: DynamicObject,
+    days: DynamicDays,
   ) => {
     dispatch(setLoading(true))
     try {
@@ -73,7 +73,7 @@ export const usePublicSpacesViewController = () => {
   const updatePublicSpace = async (
     id: string,
     space: PlainPublicSpace,
-    days: DynamicObject,
+    days: DynamicDays,
   ) => {
     dispatch(setLoading(true))
     try {

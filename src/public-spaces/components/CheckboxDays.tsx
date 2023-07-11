@@ -1,14 +1,14 @@
 import { FC } from 'react'
-import { DynamicObject } from '../../shared/interfaces/dynamic-object.interface'
+import { DynamicDays } from '../../shared/interfaces/dynamic-object.interface'
 import { Checkbox } from '../../shared/styled-components/Checkbox'
 import { Label } from '../../shared/styled-components/Label'
 import { Days } from '../interfaces/public-space.interface'
 import { DAYS } from '../constants/days'
 
 type Props = {
-  days: DynamicObject
+  days: DynamicDays
   setDays: React.Dispatch<
-    React.SetStateAction<DynamicObject>
+    React.SetStateAction<DynamicDays>
   >
 }
 

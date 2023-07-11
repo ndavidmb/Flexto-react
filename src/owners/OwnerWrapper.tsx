@@ -60,7 +60,6 @@ export const OwnerWrapper = () => {
             setItems: setOwners,
           }}
           title="Propietarios"
-          action={open}
         >
           <OwnerList
             openEdit={open}

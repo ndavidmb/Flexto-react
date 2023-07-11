@@ -7,7 +7,7 @@ import { useRequestClientViewController } from '../controllers/request-client.vi
 import { AdminRequest } from '../interfaces/request.interface'
 import { useModal } from '../../shared/hooks/useModal'
 import { ModalContainer } from '../../shared/components/Modal/Modal'
-import { ClientRequestStateForm } from '../components/ClientRequestStateForm'
+import { ClientRequestPublicSpaceForm } from '../components/ClientRequestPublicSpaceForm'
 import { ClientRequestForm } from '../components/ClientRequestForm'
 
 export const ClientRequestPage = () => {
@@ -35,6 +35,10 @@ export const ClientRequestPage = () => {
       })
   }, [])
 
+  const handleClose = (refresh?: boolean) => {
+    closeModal()
+  }
+
   return (
     <>
       {isOpen && (
@@ -42,7 +46,7 @@ export const ClientRequestPage = () => {
           close={closeModal}
           title="Crear solicitud"
         >
-          <ClientRequestForm />
+          <ClientRequestForm closeModal={handleClose} />
         </ModalContainer>
       )}
       <DefaultContainerWithSearch

@@ -8,6 +8,10 @@ export const usePublicSpacesModelController = () => {
     return await publicSpacesRepository.getAll()
   }
 
+  const getAvailablePublicSpaces = async () => {
+    return await publicSpacesRepository.getAll()
+  }
+
   const createPublicSpace = async (space: PublicSpace) => {
     return await publicSpacesRepository.create(space)
   }
@@ -26,6 +30,7 @@ export const usePublicSpacesModelController = () => {
 
   return {
     getAllPublicSpaces,
+    getAvailablePublicSpaces,
     createPublicSpace,
     updatePublicSpace,
     deletePublicSpace,

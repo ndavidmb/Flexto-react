@@ -40,6 +40,10 @@ export interface ClientRequestDTO extends IUserRequest {
   requestType: RequestType
 
   // Default void
+  date: string
   startHour?: string
   endHour?: string
+
+  // This could be foreign id to act or public space
+  foreignId?: string
 }

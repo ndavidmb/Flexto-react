@@ -1,5 +1,5 @@
 import { Days } from "../../public-spaces/interfaces/public-space.interface";
 
-export interface DynamicObject {
+export interface DynamicDays {
   [key: string]: Days
 }

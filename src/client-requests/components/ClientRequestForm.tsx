@@ -1,13 +1,19 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { Select } from '../../shared/styled-components/Select'
 import {
   REQUEST_TYPE_DICT,
   RequestType,
 } from '../interfaces/client-request.interface'
 import { Label } from '../../shared/styled-components/Label'
-import { ClientRequestStateForm } from './ClientRequestStateForm'
+import { ClientRequestPublicSpaceForm } from './ClientRequestPublicSpaceForm'
 
-export const ClientRequestForm = () => {
+type Props = {
+  closeModal: (refresh?: boolean) => void
+}
+
+export const ClientRequestForm: FC<Props> = ({
+  closeModal,
+}) => {
   const [requestType, setRequestType] = useState(1)
 
   return (
@@ -25,8 +31,8 @@ export const ClientRequestForm = () => {
           <option value={RequestType.ACT}>
             {REQUEST_TYPE_DICT[RequestType.ACT]}
           </option>
-          <option value={RequestType.CHANGE_STATE}>
-            {REQUEST_TYPE_DICT[RequestType.CHANGE_STATE]}
+          <option value={RequestType.PUBLIC_SPACE}>
+            {REQUEST_TYPE_DICT[RequestType.PUBLIC_SPACE]}
           </option>
         </Select>
       </div>
@@ -34,7 +40,9 @@ export const ClientRequestForm = () => {
         // TODO: Agregar formulario del acta
         <div>Lógica de acta</div>
       ) : (
-        <ClientRequestStateForm />
+        <ClientRequestPublicSpaceForm
+          handleClose={closeModal}
+        />
       )}
     </>
   )

@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
 import { FC, useEffect, useState } from 'react'
-import { DynamicObject } from '../../shared/interfaces/dynamic-object.interface'
+import { DynamicDays } from '../../shared/interfaces/dynamic-object.interface'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 import { Label } from '../../shared/styled-components/Label'
@@ -23,7 +23,7 @@ export const PublicSpacesForm: FC<Props> = ({
   data,
   closeModal,
 }) => {
-  const [days, setDays] = useState<DynamicObject>({})
+  const [days, setDays] = useState<DynamicDays>({})
 
   useEffect(() => {
     if (data?.schedule.days) {

@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 type Props = {
   name: string
-  type: 'email' | 'password' | 'text' | 'number'
+  type: 'email' | 'password' | 'text' | 'number' | 'date'
   placeholder: string
   className?: string
 }

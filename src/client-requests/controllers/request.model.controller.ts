@@ -2,7 +2,10 @@ import { useApartmentViewController } from '../../apartments/controllers/apartme
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { useAppSelector } from '../../shared/store/hooks'
+import { getFormattedDate } from '../../shared/utils/formattedDate'
 import { RequestType } from '../interfaces/client-request.interface'
+import { RequestPublicSpaceDTO } from '../interfaces/request-public-space.interface'
 import {
   AdminRequest,
   RequestStates,
@@ -13,6 +16,10 @@ export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
   const ownerRepository = useOwnerRepository()
   const apartmentController = useApartmentViewController()
+
+  const userState = useAppSelector(
+    (state) => state.authState,
+  )
 
   const getAdminRequest = async () => {
     return await requestRepository.getAdminRequest()
@@ -54,6 +61,7 @@ export const useRequestModelController = () => {
       displayName: accessRequest.displayName,
       description: accessRequest.description,
       phoneNumber: accessRequest.phoneNumber,
+      date: getFormattedDate(new Date()),
     })
   }
 
@@ -112,11 +120,31 @@ export const useRequestModelController = () => {
     }
   }
 
+  const createPublicSpaceRequest = async (
+    request: RequestPublicSpaceDTO,
+  ) => {
+    const { phoneNumber } =
+      await ownerRepository.getOwnerByUid(userState.uid)
+    await requestRepository.createRequest({
+      description: `Solicitud de reserva: "${request.space.name}"`,
+      endHour: request.endHour,
+      startHour: request.startHour,
+      requestType: RequestType.PUBLIC_SPACE,
+      displayName: userState.displayName,
+      uid: userState.uid,
+      email: userState.email,
+      phoneNumber,
+      date: request.date,
+      foreignId: request.space.id!,
+    })
+  }
+
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
     createAccessRequest,
+    createPublicSpaceRequest,
     acceptAccessRequest,
     getOwnerRequest,
   }
