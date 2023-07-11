@@ -28,11 +28,18 @@ export const usePublicSpacesModelController = () => {
     )
   }
 
+  const getPublicSpaceById = async (id: string) => {
+    const [space] =
+      await publicSpacesRepository.getPublicSpaceById(id)
+    return space
+  }
+
   return {
     getAllPublicSpaces,
     getAvailablePublicSpaces,
     createPublicSpace,
     updatePublicSpace,
     deletePublicSpace,
+    getPublicSpaceById,
   }
 }

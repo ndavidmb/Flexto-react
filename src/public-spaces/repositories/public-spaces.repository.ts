@@ -23,10 +23,17 @@ export const usePublicSpacesRepository = () => {
     return await firestore.deleteFirestore(id)
   }
 
+  const getPublicSpaceById = async (id: string) => {
+    const res = await firestore.getByParam('id', id)
+    console.log(res)
+    return res
+  }
+
   return {
     getAll,
     create,
     updatePublicSpace,
     deletePublicSpace,
+    getPublicSpaceById,
   }
 }

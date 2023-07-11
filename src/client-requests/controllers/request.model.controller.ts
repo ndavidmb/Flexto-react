@@ -1,7 +1,11 @@
-import { useApartmentViewController } from '../../apartments/controllers/apartment.view.controller'
+import { useApartmentModelController } from '../../apartments/controllers/apartment.model.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { useBookingModelController } from '../../booking/controllers/booking.model.controller'
+import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
+import { usePublicSpacesRepository } from '../../public-spaces/repositories/public-spaces.repository'
 import { useAppSelector } from '../../shared/store/hooks'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import { RequestType } from '../interfaces/client-request.interface'
@@ -15,7 +19,10 @@ import { useRequestRepository } from '../repositories/request.repository'
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
   const ownerRepository = useOwnerRepository()
-  const apartmentController = useApartmentViewController()
+  const publicSpaceController =
+    usePublicSpacesModelController()
+  const apartmentController = useApartmentModelController()
+  const bookingController = useBookingModelController()
 
   const userState = useAppSelector(
     (state) => state.authState,
@@ -81,9 +88,10 @@ export const useRequestModelController = () => {
           ...owner,
           apartmentId: apartment.id!,
         }),
-        apartmentController.updateApartment(apartment.id!, {
+        apartmentController.updateApartment({
           ...apartment,
           owner: request.user.uid,
+          id: apartment.id!,
         }),
         changeRequestState(RequestStates.ACCEPTED, request),
         ownerRepository.activateOwnerAccount(
@@ -100,13 +108,11 @@ export const useRequestModelController = () => {
         })
       }
 
-      await apartmentController.updateApartment(
-        apartment.id!,
-        {
-          ...apartment,
-          owner: '',
-        },
-      )
+      await apartmentController.updateApartment({
+        ...apartment,
+        id: apartment.id!,
+        owner: '',
+      })
       throw err
     }
   }
@@ -139,9 +145,36 @@ export const useRequestModelController = () => {
     })
   }
 
-  // const acceptPublicSpaceRequest = async (request: AdminRequest) => {
-    
-  // }
+  const acceptPublicSpaceRequest = async (
+    request: AdminRequest,
+  ) => {
+    try {
+      console.log(request.foreignId)
+      const publicSpace =
+        await publicSpaceController.getPublicSpaceById(
+          request.foreignId!,
+        )
+
+      const booking: BookingDTO = {
+        date: request.dateDetail.date,
+        startHour: Number(request.dateDetail.startHour),
+        endHour: Number(request.dateDetail.endHour),
+        owner: request.user,
+        publicSpace: {
+          name: publicSpace.name,
+          id: publicSpace.id,
+        },
+      }
+
+      await Promise.all([
+        bookingController.addBooking(booking),
+        changeRequestState(RequestStates.ACCEPTED, request),
+      ])
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
 
   return {
     getAdminRequest,
@@ -150,6 +183,7 @@ export const useRequestModelController = () => {
     createAccessRequest,
     createPublicSpaceRequest,
     acceptAccessRequest,
+    acceptPublicSpaceRequest,
     getOwnerRequest,
   }
 }

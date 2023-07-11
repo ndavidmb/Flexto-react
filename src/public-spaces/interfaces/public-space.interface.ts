@@ -15,15 +15,18 @@ export interface PublicSpaceSchedule {
   rangeStartHour: number
 }
 
-export interface PublicSpace {
-  name: string
-  schedule: PublicSpaceSchedule
-  id?: string
-}
-
 export interface PlainPublicSpace {
   name: string
   maxPerHour: number
   rangeStartHour: number
   rangeEndHour: number
+}
+
+export interface PublicSpaceBase {
+  name: string
+  id?: string
+}
+
+export interface PublicSpace extends PublicSpaceBase {
+  schedule: PublicSpaceSchedule
 }

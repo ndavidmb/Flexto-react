@@ -53,6 +53,15 @@ export const AdminRequestPage = () => {
       setData(request)
     }
 
+    if (request.type === RequestType.PUBLIC_SPACE) {
+      requestViewController
+        .acceptPublicSpaceRequest(request)
+        .then((successfully) => {
+          if (successfully) {
+            handleRefresh()
+          }
+        })
+    }
   }
 
   const handleDelete = (request: AdminRequest) => {

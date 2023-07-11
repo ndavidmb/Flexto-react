@@ -120,8 +120,21 @@ export const useRequestViewController = () => {
   ) => {
     dispatch(setLoading(true))
     try {
+      await requestModelController.acceptPublicSpaceRequest(
+        request,
+      )
       return true
     } catch {
+      dispatch(
+        showToast({
+          title:
+            'No se pudo aceptar correctamente la solicitud',
+          details: [
+            'Intente más tarde o contacte con soporte',
+          ],
+          type: 'error',
+        }),
+      )
       return false
     } finally {
       dispatch(setLoading(false))
@@ -132,6 +145,7 @@ export const useRequestViewController = () => {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
+    acceptPublicSpaceRequest,
     acceptAccessRequest,
   }
 }

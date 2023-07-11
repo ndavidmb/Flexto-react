@@ -5,12 +5,7 @@ export const useBookingModelController = () => {
   const bookingRepository = useBookingRepository()
 
   const addBooking = async (booking: BookingDTO) => {
-    try {
-      await bookingRepository.addBooking(booking)
-      return true
-    } catch {
-      return false
-    }
+    await bookingRepository.addBooking(booking)
   }
 
   return { addBooking }
