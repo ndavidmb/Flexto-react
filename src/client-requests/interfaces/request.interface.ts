@@ -20,6 +20,7 @@ export interface AdminRequest {
   user: IUserRequest
   approved: RequestStates
   id?: string
+  foreignId?: string
   dateDetail: {
     date: string
     endHour: string

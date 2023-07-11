@@ -8,4 +8,5 @@ export const enum FirestoreTable {
   ACT_TEMPLATES = 'act-templates',
   ACT = 'act',
   PUBLIC_SPACES = 'public-spaces',
+  BOOKING = 'booking',
 }

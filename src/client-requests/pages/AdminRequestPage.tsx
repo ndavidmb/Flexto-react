@@ -11,6 +11,8 @@ import { useModal } from '../../shared/hooks/useModal'
 import { ModalContainer } from '../../shared/components/Modal/Modal'
 import { AdminRequestConnectOwnerForm } from '../components/AdminRequestConnectOwnerForm'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { AdminRequestModal } from '../components/AdminRequestModal'
+import { RequestType } from '../interfaces/client-request.interface'
 
 export const AdminRequestPage = () => {
   const { isOpen, openModal, closeModal, setData, data } =
@@ -46,8 +48,11 @@ export const AdminRequestPage = () => {
   }
 
   const handleAcceptRequest = (request: AdminRequest) => {
-    openModal()
-    setData(request)
+    if (request.type === RequestType.ACCESS) {
+      openModal()
+      setData(request)
+    }
+
   }
 
   const handleDelete = (request: AdminRequest) => {
@@ -78,33 +83,14 @@ export const AdminRequestPage = () => {
     setAdminRequests(newRequests)
   }
 
-  const handleCloseModal = (apartment?: Apartment) => {
-    if (!apartment) {
-      closeModal()
-      return
-    }
-
-    requestViewController
-      .updateOwnerApartment(apartment, data!)
-      .then((successfully) => {
-        if (successfully) {
-          refreshState(data!.id!, RequestStates.ACCEPTED)
-        }
-      })
-      .finally(() => closeModal())
-  }
-
   return (
     <>
       {isOpen && (
-        <ModalContainer
-          close={closeModal}
-          title="Vincular apartamento"
-        >
-          <AdminRequestConnectOwnerForm
-            closeModal={handleCloseModal}
-          />
-        </ModalContainer>
+        <AdminRequestModal
+          data={data!}
+          closeModal={closeModal}
+          refreshState={refreshState}
+        />
       )}
       <AdminRequestList
         adminRequests={adminRequests}

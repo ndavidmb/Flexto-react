@@ -37,6 +37,7 @@ export const useRequestRepository = () => {
         startHour: req.startHour ?? '',
         endHour: req.endHour ?? '',
       },
+      foreignId: req.foreignId,
     })
     return createdRequest
   }
@@ -67,7 +68,7 @@ export const useRequestRepository = () => {
   }
 
   const getOwnerRequests = async (uid: string) => {
-    console.log(uid);
+    console.log(uid)
     return await firestore.getAllFirestore([
       where('user.uid', '==', uid),
     ])

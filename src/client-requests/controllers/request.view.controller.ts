@@ -114,10 +114,24 @@ export const useRequestViewController = () => {
       dispatch(setLoading(false))
     }
   }
+
+  const acceptPublicSpaceRequest = async (
+    request: AdminRequest,
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      return true
+    } catch {
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
-    updateOwnerApartment: acceptAccessRequest,
+    acceptAccessRequest,
   }
 }
