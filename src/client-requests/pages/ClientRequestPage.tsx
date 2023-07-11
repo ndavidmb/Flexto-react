@@ -27,15 +27,22 @@ export const ClientRequestPage = () => {
   )
 
   useEffect(() => {
+    consultData()
+  }, [])
+
+  const consultData = () => {
     requestClientViewController
       .getOwnerRequest(user.uid)
       .then((users) => {
         setRequestStates(users)
         setRequestAllStates(users)
       })
-  }, [])
+  }
 
   const handleClose = (refresh?: boolean) => {
+    if (refresh) {
+      consultData()
+    }
     closeModal()
   }
 
