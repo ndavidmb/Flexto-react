@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { IoArrowBack, IoSave } from 'react-icons/io5'
 import { useNavigate, useParams } from 'react-router-dom'
+import { BookingList } from '../../booking/components/BookingList'
+import { useBookingViewController } from '../../booking/controllers/booking.view.controller'
+import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { DefaultContainer } from '../../shared/components/DefaultContainer/DefaultContainer'
 import { Button } from '../../shared/styled-components/Button'
 import { PageTitle } from '../../shared/styled-components/PageTitle'
-import { THead } from '../../shared/styled-components/THead'
-import { TRow } from '../../shared/styled-components/TRow'
-import { Table } from '../../shared/styled-components/Table'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
 import { OwnerView } from '../interfaces/owner.view.interface'
-import { HOURS_NUM_TO_STRING } from '../../public-spaces/constants/hours'
 
 export const OwnerDetailPage = () => {
   // React Hooks
@@ -18,6 +17,7 @@ export const OwnerDetailPage = () => {
 
   const navigate = useNavigate()
   const ownerViewController = useOwnerViewController()
+  const bookingViewController = useBookingViewController()
 
   // Life cycle
   useEffect(() => {
@@ -33,6 +33,22 @@ export const OwnerDetailPage = () => {
         }
       })
   }, [])
+
+  const handleCancelBooking = (booking: BookingDTO) => {
+    bookingViewController
+      .deleteBooking(booking)
+      .then((successfully) => {
+        if (successfully) {
+          setOwnerVm({
+            owner: ownerVm!.owner!,
+            apartment: ownerVm!.apartment,
+            bookings: ownerVm!.bookings.filter(
+              (b) => b.id !== booking.id,
+            ),
+          })
+        }
+      })
+  }
 
   const goBack = () => {
     navigate(-1)
@@ -97,49 +113,10 @@ export const OwnerDetailPage = () => {
       <section className="px-8">
         <h1>Reservas</h1>
         <hr className="my-2" />
-        <Table>
-          <THead>
-            <th scope="col">Espacio público</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Acciones</th>
-          </THead>
-          <tbody>
-            {ownerVm?.bookings.map((booking, index) => {
-              return (
-                <TRow index={index} key={booking.id}>
-                  <th scope="row">
-                    {booking.publicSpace.name}
-                  </th>
-                  <td>
-                    <div className="flex flex-col">
-                      {booking.date}
-                      <span>
-                        {`Hora ${
-                          // @ts-ignore
-                          HOURS_NUM_TO_STRING[
-                            booking.startHour
-                          ]
-                        } - ${
-                          // @ts-ignore
-                          HOURS_NUM_TO_STRING[
-                            booking.endHour
-                          ]
-                        }`}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <Button color="primary">
-                        Cancelar reserva
-                      </Button>
-                    </div>
-                  </td>
-                </TRow>
-              )
-            })}
-          </tbody>
-        </Table>
+        <BookingList
+          handleDeleteBooking={handleCancelBooking}
+          bookings={ownerVm?.bookings ?? []}
+        />
       </section>
     </DefaultContainer>
   )

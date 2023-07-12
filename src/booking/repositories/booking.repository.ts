@@ -16,11 +16,20 @@ export const useBookingRepository = () => {
     return await firestore.getAllFirestore()
   }
 
+  const deleteBooking = async (bookingId: string) => {
+    return await firestore.deleteFirestore(bookingId)
+  }
+
   const getBookingsByOwner = async (uid: string) => {
     return await firestore.getAllFirestore([
       where('owner.uid', '==', uid),
     ])
   }
 
-  return { addBooking, getAllBookings, getBookingsByOwner }
+  return {
+    addBooking,
+    getAllBookings,
+    getBookingsByOwner,
+    deleteBooking,
+  }
 }
