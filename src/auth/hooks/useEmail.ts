@@ -13,7 +13,7 @@ export function useEmail() {
       message: {
         email: emailData.subject,
         text: emailData.body,
-        html: '<p>Este es un mensaje de prueba</p>',
+        // html: '<p>Este es un mensaje de prueba</p>',
       },
     }
     await addDoc(collectionRef, emailContent)
