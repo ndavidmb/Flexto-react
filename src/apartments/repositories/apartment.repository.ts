@@ -33,8 +33,14 @@ export const useApartmentRepository = () => {
     ])
   }
 
+  const getApartmentByOwner = async (uid: string) => {
+    const [apartment] =  await firestore.getByParam('owner', uid)
+    return apartment
+  }
+
   return {
     getApartments,
+    getApartmentByOwner,
     addApartment,
     deleteApartment,
     updateApartment,

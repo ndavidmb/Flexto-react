@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useOutlet } from 'react-router-dom'
-import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
-import { ModalContainer } from '../shared/components/Modal/Modal'
-import { useModal } from '../shared/hooks/useModal'
-import { OwnerForm } from './components/OwnerForm'
-import { OwnerList } from './components/OwnerList'
-import { useOwnerViewController } from './controllers/owner.view.controller'
-import { Owner } from './interfaces/owner.interface'
+import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { useModal } from '../../shared/hooks/useModal'
+import { OwnerForm } from '../components/OwnerForm'
+import { OwnerList } from '../components/OwnerList'
+import { useOwnerViewController } from '../controllers/owner.view.controller'
+import { Owner } from '../interfaces/owner.interface'
 
-export const OwnerWrapper = () => {
+export const OwnerPage = () => {
   // States
   const [consult, setConsult] = useState(0)
   const [allOwners, setAllOwners] = useState<Owner[]>([])

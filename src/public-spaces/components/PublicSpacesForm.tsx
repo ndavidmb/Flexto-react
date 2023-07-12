@@ -6,7 +6,7 @@ import { Input } from '../../shared/styled-components/Input'
 import { Label } from '../../shared/styled-components/Label'
 import { Select } from '../../shared/styled-components/Select'
 import { DAYS_DICT } from '../constants/days'
-import { HOURS } from '../constants/hours'
+import { HOURS_STRING_TO_NUM } from '../constants/hours'
 import { usePublicSpacesViewController } from '../controllers/public-spaces.view.controller'
 import {
   PlainPublicSpace,
@@ -115,7 +115,7 @@ export const PublicSpacesForm: FC<Props> = ({
               name="rangeStartHour"
               placeholder="Hora de inicio"
             >
-              {Object.entries(HOURS).map(
+              {Object.entries(HOURS_STRING_TO_NUM).map(
                 ([label, value]) => (
                   <option value={value}>{label}</option>
                 ),
@@ -134,7 +134,7 @@ export const PublicSpacesForm: FC<Props> = ({
               name="rangeEndHour"
               placeholder="Hora de cierre"
             >
-              {Object.entries(HOURS).map(
+              {Object.entries(HOURS_STRING_TO_NUM).map(
                 ([label, value]) => (
                   <option value={value}>{label}</option>
                 ),

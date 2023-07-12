@@ -1,4 +1,4 @@
-import { HOURS } from '../../public-spaces/constants/hours'
+import { HOURS_STRING_TO_NUM } from '../../public-spaces/constants/hours'
 
 export function getPublicSpaceHours(
   startHour: number,
@@ -7,7 +7,7 @@ export function getPublicSpaceHours(
   const startHours: Record<string, number> = {}
   const endHours: Record<string, number> = {}
 
-  Object.entries(HOURS)
+  Object.entries(HOURS_STRING_TO_NUM)
     .filter(
       ([_, hour]) => hour >= startHour && hour <= endHour,
     )

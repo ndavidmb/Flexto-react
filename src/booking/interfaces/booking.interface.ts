@@ -8,4 +8,5 @@ export interface BookingDTO {
   endHour: number
   date: string
   createAt: string
+  id?: string
 }

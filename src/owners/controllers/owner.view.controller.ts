@@ -2,6 +2,7 @@ import { useOwnerModelController } from './owner.model.controller'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
+import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
 
 export const useOwnerViewController = () => {
   const ownerModelController = useOwnerModelController()
@@ -37,8 +38,31 @@ export const useOwnerViewController = () => {
     }
   }
 
+  const getOwnerDetail = async (ownerId: string) => {
+    dispatch(setLoading(true))
+    try {
+      return await ownerModelController.getOwnerDetail(
+        ownerId,
+      )
+    } catch {
+      dispatch(
+        showToast({
+          title:
+            'No se pudo obtener el detalle del propietario',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+
+      return null
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   return {
     getOwners,
     getOwnerWithStates,
+    getOwnerDetail,
   }
 }

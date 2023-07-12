@@ -1,3 +1,4 @@
+import { where } from 'firebase/firestore/lite'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { BookingDTO } from '../interfaces/booking.interface'
@@ -15,5 +16,11 @@ export const useBookingRepository = () => {
     return await firestore.getAllFirestore()
   }
 
-  return { addBooking, getAllBookings }
+  const getBookingsByOwner = async (uid: string) => {
+    return await firestore.getAllFirestore([
+      where('owner.uid', '==', uid),
+    ])
+  }
+
+  return { addBooking, getAllBookings, getBookingsByOwner }
 }

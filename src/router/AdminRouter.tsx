@@ -3,8 +3,8 @@ import { ActRouter } from '../act/ActRouter'
 import { ApartmentWrapper } from '../apartments/ApartmentWrapper'
 import { AdminRequestPage } from '../client-requests/pages/AdminRequestPage'
 import { CustomizationWrapper } from '../customizations/CustomizationWrapper'
-import { OwnerWrapper } from '../owners/OwnerWrapper'
-import { OwnerDetail } from '../owners/components/OwnerDetail'
+import { OwnerPage } from '../owners/pages/OwnerPage'
+import { OwnerDetailPage } from '../owners/pages/OwnerDetailPage'
 import { PublicSpacesPage } from '../public-spaces/pages/PublicSpacesPage'
 import { StateWrapper } from '../states/StatesWrapper'
 
@@ -16,8 +16,8 @@ export const AdminRouter = () => {
         element={<ApartmentWrapper />}
       />
 
-      <Route path="owners" element={<OwnerWrapper />}>
-        <Route path=":ownerId" element={<OwnerDetail />} />
+      <Route path="owners" element={<OwnerPage />}>
+        <Route path=":ownerId" element={<OwnerDetailPage />} />
       </Route>
 
       <Route path="states" element={<StateWrapper />} />
