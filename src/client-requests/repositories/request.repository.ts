@@ -8,7 +8,11 @@ import {
   ClientRequestDTO,
   RequestStates,
 } from '../interfaces/request.interface'
-import { where } from 'firebase/firestore/lite'
+import {
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore/lite'
 
 export const useRequestRepository = () => {
   const firestore = useFirestore<AdminRequest>(
@@ -34,10 +38,11 @@ export const useRequestRepository = () => {
         date: req.date,
 
         // Related to rent something
-        startHour: req.startHour ?? '',
-        endHour: req.endHour ?? '',
+        startHour: req.startHour ?? 0,
+        endHour: req.endHour ?? 0,
       },
       foreignId: req.foreignId,
+      createdAt: new Date().toUTCString(),
     })
     return createdRequest
   }

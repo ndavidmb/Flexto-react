@@ -5,7 +5,6 @@ import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
-import { usePublicSpacesRepository } from '../../public-spaces/repositories/public-spaces.repository'
 import { useAppSelector } from '../../shared/store/hooks'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import { RequestType } from '../interfaces/client-request.interface'
@@ -29,7 +28,16 @@ export const useRequestModelController = () => {
   )
 
   const getAdminRequest = async () => {
-    return await requestRepository.getAdminRequest()
+    const requests =
+      await requestRepository.getAdminRequest()
+
+    requests.sort(
+      (a, b) =>
+        new Date(b.createdAt!).getTime() -
+        new Date(a.createdAt!).getTime(),
+    )
+
+    return requests
   }
 
   const deleteRequest = async (id: string) => {
@@ -149,7 +157,6 @@ export const useRequestModelController = () => {
     request: AdminRequest,
   ) => {
     try {
-      console.log(request.foreignId)
       const publicSpace =
         await publicSpaceController.getPublicSpaceById(
           request.foreignId!,
@@ -164,6 +171,7 @@ export const useRequestModelController = () => {
           name: publicSpace.name,
           id: publicSpace.id,
         },
+        createAt: new Date().toUTCString(),
       }
 
       await Promise.all([

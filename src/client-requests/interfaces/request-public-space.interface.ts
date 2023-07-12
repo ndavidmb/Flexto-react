@@ -2,8 +2,8 @@ import { PublicSpace } from '../../public-spaces/interfaces/public-space.interfa
 
 export interface RequestBase {
   date: string
-  startHour: string
-  endHour: string
+  startHour: number
+  endHour: number
 }
 
 export interface RequestPublicSpaceDTO extends RequestBase {

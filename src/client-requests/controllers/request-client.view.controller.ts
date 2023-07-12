@@ -1,4 +1,6 @@
+import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
+import { PublicSpaceWithHours } from '../../public-spaces/interfaces/public-space.interface'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
@@ -19,10 +21,13 @@ export const useRequestClientViewController = () => {
     return await requestModelController.getOwnerRequest(uid)
   }
 
-  const getPublicSpaces = async () => {
+  const getPublicSpaces = async (): Promise<{
+    publicWithHours: PublicSpaceWithHours[]
+    bookings: BookingDTO[]
+  }> => {
     dispatch(setLoading(true))
     try {
-      return await publicSpacesModelController.getAvailablePublicSpaces()
+      return await publicSpacesModelController.getPublicSpacesHours()
     } catch (error) {
       dispatch(
         showToast({
@@ -34,7 +39,10 @@ export const useRequestClientViewController = () => {
           type: 'error',
         }),
       )
-      return []
+      return {
+        publicWithHours: [],
+        bookings: [],
+      }
     } finally {
       dispatch(setLoading(false))
     }

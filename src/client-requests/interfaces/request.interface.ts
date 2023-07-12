@@ -23,9 +23,10 @@ export interface AdminRequest {
   foreignId?: string
   dateDetail: {
     date: string
-    endHour: string
-    startHour: string
+    endHour: number
+    startHour: number
   }
+  createdAt?: string
 }
 
 export interface AdminRequestVm extends AdminRequest {
@@ -42,8 +43,8 @@ export interface ClientRequestDTO extends IUserRequest {
 
   // Default void
   date: string
-  startHour?: string
-  endHour?: string
+  startHour?: number
+  endHour?: number
 
   // This could be foreign id to act or public space
   foreignId?: string

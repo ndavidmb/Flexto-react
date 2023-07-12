@@ -1,15 +1,38 @@
+import { useBookingRepository } from '../../booking/repositories/booking.repository'
+import { getPublicSpaceHours } from '../../client-requests/utils/getPublicSpaceHours'
 import { PublicSpace } from '../interfaces/public-space.interface'
 import { usePublicSpacesRepository } from '../repositories/public-spaces.repository'
 
 export const usePublicSpacesModelController = () => {
   const publicSpacesRepository = usePublicSpacesRepository()
+  const bookingRepository = useBookingRepository()
 
   const getAllPublicSpaces = async () => {
     return await publicSpacesRepository.getAll()
   }
 
-  const getAvailablePublicSpaces = async () => {
-    return await publicSpacesRepository.getAll()
+  const getPublicSpacesHours = async () => {
+    const [publicSpaces, bookings] = await Promise.all([
+      publicSpacesRepository.getAll(),
+      bookingRepository.getAllBookings(),
+    ])
+
+    const publicWithHours = publicSpaces.map((space) => {
+      const availableHours = getPublicSpaceHours(
+        space.schedule.rangeStartHour,
+        space.schedule.rangeEndHour,
+      )
+
+      return {
+        ...space,
+        availableHours,
+      }
+    })
+
+    return {
+      publicWithHours,
+      bookings,
+    }
   }
 
   const createPublicSpace = async (space: PublicSpace) => {
@@ -36,7 +59,7 @@ export const usePublicSpacesModelController = () => {
 
   return {
     getAllPublicSpaces,
-    getAvailablePublicSpaces,
+    getPublicSpacesHours,
     createPublicSpace,
     updatePublicSpace,
     deletePublicSpace,

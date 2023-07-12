@@ -1,56 +1,125 @@
 import { useFormikContext } from 'formik'
 import { FC, useEffect, useState } from 'react'
+import { BookingDTO } from '../../booking/interfaces/booking.interface'
+import { PublicSpaceWithHours } from '../../public-spaces/interfaces/public-space.interface'
 import { Label } from '../../shared/styled-components/Label'
 import { Select } from '../../shared/styled-components/Select'
 import { RequestPublicSpaceForm } from '../interfaces/request-public-space.interface'
-import { PublicSpace } from '../../public-spaces/interfaces/public-space.interface'
-import { getPublicSpaceHours } from '../utils/getPublicSpaceHours'
 
 type Props = {
-  publicSpaces: PublicSpace[]
-  // endHours: Record<string, number>
+  viewModel: {
+    publicWithHours: PublicSpaceWithHours[]
+    bookings: BookingDTO[]
+  }
 }
 
 export const ClientRequestHours: FC<Props> = ({
-  publicSpaces,
+  viewModel,
 }) => {
-  const [hours, setHours] = useState<{
+  const [state, setState] = useState<{
+    relevantBookings: BookingDTO[]
     startHours: [string, number][]
     endHours: [string, number][]
+    currentPublicSpace: PublicSpaceWithHours | null
   }>({
+    relevantBookings: [],
     startHours: [],
     endHours: [],
+    currentPublicSpace: null,
   })
 
   const formikContext =
     useFormikContext<RequestPublicSpaceForm>()
 
+  // Calculate relevant bookings and start hours available for specific date
   useEffect(() => {
-    if (!formikContext.values.publicSpaceId) {
+    // Return with invalid dependencies
+    if (
+      !formikContext.values.publicSpaceId ||
+      !formikContext.values.date
+    ) {
       return
     }
 
-    const space = publicSpaces.find(
-      (space) =>
-        space.id === formikContext.values.publicSpaceId,
+    // Get relevant bookings
+    const { publicSpaceId, date } = formikContext.values
+
+    const relevantBookings = viewModel.bookings.filter(
+      (booking) =>
+        booking.publicSpace.id === publicSpaceId &&
+        booking.date === date,
     )
-    const availableHours = getPublicSpaceHours(
-      space!.schedule.rangeStartHour,
-      space!.schedule.rangeEndHour,
-    )
+
+    // Get start hours
+    const currentPublicSpace =
+      viewModel.publicWithHours.find(
+        (space) =>
+          space.id === formikContext.values.publicSpaceId,
+      )!
+
+    const startHours =
+      currentPublicSpace.availableHours.startHours.filter(
+        ([_, hour]) =>
+          !relevantBookings.some(
+            (booking) =>
+              hour >= booking.startHour &&
+              hour < booking.endHour,
+          ),
+      )
 
     formikContext.setFieldValue(
       'startHour',
-      availableHours.startHours[0][1],
+      startHours[0][1],
     )
+    setState({
+      ...state,
+      relevantBookings,
+      startHours,
+      currentPublicSpace,
+    })
+  }, [
+    formikContext.values.publicSpaceId,
+    formikContext.values.date,
+  ])
+
+  // Calculate end hours according to startHour
+  useEffect(() => {
+    if (
+      !formikContext.values.startHour ||
+      !state.currentPublicSpace
+    ) {
+      return
+    }
+    const startHour = formikContext.values.startHour
+
+    const closestBooking = state.relevantBookings.find(
+      (booking) => booking.startHour > startHour,
+    )
+
+    const endHours =
+      state.currentPublicSpace.availableHours.endHours.filter(
+        ([_, hour]) => {
+          if (!closestBooking) {
+            return hour > startHour
+          }
+
+          return (
+            hour > startHour &&
+            hour <= closestBooking.startHour
+          )
+        },
+      )
 
     formikContext.setFieldValue(
       'endHour',
-      availableHours.endHours[0][1],
+      endHours[0][1],
     )
 
-    setHours(availableHours)
-  }, [formikContext.values.publicSpaceId])
+    setState({
+      ...state,
+      endHours,
+    })
+  }, [formikContext.values.startHour])
 
   return (
     <div className="flex gap-1 w-full">
@@ -63,7 +132,7 @@ export const ClientRequestHours: FC<Props> = ({
           name="startHour"
           placeholder="Hora"
         >
-          {hours.startHours.map(([label, value]) => (
+          {state.startHours.map(([label, value]) => (
             <option key={label} value={value}>
               {label}
             </option>
@@ -81,7 +150,7 @@ export const ClientRequestHours: FC<Props> = ({
           name="endHour"
           placeholder="Hora"
         >
-          {hours.endHours.map(([label, value]) => (
+          {state.endHours.map(([label, value]) => (
             <option key={label} value={value}>
               {label}
             </option>

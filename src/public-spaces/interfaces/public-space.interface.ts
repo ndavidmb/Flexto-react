@@ -30,3 +30,10 @@ export interface PublicSpaceBase {
 export interface PublicSpace extends PublicSpaceBase {
   schedule: PublicSpaceSchedule
 }
+
+export interface PublicSpaceWithHours extends PublicSpace {
+  availableHours: {
+    startHours: [string, number][]
+    endHours: [string, number][]
+  }
+}
