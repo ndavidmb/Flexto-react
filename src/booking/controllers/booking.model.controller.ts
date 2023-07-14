@@ -1,10 +1,15 @@
 import { useEmail } from '../../auth/hooks/useEmail'
 import { HOURS_NUM_TO_STRING } from '../../public-spaces/constants/hours'
-import { BookingDTO } from '../interfaces/booking.interface'
+import { useAppSelector } from '../../shared/store/hooks'
+import {
+  BookingDTO,
+  BookingVm,
+} from '../interfaces/booking.interface'
 import { useBookingRepository } from '../repositories/booking.repository'
 
 export const useBookingModelController = () => {
   const bookingRepository = useBookingRepository()
+  const { uid } = useAppSelector((state) => state.authState)
   const email = useEmail()
 
   const addBooking = async (booking: BookingDTO) => {
@@ -27,5 +32,32 @@ export const useBookingModelController = () => {
     })
   }
 
-  return { addBooking, deleteBooking }
+  const getBookingsByOwner = async (): Promise<
+    BookingVm[]
+  > => {
+    const bookings =
+      await bookingRepository.getBookingsByOwner(uid)
+
+    return bookings.map((booking) => ({
+      ...booking,
+      publicSpaceName: booking.publicSpace.name,
+    }))
+  }
+
+  const getBookings = async () => {
+    const bookings =
+      await bookingRepository.getAllBookings()
+
+    return bookings.map((booking) => ({
+      ...booking,
+      publicSpaceName: booking.publicSpace.name,
+    }))
+  }
+
+  return {
+    addBooking,
+    deleteBooking,
+    getBookingsByOwner,
+    getBookings,
+  }
 }

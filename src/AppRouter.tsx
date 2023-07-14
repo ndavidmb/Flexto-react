@@ -4,15 +4,10 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { App } from '../App'
-import { NotFound } from '../shared/components/NotFound'
-import { HomeRouter } from './HomeRouter'
-import { PublicRouter } from './PublicRouter'
-import { createContext } from 'react'
-
-const AuthContext = createContext({
-  
-})
+import { App } from './App'
+import { NotFound } from './shared/components/NotFound'
+import { HomeRouter } from './auth/HomeRouter'
+import { PublicRouter } from './auth/PublicRouter'
 
 export const AppRouting = () => {
   return (

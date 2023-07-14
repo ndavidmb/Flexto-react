@@ -21,6 +21,7 @@ export const useBookingRepository = () => {
   }
 
   const getBookingsByOwner = async (uid: string) => {
+    console.log(uid)
     return await firestore.getAllFirestore([
       where('owner.uid', '==', uid),
     ])

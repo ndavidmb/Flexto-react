@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { IoAccessibility, IoMail } from 'react-icons/io5'
+import { TbBrandBooking } from 'react-icons/tb'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
 
@@ -24,6 +25,14 @@ export const ClientMenu: FC<Props> = ({ id }) => {
       >
         <IoMail className="text-xl" />
         Enviar petición
+      </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.CLIENT}
+        href={`/${id}/home/booking`}
+      >
+        <TbBrandBooking className="text-xl" />
+        Reservas
       </MenuLink>
     </>
   )

@@ -7,6 +7,7 @@ import { OwnerPage } from '../owners/pages/OwnerPage'
 import { OwnerDetailPage } from '../owners/pages/OwnerDetailPage'
 import { PublicSpacesPage } from '../public-spaces/pages/PublicSpacesPage'
 import { StateWrapper } from '../states/StatesWrapper'
+import { BookingRouter } from '../booking/BookingRouter'
 
 export const AdminRouter = () => {
   return (
@@ -17,7 +18,10 @@ export const AdminRouter = () => {
       />
 
       <Route path="owners" element={<OwnerPage />}>
-        <Route path=":ownerId" element={<OwnerDetailPage />} />
+        <Route
+          path=":ownerId"
+          element={<OwnerDetailPage />}
+        />
       </Route>
 
       <Route path="states" element={<StateWrapper />} />
@@ -36,6 +40,8 @@ export const AdminRouter = () => {
       />
 
       <Route path="act/*" element={<ActRouter />}></Route>
+
+      <Route path="booking/*" element={<BookingRouter />} />
 
       <Route
         path="*"

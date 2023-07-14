@@ -5,6 +5,7 @@ import { LoadingSvg } from '../shared/components/Loading/Loading'
 import { RootState } from '../shared/store/store'
 import { AdminRouter } from './AdminRouter'
 import { AuthWaitApproved } from '../auth/pages/AuthWaitApproved'
+import { BookingRouter } from '../booking/BookingRouter'
 
 export const HomeRouter = () => {
   const { role } = useSelector(
@@ -30,6 +31,7 @@ export const HomeRouter = () => {
           path="wait-approved"
           element={<AuthWaitApproved />}
         />
+        <Route path="booking/*" element={<BookingRouter />} />
         <Route
           path="*"
           element={<Navigate to="/NotFound" replace />}

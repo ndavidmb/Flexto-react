@@ -10,3 +10,7 @@ export interface BookingDTO {
   createAt: string
   id?: string
 }
+
+export interface BookingVm extends BookingDTO {
+  publicSpaceName: string
+}

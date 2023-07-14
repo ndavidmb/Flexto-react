@@ -9,6 +9,7 @@ import {
 import { MdOutlineBedroomParent } from 'react-icons/md'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
+import { TbBrandBooking } from 'react-icons/tb'
 
 type Props = {
   id: string | undefined
@@ -60,6 +61,14 @@ export const AdminMenu: FC<Props> = ({ id }) => {
       >
         <MdOutlineBedroomParent className="text-xl" />
         Espacios públicos
+      </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.ADMIN}
+        href={`/${id}/home/booking/admin`}
+      >
+        <TbBrandBooking className="text-xl" />
+        Reservas
       </MenuLink>
     </>
   )
