@@ -63,8 +63,6 @@ export const OwnerForm: FC<Props> = ({
       )!,
     }
 
-    console.log(owner)
-
     if (data) {
       updateOwner(owner)
       return

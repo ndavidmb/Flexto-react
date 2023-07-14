@@ -73,7 +73,6 @@ export const useRequestRepository = () => {
   }
 
   const getOwnerRequests = async (uid: string) => {
-    console.log(uid)
     return await firestore.getAllFirestore([
       where('user.uid', '==', uid),
     ])
