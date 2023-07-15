@@ -6,10 +6,19 @@ import {
 } from '../interfaces/client-request.interface'
 import { Label } from '../../shared/styled-components/Label'
 import { ClientRequestStateForm } from './ClientRequestStateForm'
+import { ClientRequestRecordForm } from './ClientRequestRecordForm'
 
 export const ClientRequestForm = () => {
   const [requestType, setRequestType] = useState(1)
 
+  const handleClose = (refresh?: boolean) => {
+    // se debe hacer algo
+    // if (refresh) {
+    //   setConsult(consult + 1)
+    // }
+    // closeModal()
+  }
+  const data=ClientRequestRecordForm;
   return (
     <>
       <div className="flex flex-col w-full">
@@ -31,8 +40,10 @@ export const ClientRequestForm = () => {
         </Select>
       </div>
       {requestType === RequestType.ACT ? (
-        // TODO: Agregar formulario del acta
-        <div>Lógica de acta</div>
+        <ClientRequestRecordForm
+        // data={data}
+        closeModal={handleClose}
+      />
       ) : (
         <ClientRequestStateForm />
       )}

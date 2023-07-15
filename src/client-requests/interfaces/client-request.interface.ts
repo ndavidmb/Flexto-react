@@ -17,6 +17,10 @@ export interface ClientRequest {
   approved: boolean
 }
 
+export interface ClientRequestRecord {
+  date: string
+  recordDetail: string
+}
 export const REQUEST_TYPE_DICT = {
   1: 'Acta',
   2: 'Espacio público',
