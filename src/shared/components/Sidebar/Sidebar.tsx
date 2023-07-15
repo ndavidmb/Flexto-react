@@ -1,19 +1,12 @@
 import {
-  IoAccessibility,
-  IoBuild,
-  IoBusiness,
-  IoCheckmarkDoneCircle,
-  IoHandRightOutline,
-  IoLogOut,
-  IoMail,
-  IoPeople,
+  IoLogOut
 } from 'react-icons/io5'
 import { useParams } from 'react-router-dom'
 
-import { MenuLink } from '../../styled-components/MenuLink'
-import { Avatar } from '../Avatar'
 import { useAuthDefaultController } from '../../../auth/hooks/useAuthDefaultController'
-import { UserRoles } from '../../../auth/interfaces/user-roles.enums'
+import { Avatar } from '../Avatar'
+import { AdminMenu } from './components/AdminMenu'
+import { ClientMenu } from './components/ClientMenu'
 
 export const Sidebar = () => {
   const { id } = useParams()
@@ -32,58 +25,8 @@ export const Sidebar = () => {
         </h2>
         <Avatar />
         <ul className="space-y-2 py-2">
-          <MenuLink
-            permissionsRole={UserRoles.ADMIN}
-            href={`/${id}/home/owners`}
-          >
-            <IoPeople className="text-xl" />
-            Propietarios
-          </MenuLink>
-          <MenuLink
-            permissionsRole={UserRoles.ADMIN}
-            href={`/${id}/home/apartments`}
-          >
-            <IoBusiness className="text-xl" />
-            Apartamentos
-          </MenuLink>
-          <MenuLink
-            permissionsRole={UserRoles.ADMIN}
-            href={`/${id}/home/states`}
-          >
-            <IoCheckmarkDoneCircle className="text-xl" />
-            Estados
-          </MenuLink>
-          <MenuLink
-            permissionsRole={UserRoles.ADMIN}
-            href={`/${id}/home/admin-request`}
-          >
-            <IoHandRightOutline className="text-xl" />
-            Solicitudes
-          </MenuLink>
-
-          <MenuLink
-            permissionsRole={UserRoles.ADMIN}
-            href={`/${id}/home/act`}
-          >
-            <IoBuild className="text-xl" />
-            Actas
-          </MenuLink>
-
-          <MenuLink
-            permissionsRole={UserRoles.CLIENT}
-            href={`/${id}/home/own-status`}
-          >
-            <IoAccessibility className="text-xl" />
-            Estado
-          </MenuLink>
-
-          <MenuLink
-            permissionsRole={UserRoles.CLIENT}
-            href={`/${id}/home/request`}
-          >
-            <IoMail className="text-xl" />
-            Enviar petición
-          </MenuLink>
+          <AdminMenu id={id} />
+          <ClientMenu id={id} />
 
           <button
             onClick={handleLogout}

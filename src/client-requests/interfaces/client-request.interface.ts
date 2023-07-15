@@ -1,6 +1,6 @@
 export const enum RequestType {
   ACT = 1,
-  CHANGE_STATE = 2,
+  PUBLIC_SPACE = 2,
   ACCESS = 3,
 }
 

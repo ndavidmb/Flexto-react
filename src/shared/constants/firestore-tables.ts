@@ -7,4 +7,6 @@ export const enum FirestoreTable {
   STATE_OWNERS = 'state-owners',
   ACT_TEMPLATES = 'act-templates',
   ACT = 'act',
+  PUBLIC_SPACES = 'public-spaces',
+  BOOKING = 'booking',
 }

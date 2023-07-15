@@ -9,6 +9,10 @@ const STYLE_STRING = (theme: Theme) => `
   color: ${theme.primary[0]};
 }
 
+.accent-primary {
+  accent-color: ${theme.primary[0]};
+}
+
 .search-input::placeholder {
   color: ${theme.primary[0]};
 }

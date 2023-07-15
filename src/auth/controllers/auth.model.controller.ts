@@ -13,6 +13,7 @@ import { useRequestRepository } from '../../client-requests/repositories/request
 import { RequestType } from '../../client-requests/interfaces/client-request.interface'
 import { RegisterError } from '../errors/register.error'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { getFormattedDate } from '../../shared/utils/formattedDate'
 
 export const useAuthModelController = () => {
   const authRepository = useAuthRepository()
@@ -48,6 +49,7 @@ export const useAuthModelController = () => {
         displayName: newUserInstance.displayName as string,
         description: registerFb.requestDescription,
         phoneNumber: registerFb.phoneNumber,
+        date: getFormattedDate(new Date()),
       })
 
       extraUserId = id

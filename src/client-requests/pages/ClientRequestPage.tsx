@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { useModal } from '../../shared/hooks/useModal'
 import { RootState } from '../../shared/store/store'
+import { ClientRequestForm } from '../components/ClientRequestForm'
 import { ClientRequestList } from '../components/ClientRequestList'
 import { useRequestClientViewController } from '../controllers/request-client.view.controller'
 import { AdminRequest } from '../interfaces/request.interface'
-import { useModal } from '../../shared/hooks/useModal'
-import { ModalContainer } from '../../shared/components/Modal/Modal'
-import { ClientRequestStateForm } from '../components/ClientRequestStateForm'
-import { ClientRequestForm } from '../components/ClientRequestForm'
 
 export const ClientRequestPage = () => {
   const { closeModal, openModal, setData, data, isOpen } =
@@ -27,13 +26,24 @@ export const ClientRequestPage = () => {
   )
 
   useEffect(() => {
+    consultData()
+  }, [])
+
+  const consultData = () => {
     requestClientViewController
       .getOwnerRequest(user.uid)
       .then((users) => {
         setRequestStates(users)
         setRequestAllStates(users)
       })
-  }, [])
+  }
+
+  const handleClose = (refresh?: boolean) => {
+    if (refresh) {
+      consultData()
+    }
+    closeModal()
+  }
 
   return (
     <>
@@ -42,7 +52,7 @@ export const ClientRequestPage = () => {
           close={closeModal}
           title="Crear solicitud"
         >
-          <ClientRequestForm />
+          <ClientRequestForm closeModal={handleClose} />
         </ModalContainer>
       )}
       <DefaultContainerWithSearch

@@ -1,17 +1,16 @@
-import { useSelector } from 'react-redux'
-import { RootState } from '../store/store'
+import { useAppSelector } from '../store/hooks'
 
 export const Avatar = () => {
-  const { email, photoUrl, displayName } = useSelector(
-    (state: RootState) => state.authState,
+  const { email, photoUrl, displayName } = useAppSelector(
+    (state) => state.authState,
   )
 
   return (
     <div className="flex flex-col items-center justify-center p-5">
-      <div className="rounded-full p-1 h-32 w-32 border">
+      <div className="rounded-full p-1 h-32 w-32 border flex items-center justify-center">
         <img
           src={photoUrl || undefined}
-          className="object-cover rounded-full h-full"
+          className="object-cover rounded-full !h-full w-full"
           alt="avatar"
         />
       </div>

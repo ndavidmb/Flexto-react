@@ -1,14 +1,24 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { Select } from '../../shared/styled-components/Select'
 import {
   REQUEST_TYPE_DICT,
   RequestType,
 } from '../interfaces/client-request.interface'
 import { Label } from '../../shared/styled-components/Label'
+<<<<<<< HEAD
 import { ClientRequestStateForm } from './ClientRequestStateForm'
 import { ClientRequestRecordForm } from './ClientRequestRecordForm'
+=======
+import { ClientRequestPublicSpaceForm } from './ClientRequestPublicSpaceForm'
+>>>>>>> 4c7cd4f436c5fe2f0600811a0cf05c183a629483
 
-export const ClientRequestForm = () => {
+type Props = {
+  closeModal: (refresh?: boolean) => void
+}
+
+export const ClientRequestForm: FC<Props> = ({
+  closeModal,
+}) => {
   const [requestType, setRequestType] = useState(1)
 
   const handleClose = (refresh?: boolean) => {
@@ -34,8 +44,8 @@ export const ClientRequestForm = () => {
           <option value={RequestType.ACT}>
             {REQUEST_TYPE_DICT[RequestType.ACT]}
           </option>
-          <option value={RequestType.CHANGE_STATE}>
-            {REQUEST_TYPE_DICT[RequestType.CHANGE_STATE]}
+          <option value={RequestType.PUBLIC_SPACE}>
+            {REQUEST_TYPE_DICT[RequestType.PUBLIC_SPACE]}
           </option>
         </Select>
       </div>
@@ -45,7 +55,9 @@ export const ClientRequestForm = () => {
         closeModal={handleClose}
       />
       ) : (
-        <ClientRequestStateForm />
+        <ClientRequestPublicSpaceForm
+          handleClose={closeModal}
+        />
       )}
     </>
   )

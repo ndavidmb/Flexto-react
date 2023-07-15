@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { RecoveryPassword } from '../auth/components/RecoveryPassword'
-import { Register } from '../auth/components/Register'
-import { AuthWrapper } from '../auth/pages/AuthWrapper'
+import { RecoveryPassword } from './components/RecoveryPassword'
+import { Register } from './components/Register'
+import { AuthWrapper } from './pages/AuthWrapper'
 import { Loading } from '../shared/components/Loading/Loading'
 
 export const PublicRouter = () => {
