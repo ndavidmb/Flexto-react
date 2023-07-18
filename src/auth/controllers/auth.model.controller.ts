@@ -14,11 +14,19 @@ import { RequestType } from '../../client-requests/interfaces/client-request.int
 import { RegisterError } from '../errors/register.error'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
+import { useEmail } from '../hooks/useEmail'
+import { useAppSelector } from '../../shared/store/hooks'
+import { ValidateError } from '../../shared/errors/validate-error'
 
 export const useAuthModelController = () => {
+  const { theme } = useAppSelector(
+    (state) => state.themeState,
+  )
+
   const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
   const requestRepository = useRequestRepository()
+  const emailFb = useEmail()
 
   const registerUser = async (
     registerFb: IRegisterFirebase,
@@ -115,10 +123,25 @@ export const useAuthModelController = () => {
     return getExtraUser(agreement, user)
   }
 
+  const sendRecoveryPasswordEmail = async (
+    email: string,
+  ) => {
+    const owner = await ownerRepository.getOwnerByEmail(
+      email,
+    )
+
+    if (!owner) {
+      throw new ValidateError('El usuario no existe')
+    }
+
+    return await authRepository.changePasswordEmail(email)
+  }
+
   return {
     registerUser,
     signInWithEmailAndPassword,
     logOut: authRepository.logOut,
     getExtraUser,
+    sendRecoveryPasswordEmail,
   }
 }

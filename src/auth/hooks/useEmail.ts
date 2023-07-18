@@ -1,21 +1,32 @@
 import { addDoc, collection } from 'firebase/firestore/lite'
 import { db } from '../../shared/services/firebase.service'
+import { EmailData } from '../interfaces/email-data.interface'
 
 export function useEmail() {
-  const sendEmail = async (emailData: {
-    email: string
-    subject: string
-    body: string
-  }) => {
+  const sendEmail = async ({
+    email,
+    body,
+    subject,
+    html = false,
+  }: EmailData) => {
     const collectionRef = collection(db, 'mail')
-    const emailContent = {
-      to: emailData.email,
-      message: {
-        email: emailData.subject,
-        text: emailData.body,
-        // html: '<p>Este es un mensaje de prueba</p>',
-      },
-    }
+
+    const emailContent = html
+      ? {
+          to: email,
+          message: {
+            subject,
+            body,
+          },
+        }
+      : {
+          to: email,
+          message: {
+            subject,
+            html: body,
+          },
+        }
+
     await addDoc(collectionRef, emailContent)
   }
 

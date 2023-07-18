@@ -4,7 +4,9 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   updateProfile,
+  updatePassword,
 } from 'firebase/auth'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
@@ -12,8 +14,6 @@ import { authFirebase } from '../../shared/services/firebase.service'
 import { RegisterError } from '../errors/register.error'
 import { RegisterFallback } from '../interfaces/register-fallback.interface'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
-import { UserRoles } from '../interfaces/user-roles.enums'
-import { IExtraUser } from '../interfaces/user.interface'
 
 export const useAuthRepository = () => {
   const firestoreDocs = useFirestoreDocs()
@@ -123,6 +123,17 @@ export const useAuthRepository = () => {
     }
   }
 
+  const updatePasswordFb = async (
+    user: User,
+    newPassword: string,
+  ) => {
+    await updatePassword(user, newPassword)
+  }
+
+  const changePasswordEmail = async (email: string) => {
+    await sendPasswordResetEmail(authFirebase, email)
+  }
+
   return {
     createUser,
     deleteAppUser,
@@ -130,8 +141,10 @@ export const useAuthRepository = () => {
     removeUserImage,
     uploadUserImage,
     updateUserProfile,
+    updatePasswordFb,
     signIn,
     logOut,
     createCompleteUser,
+    changePasswordEmail,
   }
 }
