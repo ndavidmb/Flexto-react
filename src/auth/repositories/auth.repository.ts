@@ -16,9 +16,6 @@ import { UserRoles } from '../interfaces/user-roles.enums'
 import { IExtraUser } from '../interfaces/user.interface'
 
 export const useAuthRepository = () => {
-  // const firestoreRegisteredUser = useFirestore<IExtraUser>(
-  //   FirestoreTable.REGISTERED_USER,
-  // )
   const firestoreDocs = useFirestoreDocs()
 
   const createUser = async (user: {
@@ -31,33 +28,6 @@ export const useAuthRepository = () => {
       user.password,
     )
   }
-
-  // const createUserExtra = async (user: IExtraUser) => {
-  //   return await firestoreRegisteredUser.addFirestore(user)
-  // }
-
-  // const deleteUserExtra = async (extraUserId: string) => {
-  //   return await firestoreRegisteredUser.deleteFirestore(
-  //     extraUserId,
-  //   )
-  // }
-
-  // const getExtraUser = async (uid: string) => {
-  //   const registeredUsers =
-  //     await firestoreRegisteredUser.getAllFirestore()
-
-  //   const currentUsers = registeredUsers.filter(
-  //     (user) => user.uid === uid,
-  //   )
-
-  //   if (currentUsers.length > 1) {
-  //     throw new Error(
-  //       'Should exist just one user with the uid',
-  //     )
-  //   }
-
-  //   return currentUsers[0]
-  // }
 
   const uploadUserImage = async (
     blob: Blob,
@@ -107,16 +77,6 @@ export const useAuthRepository = () => {
     )
   }
 
-  // const updateExtraUser = async (
-  //   uid: string,
-  //   updatedUser: IExtraUser,
-  // ) => {
-  //   await firestoreRegisteredUser.updateFirestore(
-  //     uid,
-  //     updatedUser,
-  //   )
-  // }
-
   const logOut = async () => {
     return await authFirebase.signOut()
   }
@@ -125,7 +85,6 @@ export const useAuthRepository = () => {
     registerFb: IRegisterFirebase,
   ) => {
     let newUserInstance: User | null = null
-    // let extraUserId: string | null = null
 
     try {
       const { user: newUser } = await createUser({
@@ -163,25 +122,6 @@ export const useAuthRepository = () => {
       ])
     }
   }
-
-  // const activateUserAccount = async (uid: string) => {
-  //   const extraUser = await getExtraUser(uid)
-  //   await updateExtraUser(extraUser.id!, {
-  //     ...extraUser,
-  //     accepted: true,
-  //   })
-  // }
-
-  // const updateUserApartment = async (
-  //   uid: string,
-  //   apartmentId: string,
-  // ) => {
-  //   const extraUser = await getExtraUser(uid)
-  //   await updateExtraUser(extraUser.id!, {
-  //     ...extraUser,
-  //     apartmentId,
-  //   })
-  // }
 
   return {
     createUser,

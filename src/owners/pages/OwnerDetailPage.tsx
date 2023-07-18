@@ -8,11 +8,12 @@ import { DefaultContainer } from '../../shared/components/DefaultContainer/Defau
 import { Button } from '../../shared/styled-components/Button'
 import { PageTitle } from '../../shared/styled-components/PageTitle'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
-import { OwnerView } from '../interfaces/owner.view.interface'
+import { OwnerViewWithBookings } from '../interfaces/owner.view.interface'
 
 export const OwnerDetailPage = () => {
   // React Hooks
-  const [ownerVm, setOwnerVm] = useState<OwnerView>()
+  const [ownerVm, setOwnerVm] =
+    useState<OwnerViewWithBookings>()
   const { ownerId } = useParams()
 
   const navigate = useNavigate()

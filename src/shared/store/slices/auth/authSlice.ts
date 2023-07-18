@@ -1,4 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import {
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit'
 import {
   IUserState,
   IUserPayload,
@@ -45,7 +48,24 @@ export const authSlice = createSlice({
         userState: USER_APPROVED_STATES.PENDING,
       }
     },
+
+    updateOwnerState: (
+      state,
+      {
+        payload,
+      }: PayloadAction<
+        Pick<IUserState, 'displayName' | 'photoUrl'>
+      >,
+    ) => {
+      state.displayName = payload.displayName
+      state.photoUrl = payload.photoUrl
+    },
   },
 })
 
-export const { login, logout, registerProcess } = authSlice.actions
+export const {
+  login,
+  logout,
+  registerProcess,
+  updateOwnerState,
+} = authSlice.actions

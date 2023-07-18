@@ -5,5 +5,10 @@ import { OwnerDTO } from './owner.interface'
 export interface OwnerView {
   owner: OwnerDTO
   apartment: Apartment
+}
+
+export interface OwnerViewWithBookings extends OwnerView {
+  owner: OwnerDTO
+  apartment: Apartment
   bookings: BookingDTO[]
 }

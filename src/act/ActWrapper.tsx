@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultContainer'
-import { ActTabs } from './components/ActTabs'
+import { Tabs } from '../shared/components/Tabs'
 import { ACT_ROUTES } from './ActRouter'
 
 export const ActWrapper = () => {
   return (
     <DefaultContainer>
-      <ActTabs
+      <Tabs
         tabs={[
           {
             label: 'Actas',
