@@ -3,6 +3,7 @@ import { RecoveryPassword } from './components/RecoveryPassword'
 import { Register } from './components/Register'
 import { AuthWrapper } from './pages/AuthWrapper'
 import { Loading } from '../shared/components/Loading/Loading'
+import { ForgetPasswordPage } from './pages/ForgetPasswordPage'
 
 export const PublicRouter = () => {
   return (
@@ -20,6 +21,10 @@ export const PublicRouter = () => {
             <Loading />
           </>
         }
+      />
+      <Route
+        path="forgot-password"
+        element={<ForgetPasswordPage />}
       />
       <Route
         path="*"

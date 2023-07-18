@@ -7,6 +7,7 @@ import { RootState } from '../../shared/store/store'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 import { ActFormData } from '../interfaces/act-form-data.interface'
+import { getFormattedDate } from '../../shared/utils/formattedDate'
 
 export const useActController = (
   actType:
@@ -57,6 +58,7 @@ export const useActController = (
       documentName: formData.documentName,
       templateName: formData.templateName,
       documentUrl: url,
+      date: getFormattedDate(new Date()),
     })
 
     dispatch(setLoading(false))
