@@ -3,37 +3,38 @@ import { Button } from '../../shared/styled-components/Button'
 import { FC } from 'react'
 import { ClientRequestRecord } from '../interfaces/client-request.interface'
 import { TextArea } from '../../shared/styled-components/TextArea'
+import { useRequestClientViewController } from '../controllers/request-client.view.controller'
+import { getInputInitialDate } from '../../shared/utils/formattedDate'
 
 type Props = {
-  data?: ClientRequestRecord
-  closeModal: (refresh?: boolean) => void
+  handleClose: (refresh?: boolean) => void
 }
 
 export const ClientRequestRecordForm: FC<Props> = ({
-  data,
-  closeModal,
+  handleClose,
 }) => {
+  
   const initialValues: ClientRequestRecord = {
-    date: data?.date || '',
-    recordDetail: data?.recordDetail || '',
+    date: getInputInitialDate(new Date()),
+    recordDetail: '',
   }
+  const requestClientViewController =
+  useRequestClientViewController()
+  
   const handleSubmit = (values: ClientRequestRecord) => {
-    if (data) {
-      createRecordRequest(values)
+
+    const request: ClientRequestRecord = {
+      date: values.date,
+      recordDetail:values.recordDetail
     }
-  }
-  const createRecordRequest = (values: ClientRequestRecord) => {
-    // se debe crear la acta
-    // apartmentViewController
-    //   .addApartment({
-    //     // Se pasa de número a string
-    //     apartmentNumber: values.apartmentNumber,
-    //     tower: values.tower,
-    //     owner: "",
-    //   })
-    //   .then(() => {
-    //     closeModal(true)
-    //   })
+
+    requestClientViewController
+      .createActRequest(request)
+      .then((successfully) => {
+        if (successfully) {
+          handleClose(true)
+        }
+      })
   }
 
   return (
@@ -44,15 +45,15 @@ export const ClientRequestRecordForm: FC<Props> = ({
       <Form className="flex flex-col gap-2">
         <div className="flex flex-col text-gray-900">
           <label
-            htmlFor="dateRecord"
+            htmlFor="date"
             className="font-semibold p-1"
           >
             Fecha
           </label>
           <Field
             type="date"
-            id="dateRecord"
-            name="dateRecord"
+            id="date"
+            name="date"
             className="border bg-white px-2 py-1"
             placeholder="Fecha"
           />
@@ -74,7 +75,7 @@ export const ClientRequestRecordForm: FC<Props> = ({
           <Button type="submit" color="primary">
             Enviar solicitud
           </Button>
-          <Button color="link" onClick={() => closeModal()}>
+          <Button color="link" onClick={() => handleClose()}>
             Cerrar
           </Button>
         </div>

@@ -62,6 +62,10 @@ export const AdminRequestPage = () => {
           }
         })
     }
+    
+    if (request.type === RequestType.ACT) {
+ alert("entro")
+    }
   }
 
   const handleDelete = (request: AdminRequest) => {

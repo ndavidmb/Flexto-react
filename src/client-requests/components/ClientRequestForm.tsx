@@ -5,12 +5,9 @@ import {
   RequestType,
 } from '../interfaces/client-request.interface'
 import { Label } from '../../shared/styled-components/Label'
-<<<<<<< HEAD
-import { ClientRequestStateForm } from './ClientRequestStateForm'
 import { ClientRequestRecordForm } from './ClientRequestRecordForm'
-=======
 import { ClientRequestPublicSpaceForm } from './ClientRequestPublicSpaceForm'
->>>>>>> 4c7cd4f436c5fe2f0600811a0cf05c183a629483
+import { useRequestClientViewController } from '../controllers/request-client.view.controller'
 
 type Props = {
   closeModal: (refresh?: boolean) => void
@@ -20,7 +17,7 @@ export const ClientRequestForm: FC<Props> = ({
   closeModal,
 }) => {
   const [requestType, setRequestType] = useState(1)
-
+  
   const handleClose = (refresh?: boolean) => {
     // se debe hacer algo
     // if (refresh) {
@@ -52,7 +49,7 @@ export const ClientRequestForm: FC<Props> = ({
       {requestType === RequestType.ACT ? (
         <ClientRequestRecordForm
         // data={data}
-        closeModal={handleClose}
+        handleClose={closeModal}
       />
       ) : (
         <ClientRequestPublicSpaceForm

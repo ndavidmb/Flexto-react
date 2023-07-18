@@ -4,6 +4,7 @@ import { PublicSpaceWithHours } from '../../public-spaces/interfaces/public-spac
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
+import { ClientRequestRecord } from '../interfaces/client-request.interface'
 import {
   RequestPublicSpaceDTO,
   RequestPublicSpaceForm,
@@ -52,9 +53,32 @@ export const useRequestClientViewController = () => {
     request: RequestPublicSpaceDTO,
   ) => {
     dispatch(setLoading(true))
-
     try {
       await requestModelController.createPublicSpaceRequest(
+        request,
+      )
+      return true
+    } catch (error) {
+      dispatch(
+        showToast({
+          title: 'No se pudo crear la solicitud',
+          details: [
+            'intente más tarde o contacte con soporte',
+          ],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+  const createActRequest = async (
+    request: ClientRequestRecord,
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      await requestModelController.createActRequest(
         request,
       )
       return true
@@ -78,5 +102,6 @@ export const useRequestClientViewController = () => {
     getOwnerRequest,
     getPublicSpaces,
     createPublicSpaceRequest,
+    createActRequest
   }
 }

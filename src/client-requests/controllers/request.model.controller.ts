@@ -7,7 +7,10 @@ import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
 import { useAppSelector } from '../../shared/store/hooks'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
-import { RequestType } from '../interfaces/client-request.interface'
+import {
+  ClientRequestRecord,
+  RequestType,
+} from '../interfaces/client-request.interface'
 import { RequestPublicSpaceDTO } from '../interfaces/request-public-space.interface'
 import {
   AdminRequest,
@@ -26,7 +29,6 @@ export const useRequestModelController = () => {
   const userState = useAppSelector(
     (state) => state.authState,
   )
-
   const getAdminRequest = async () => {
     const requests =
       await requestRepository.getAdminRequest()
@@ -152,6 +154,22 @@ export const useRequestModelController = () => {
       foreignId: request.space.id!,
     })
   }
+  const createActRequest = async (
+    request: ClientRequestRecord,
+  ) => {
+    const { phoneNumber } =
+      await ownerRepository.getOwnerByUid(userState.uid)
+    await requestRepository.createRequest({
+      description: request.recordDetail,
+      requestType: RequestType.ACT,
+      displayName: userState.displayName,
+      uid: userState.uid,
+      email: userState.email,
+      phoneNumber,
+      date: request.date,
+      foreignId:''
+    })
+  }
 
   const acceptPublicSpaceRequest = async (
     request: AdminRequest,
@@ -193,5 +211,6 @@ export const useRequestModelController = () => {
     acceptAccessRequest,
     acceptPublicSpaceRequest,
     getOwnerRequest,
+    createActRequest,
   }
 }
