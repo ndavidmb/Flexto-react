@@ -6,10 +6,13 @@ import {
   IoHandRightOutline,
   IoPeople,
 } from 'react-icons/io5'
-import { MdOutlineBedroomParent } from 'react-icons/md'
+import {
+  MdOutlineBedroomParent,
+  MdOutlinePayments
+} from 'react-icons/md'
+import { TbBrandBooking } from 'react-icons/tb'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
-import { TbBrandBooking } from 'react-icons/tb'
 
 type Props = {
   id: string | undefined
@@ -25,6 +28,15 @@ export const AdminMenu: FC<Props> = ({ id }) => {
         <IoPeople className="text-xl" />
         Propietarios
       </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.ADMIN}
+        href={`/${id}/home/payments`}
+      >
+        <MdOutlinePayments className="text-xl" />
+        Servicios
+      </MenuLink>
+
       <MenuLink
         permissionsRole={UserRoles.ADMIN}
         href={`/${id}/home/apartments`}

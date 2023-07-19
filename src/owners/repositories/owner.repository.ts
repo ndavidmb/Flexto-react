@@ -70,9 +70,16 @@ export const useOwnerRepository = () => {
     return owner
   }
 
+  const getOwnersWithIds = (ids: string[]) => {
+    return firestore.getAllFirestore([
+      where('id', 'in', ids),
+    ])
+  }
+
   return {
     getOwnerByUid,
     getAllOwners,
+    getOwnersWithIds,
     getOwnerById,
     getOwnerByEmail,
     activateOwnerAccount,
