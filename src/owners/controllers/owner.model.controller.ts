@@ -30,7 +30,7 @@ export const useOwnerModelController = () => {
 
   const getOwners = async (): Promise<Owner[]> => {
     const [owners, apartments] = await Promise.all([
-      ownerRepository.getAllOwners(),
+      ownerRepository.getActiveOwners(),
       apartmentRepository.getApartments(),
     ])
     return owners.map((owner) => {

@@ -59,10 +59,11 @@ export function useAuthViewController(themeId: string) {
 
     dispatch(setLoading(true))
     try {
-      const extraUser = await authModelController.getExtraUser(
-        themeId,
-        user,
-      )
+      const extraUser =
+        await authModelController.getExtraUser(
+          themeId,
+          user,
+        )
       dispatch(login(extraUser))
       getRedirectPath(extraUser)
     } catch (err) {
@@ -102,7 +103,9 @@ export function useAuthViewController(themeId: string) {
     dispatch(setLoading(true))
 
     try {
-      const res = await authModelController.registerUser(registerFb)
+      const res = await authModelController.registerUser(
+        registerFb,
+      )
       if (!res) {
         return
       }
@@ -118,6 +121,7 @@ export function useAuthViewController(themeId: string) {
         replace: true,
       })
     } catch (err) {
+      console.error(err)
       if (err instanceof FirebaseError) {
         dispatch(
           showToast({

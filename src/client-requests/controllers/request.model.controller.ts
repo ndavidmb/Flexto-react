@@ -1,5 +1,6 @@
 import { useApartmentModelController } from '../../apartments/controllers/apartment.model.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { useAuthModelController } from '../../auth/controllers/auth.model.controller'
 import { IUserRequest } from '../../auth/interfaces/user.interface'
 import { useBookingModelController } from '../../booking/controllers/booking.model.controller'
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
@@ -18,6 +19,7 @@ import { useRequestRepository } from '../repositories/request.repository'
 
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
+  const authModelController = useAuthModelController()
   const ownerRepository = useOwnerRepository()
   const publicSpaceController =
     usePublicSpacesModelController()
@@ -78,6 +80,7 @@ export const useRequestModelController = () => {
       description: accessRequest.description,
       phoneNumber: accessRequest.phoneNumber,
       date: getFormattedDate(new Date()),
+      foreignId: '',
     })
   }
 

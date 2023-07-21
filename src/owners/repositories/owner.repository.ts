@@ -16,6 +16,13 @@ export const useOwnerRepository = () => {
     ])
   }
 
+  const getActiveOwners = async () => {
+    return await firestore.getAllFirestore([
+      where('role', '==', UserRoles.CLIENT),
+      where('accepted', '==', true),
+    ])
+  }
+
   const getOwnersByState = async (stateId: string) => {
     return await firestore.getAllFirestore([
       where('role', '==', UserRoles.CLIENT),
@@ -82,6 +89,7 @@ export const useOwnerRepository = () => {
     getOwnersWithIds,
     getOwnerById,
     getOwnerByEmail,
+    getActiveOwners,
     activateOwnerAccount,
     deleteOwner,
     createOwner,

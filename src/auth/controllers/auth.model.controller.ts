@@ -1,32 +1,25 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
-import { useRequestModelController } from '../../client-requests/controllers/request.model.controller'
+import { RequestType } from '../../client-requests/interfaces/client-request.interface'
+import { useRequestRepository } from '../../client-requests/repositories/request.repository'
+import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { ValidateError } from '../../shared/errors/validate-error'
+import { useAppSelector } from '../../shared/store/hooks'
 import {
   IUserState,
   USER_APPROVED_STATES,
 } from '../../shared/store/interfaces/auth/auth.interface'
+import { getFormattedDate } from '../../shared/utils/formattedDate'
+import { RegisterError } from '../errors/register.error'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthRepository } from '../repositories/auth.repository'
-import { useRequestRepository } from '../../client-requests/repositories/request.repository'
-import { RequestType } from '../../client-requests/interfaces/client-request.interface'
-import { RegisterError } from '../errors/register.error'
-import { useOwnerRepository } from '../../owners/repositories/owner.repository'
-import { getFormattedDate } from '../../shared/utils/formattedDate'
-import { useEmail } from '../hooks/useEmail'
-import { useAppSelector } from '../../shared/store/hooks'
-import { ValidateError } from '../../shared/errors/validate-error'
 
 export const useAuthModelController = () => {
-  const { theme } = useAppSelector(
-    (state) => state.themeState,
-  )
-
   const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
   const requestRepository = useRequestRepository()
-  const emailFb = useEmail()
 
   const registerUser = async (
     registerFb: IRegisterFirebase,
@@ -58,6 +51,7 @@ export const useAuthModelController = () => {
         description: registerFb.requestDescription,
         phoneNumber: registerFb.phoneNumber,
         date: getFormattedDate(new Date()),
+        foreignId: ''
       })
 
       extraUserId = id
