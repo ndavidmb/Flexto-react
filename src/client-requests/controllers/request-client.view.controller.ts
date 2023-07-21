@@ -32,7 +32,7 @@ export const useRequestClientViewController = () => {
       dispatch(
         showToast({
           title:
-            'No se pudieron obtener los espacios públicos disponibles',
+            'No se pudieron obtener las zonas comunes disponibles',
           details: [
             'Intente más tarde o contacte con soporte',
           ],

@@ -80,7 +80,6 @@ export const OwnerForm: FC<Props> = ({
       .finally(() => dispatch(setLoading(false)))
   }
 
-  // Esto llama al service, y agrega un apartamento
   const createOwner = (owner: Owner) => {
     ownerService
       .addOwner(owner)
@@ -130,7 +129,7 @@ export const OwnerForm: FC<Props> = ({
             htmlFor="apartmentId"
             className="font-semibold p-1"
           >
-            Apartamento
+            Unidad residencial
           </label>
           <Select
             formik={true}

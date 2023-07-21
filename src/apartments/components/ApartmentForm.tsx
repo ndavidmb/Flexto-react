@@ -39,7 +39,6 @@ export const ApartmentForm: FC<Props> = ({
       })
   }
 
-  // Esto llama al service, y agrega un apartamento
   const createApt = (values: Apartment) => {
     apartmentViewController
       .addApartment({
@@ -78,13 +77,13 @@ export const ApartmentForm: FC<Props> = ({
             htmlFor="apartmentNumber"
             className="font-semibold p-1"
           >
-            Número de apartamento
+            Número de unidad residencial
           </label>
           <Field
             id="apartmentNumber"
             name="apartmentNumber"
             className="border bg-white px-2 py-1"
-            placeholder="Número de apartamento"
+            placeholder="Número de unidad residencial"
           />
         </div>
         <div className="flex flex-row-reverse gap-3 pt-3">

@@ -57,7 +57,7 @@ export const ApartmentWrapper = () => {
       {isOpen && (
         <ModalContainer
           close={closeModal}
-          title={`${data ? 'Editar' : 'Crear'} apartamento`}
+          title={`${data ? 'Editar' : 'Crear'} unidad residencial`}
         >
           <ApartmentForm
             data={data}
@@ -77,7 +77,7 @@ export const ApartmentWrapper = () => {
           ],
           setItems: setApartments,
         }}
-        title="Apartamentos"
+        title="Unidad residencial"
         action={open}
       >
         <ApartmentList

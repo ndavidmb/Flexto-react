@@ -16,8 +16,9 @@ export const ModalContainer: FC<Props> = ({
 }) => {
   return (
     <>
-      <div className="absolute left-0 top-0 z-10 flex justify-center items-center h-screen w-full background-blur"></div>
-      <section className="absolute left-0 top-0 z-20 flex flex-col justify-center items-center w-full h-screen">
+      <div className="absolute left-0 top-0 z-10 flex justify-center items-center h-screen w-screen background-blur"></div>
+
+      <section className="absolute flex justify-center items-center top-0 left-0 z-20 w-screen h-screen">
         <div className={`bg-white shadow rounded ${width}`}>
           <header className="flex justify-between items-center bg-menu px-5 py-2 rounded-t">
             <h2 className="text-white cursor-default">

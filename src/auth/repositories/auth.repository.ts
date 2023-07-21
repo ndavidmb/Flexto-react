@@ -50,7 +50,7 @@ export const useAuthRepository = () => {
 
   const updateUserProfile = async (
     displayName: string,
-    photoURL: string,
+    photoURL?: string,
   ) => {
     if (authFirebase.currentUser) {
       return await updateProfile(authFirebase.currentUser, {
@@ -93,10 +93,13 @@ export const useAuthRepository = () => {
       })
 
       newUserInstance = newUser
-      const photoUrl = await uploadUserImage(
-        registerFb.photo.blob,
-        newUserInstance.uid,
-      )
+      let photoUrl;
+      if (registerFb.photo) {
+        photoUrl = await uploadUserImage(
+          registerFb.photo.blob,
+          newUserInstance.uid,
+        )
+      }
 
       await updateUserProfile(
         registerFb.displayName,
@@ -137,7 +140,6 @@ export const useAuthRepository = () => {
   return {
     createUser,
     deleteAppUser,
-    deleteFirebaseUser,
     removeUserImage,
     uploadUserImage,
     updateUserProfile,

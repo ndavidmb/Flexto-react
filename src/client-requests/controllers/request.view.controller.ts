@@ -102,7 +102,7 @@ export const useRequestViewController = () => {
     } catch (err) {
       dispatch(
         showToast({
-          title: `No se pudo vincular el apartamento al usuario ${request.user.displayName}`,
+          title: `No se pudo vincular la unidad residencial al usuario ${request.user.displayName}`,
           details: [
             'Por favor intente mas tarde o contacte con soporte',
           ],

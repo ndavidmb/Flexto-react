@@ -32,9 +32,10 @@ export function DefaultContainerWithSearch<T>({
   return (
     <DefaultContainer>
       <ContainerHeader title={title}>
-        <div className='flex gap-2 justify-end items-center'>
+        <div className='md:flex gap-2 justify-end items-center'>
           {action && (
             <Button
+              className='absolute top-4 right-2 md:static'
               color="primary"
               onClick={() => action()}
             >
@@ -48,7 +49,7 @@ export function DefaultContainerWithSearch<T>({
           />
         </div>
       </ContainerHeader>
-      <div className="px-4">{children}</div>
+      <div className="overflow-auto mt-3 md:mt-0 md:px-4">{children}</div>
     </DefaultContainer>
   )
 }

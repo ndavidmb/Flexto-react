@@ -58,7 +58,7 @@ export const OwnerDetailPage = () => {
   return (
     <DefaultContainer>
       <header className="px-8 py-3 flex justify-between items-start">
-        <div className="flex gap-3">
+        <div className="md:flex gap-3">
           <img
             className="rounded"
             src={ownerVm?.owner.photoUrl}
@@ -84,7 +84,7 @@ export const OwnerDetailPage = () => {
               </li>
               <li>
                 <small className="font-bold block">
-                  Apartamento
+                  Unidad residencial
                 </small>
                 {ownerVm?.apartment.apartmentNumber} -{' '}
                 {ownerVm?.apartment.tower}
@@ -92,9 +92,9 @@ export const OwnerDetailPage = () => {
             </ul>
           </div>
         </div>
-        <div className="flex gap-1 items-center mt-1">
+        <div className="flex flex-col md:flex-row gap-2 items-center mt-1">
           <button
-            className="button bg-gray-200 !text-gray-600 flex gap-2"
+            className="w-full button bg-gray-200 !text-gray-600 flex gap-2"
             onClick={() => goBack()}
           >
             <IoArrowBack />

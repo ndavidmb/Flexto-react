@@ -6,6 +6,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { IRegisterForm } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { useAuthDefaultController } from './useAuthDefaultController'
+import { FormikProps } from 'formik'
 
 export const useRegister = () => {
   const dispatch = useAppDispatch()
@@ -65,26 +66,17 @@ export const useRegister = () => {
     role: UserRoles.CLIENT,
   }
 
-  const handleSubmit = async ({
-    email,
-    name,
-    surnames,
-    password,
-    role,
-    phoneNumber,
-    requestDescription,
-  }: IRegisterForm) => {
-    if (!photo) {
-      dispatch(
-        showToast({
-          title: 'La imagen es requerida',
-          details: [],
-          type: 'info',
-        }),
-      )
-      return
-    }
-
+  const handleSubmit = async (
+    {
+      email,
+      name,
+      surnames,
+      password,
+      role,
+      phoneNumber,
+      requestDescription,
+    }: IRegisterForm,
+  ) => {
     await authController.register({
       email,
       password,

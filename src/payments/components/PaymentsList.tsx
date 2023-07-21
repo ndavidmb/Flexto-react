@@ -54,6 +54,7 @@ export const PaymentsList: FC<Props> = ({
                 <div className="flex items-center">
                   <Button
                     color="secondary"
+                    className='min-w-max'
                     onClick={() => handleAddOwner(payment)}
                   >
                     Agregar un usuario

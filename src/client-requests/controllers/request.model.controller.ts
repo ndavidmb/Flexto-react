@@ -1,7 +1,7 @@
 import { useApartmentModelController } from '../../apartments/controllers/apartment.model.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
-import { useAuthModelController } from '../../auth/controllers/auth.model.controller'
 import { IUserRequest } from '../../auth/interfaces/user.interface'
+import { useAuthRepository } from '../../auth/repositories/auth.repository'
 import { useBookingModelController } from '../../booking/controllers/booking.model.controller'
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
@@ -19,7 +19,7 @@ import { useRequestRepository } from '../repositories/request.repository'
 
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
-  const authModelController = useAuthModelController()
+  const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
   const publicSpaceController =
     usePublicSpacesModelController()

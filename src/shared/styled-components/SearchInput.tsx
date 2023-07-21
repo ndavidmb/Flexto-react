@@ -63,9 +63,10 @@ export function SearchInput<T>({
   }
 
   return (
-    <div className="relative">
+    <div className="relative my-2">
       <input
         className="
+        w-full
         text-primary
         search-input
         border-primary

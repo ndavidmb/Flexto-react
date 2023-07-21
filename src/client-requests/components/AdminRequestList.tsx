@@ -85,7 +85,7 @@ export const AdminRequestList: FC<Props> = ({
                 <p>{request.description}</p>
               </td>
               <td>
-                <ul>
+                <ul className='min-w-max'>
                   <li>
                     Solicitud del {request.dateDetail.date}
                   </li>

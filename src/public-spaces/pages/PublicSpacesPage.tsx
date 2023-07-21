@@ -78,7 +78,7 @@ export const PublicSpacesPage = () => {
       )}
 
       <DefaultContainerWithSearch
-        title="Espacios públicos"
+        title="Zonas comunes"
         action={handleCreate}
         searchOptions={{
           allItems: allPublicSpaces,

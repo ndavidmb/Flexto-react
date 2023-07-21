@@ -21,7 +21,7 @@ export const ApartmentList: FC<Props> = ({
   return (
     <Table>
       <THead>
-        <th scope="col">Apartamento</th>
+        <th scope="col">Unidad residencial</th>
         <th scope="col">Torre</th>
         <th scope="col">Propietario</th>
         <th scope="col">Acción</th>

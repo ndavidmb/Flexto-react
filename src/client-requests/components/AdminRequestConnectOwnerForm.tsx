@@ -45,7 +45,7 @@ export const AdminRequestConnectOwnerForm: FC<Props> = ({
   return (
     <section>
       <Label htmlFor="apartments" required={true}>
-        Apartamentos disponibles
+        Unidades disponibles
       </Label>
       <Select
         onChange={(ev) => handleOnChange(ev.target.value)}

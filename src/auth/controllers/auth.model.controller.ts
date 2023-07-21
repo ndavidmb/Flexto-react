@@ -51,7 +51,7 @@ export const useAuthModelController = () => {
         description: registerFb.requestDescription,
         phoneNumber: registerFb.phoneNumber,
         date: getFormattedDate(new Date()),
-        foreignId: ''
+        foreignId: '',
       })
 
       extraUserId = id
@@ -62,7 +62,7 @@ export const useAuthModelController = () => {
           uid: newUserInstance.uid,
           displayName:
             newUserInstance.displayName as string,
-          photoUrl,
+          photoUrl: photoUrl ?? '',
           role: UserRoles.CLIENT,
         },
       }
@@ -131,11 +131,24 @@ export const useAuthModelController = () => {
     return await authRepository.changePasswordEmail(email)
   }
 
+  const deleteUser = async (
+    ownerId: string,
+    user: User,
+  ) => {
+    await Promise.all([
+      authRepository.deleteAppUser({
+        newUserInstance: user,
+      }),
+      ownerRepository.deleteOwner(ownerId),
+    ])
+  }
+
   return {
     registerUser,
     signInWithEmailAndPassword,
     logOut: authRepository.logOut,
     getExtraUser,
     sendRecoveryPasswordEmail,
+    deleteUser,
   }
 }

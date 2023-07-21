@@ -46,7 +46,7 @@ export const OwnerList: FC<Props> = ({
           <th scope="col" className="w-1"></th>
           <th scope="col">Nombre</th>
           <th scope="col">Teléfono</th>
-          <th scope="col">Apartamento</th>
+          <th scope="col">Unidad residencial</th>
           <th scope="col">Correo</th>
           <th scope="col">Acción</th>
         </THead>

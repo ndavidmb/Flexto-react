@@ -65,7 +65,6 @@ export const StateForm: FC<Props> = ({
       .finally(() => dispatch(setLoading(false)))
   }
 
-  // Esto llama al service, y agrega un apartamento
   const createSta = (values: StateFromForm) => {
     const stateForService: State = {
       affair: values.affair,

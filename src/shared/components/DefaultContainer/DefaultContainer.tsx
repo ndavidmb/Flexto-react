@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from '../../store/hooks'
 import { setLoading } from '../../store/slices/loading/loadingSlice'
@@ -31,10 +31,10 @@ export const DefaultContainer: FC<Props> = ({
   }, [role])
 
   return (
-    <main className="h-screen w-full flex">
+    <main className="h-screen w-full md:flex">
       <Sidebar />
       <section
-        className={`w-full bg-gray-50 h-full ${styles.container} ${className}`}
+        className={`md:w-full bg-gray-50 h-full ${styles.container} ${className}`}
       >
         {children}
       </section>

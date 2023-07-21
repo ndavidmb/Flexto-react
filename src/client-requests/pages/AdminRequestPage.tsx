@@ -107,7 +107,7 @@ export const AdminRequestPage = () => {
         handleDenyRequest={handleDenyRequest}
         handleDelete={handleDelete}
       ></AdminRequestList>
-      <div className="absolute bottom-10 right-10 shadow">
+      <div className="absolute top-3 right-3 md:top-auto md:bottom-10 md:right-10 shadow-md">
         <Button
           className="flex items-center justify-center p-2 gap-2"
           color="primary"
