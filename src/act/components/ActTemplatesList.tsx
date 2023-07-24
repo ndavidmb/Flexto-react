@@ -33,6 +33,7 @@ export const ActTemplatesList: FC<Props> = ({
             <td>
               <a
                 href={template.documentUrl}
+                target='_blank'
                 className="flex gap-1 items-center"
               >
                 <AiOutlineFileWord
@@ -58,7 +59,7 @@ export const ActTemplatesList: FC<Props> = ({
 
                 <Button
                   onClick={() =>
-                    deleteTemplate(template.id)
+                    deleteTemplate(template.id!)
                   }
                   color="link"
                 >

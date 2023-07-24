@@ -35,7 +35,7 @@ export const Toast = () => {
           className={`
             absolute
             w-1/4
-            z-10
+            z-20
             right-1
             bottom-2
             shadow

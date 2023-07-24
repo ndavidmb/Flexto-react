@@ -3,7 +3,6 @@ import { resizeImage } from '../utils/resizeImage'
 
 type Props = {
   id: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (value: { blob: Blob; name: string }) => void
   className?: string
   placeholder?: string
@@ -21,7 +20,13 @@ export const InputFile: FC<Props> = ({
   const handleChanged = () => {
     const files = inputEl.current?.files
 
-    if (files && files[0]) {
+    if (!files || !files[0]) {
+      return
+    }
+
+    const { type, name } = files[0]
+
+    if (type.includes('image')) {
       resizeImage(files[0]).then((compressed) => {
         onChange({
           blob: compressed,
@@ -29,6 +34,14 @@ export const InputFile: FC<Props> = ({
         })
         setSelectedFile(compressed.name)
       })
+    }
+
+    if (type.includes('pdf') || type.includes('docx')) {
+      onChange({
+        blob: files[0],
+        name,
+      })
+      setSelectedFile(name)
     }
   }
 

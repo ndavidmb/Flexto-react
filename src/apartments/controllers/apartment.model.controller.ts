@@ -1,6 +1,9 @@
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ApartmentWithOwner } from '../components/AparmentWithOwner'
-import { Apartment } from '../interfaces/apartment.interface'
+import {
+  Apartment,
+  ApartmentExtraInfo,
+} from '../interfaces/apartment.interface'
 import { useApartmentRepository } from '../repositories/apartment.repository'
 
 export const useApartmentModelController = () => {
@@ -78,11 +81,27 @@ export const useApartmentModelController = () => {
     return await apartmentRepository.getAvailableApartments()
   }
 
+  const updateExtraInfo = (
+    apartment: Apartment,
+    extraInfo: ApartmentExtraInfo,
+  ) => {
+    return apartmentRepository.updateApartment(
+      apartment.id!,
+      {
+        ...apartment,
+        extraInfo: {
+          ...extraInfo,
+        },
+      },
+    )
+  }
+
   return {
     getApartmentsWithOwners,
     addApartment,
     deleteApartment,
     updateApartment,
     getAvailableApartments,
+    updateExtraInfo,
   }
 }

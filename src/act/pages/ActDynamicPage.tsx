@@ -15,7 +15,10 @@ type Props = {
   labelsName: string
 }
 
-export const ActDynamicPage: FC<Props> = ({ actType, labelsName }) => {
+export const ActDynamicPage: FC<Props> = ({
+  actType,
+  labelsName,
+}) => {
   // Hooks
   const [templates, setTemplates] = useState<ActTemplate[]>(
     [],
@@ -40,10 +43,8 @@ export const ActDynamicPage: FC<Props> = ({ actType, labelsName }) => {
 
   const handleClose = (newTemplate?: ActFormData) => {
     if (newTemplate) {
-      handleAddUser(newTemplate)
+      handleFormInfo(newTemplate)
     }
-
-    closeModal()
   }
 
   const handleOpenModal = (data?: ActTemplate) => {
@@ -56,21 +57,42 @@ export const ActDynamicPage: FC<Props> = ({ actType, labelsName }) => {
     getTemplates()
   }
 
-  const handleAddUser = async (
-    newTemplate: ActFormData,
-  ) => {
-    // If it is not edit
-    if (data) {
-      await actController.updateTemplate({
-        id: data.id,
-        formData: newTemplate,
-        oldTemplate: data,
-      })
-    } else {
-      await actController.addTemplate(newTemplate)
+  const handleFormInfo = (newTemplate: ActFormData) => {
+    if (!data) {
+      addTemplate(newTemplate)
+      return
     }
 
-    getTemplates()
+    updateTemplate(data, newTemplate)
+  }
+
+  const addTemplate = (newTemplate: ActFormData) => {
+    actController
+      .addTemplate(newTemplate)
+      .then((successfully) => {
+        if (successfully) {
+          getTemplates()
+          closeModal()
+        }
+      })
+  }
+
+  const updateTemplate = (
+    data: ActTemplate,
+    updatedTemplate: ActFormData,
+  ) => {
+    actController
+      .updateTemplate({
+        id: data.id!,
+        formData: updatedTemplate,
+        oldTemplate: data,
+      })
+      .then((successfully) => {
+        if (successfully) {
+          getTemplates()
+          closeModal()
+        }
+      })
   }
 
   return (
@@ -78,7 +100,7 @@ export const ActDynamicPage: FC<Props> = ({ actType, labelsName }) => {
       {isOpen && (
         <ModalContainer
           close={closeModal}
-          title={`${data ? 'Editar' : 'Crear'} plantilla`}
+          title={`${data ? 'Editar' : 'Crear'} ${labelsName}`}
           width="300px"
         >
           <ActTemplatesForm
