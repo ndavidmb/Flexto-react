@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useModal } from '../../shared/hooks/useModal'
-import { PaymentForm } from '../components/PaymentForm'
+import { PaymentAddUserForm } from '../components/PaymentAddUserForm'
 import { PaymentsList } from '../components/PaymentsList'
 import { usePaymentViewController } from '../controllers/payment.view.controller'
 import {
   Payment,
   PaymentWithId,
 } from '../interfaces/payment.interface'
-import { PaymentAddUserForm } from '../components/PaymentAddUserForm'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
+import { PaymentForm } from '../components/PaymentForm'
 
 export const PaymentsPage = () => {
   const { isOpen, openModal, closeModal, data, setData } =
@@ -95,11 +96,9 @@ export const PaymentsPage = () => {
     openAddUserModal()
   }
 
-  const handleSubmitUser = (values: {
-    ownerId: string
-  }) => {
+  const handleOwnersIds = (ownersIds: PaymentSelectedIds[]) => {
     paymentViewController
-      .createPaymentState(values.ownerId, userPaymentData!)
+      .createPaymentState(ownersIds, userPaymentData!)
       .then((successfully) => {
         if (successfully) {
           handleCloseUserForm()
@@ -124,7 +123,7 @@ export const PaymentsPage = () => {
       {isOpenAddUser && (
         <PaymentAddUserForm
           handleClose={handleCloseUserForm}
-          handleSubmit={handleSubmitUser}
+          handleOwnerIds={handleOwnersIds}
         />
       )}
       <PaymentsList

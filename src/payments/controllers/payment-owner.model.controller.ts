@@ -1,11 +1,12 @@
 import { FirebaseError } from 'firebase/app'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { ValidateError } from '../../shared/errors/validate-error'
 import {
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
-import { ValidateError } from '../../shared/errors/validate-error'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
 
 export const usePaymentOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
@@ -57,31 +58,11 @@ export const usePaymentOwnerModelController = () => {
   }
 
   const attachOwnerPayment = async (
-    ownerId: string,
-    payment: PaymentWithId,
+    ownerIds: PaymentSelectedIds[],
+    formPayment: PaymentWithId,
   ) => {
-    const existPayment =
-      await paymentOwnerRepository.getPaymentByOwner(
-        ownerId,
-      )
-
-    const newPaymentState = {
-      paymentId: payment.id,
-      state: PaymentState.PENDING,
-    }
-
-    if (!existPayment) {
-      return paymentOwnerRepository.createOwnerPayment({
-        ownerId,
-        payments: [newPaymentState],
-      })
-    }
-
-    return paymentOwnerRepository.updateOwnerPaymentState({
-      id: existPayment.id,
-      ownerId,
-      payments: [...existPayment.payments, newPaymentState],
-    })
+    const existingOwnersPayments =
+      await paymentOwnerRepository.getAllOwnersPayment()
   }
 
   return {

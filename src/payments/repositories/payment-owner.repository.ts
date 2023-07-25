@@ -4,8 +4,7 @@ import { useFirestore } from '../../shared/hooks/useFirestore'
 import {
   OwnerPayment,
   OwnerPaymentWithId,
-  Payment,
-  PaymentWithId,
+  PaymentWithId
 } from '../interfaces/payment.interface'
 
 export const usePaymentOwnerRepository = () => {
@@ -13,8 +12,9 @@ export const usePaymentOwnerRepository = () => {
     FirestoreTable.OWNER_PAYMENT,
   )
 
-  const getAllOwnersPayment = () => {
-    return firestore.getAllFirestore()
+  const getAllOwnersPayment = async () => {
+    const all = await firestore.getAllFirestore()
+    return all as OwnerPaymentWithId[]
   }
 
   const updateOwnerPaymentState = (
@@ -42,6 +42,12 @@ export const usePaymentOwnerRepository = () => {
     ])
   }
 
+  const getPaymentsByOwners = (ownersIds: string[]) => {
+    return firestore.getAllFirestore([
+      where('ownerId', 'in', ownersIds),
+    ])
+  }
+
   const getPaymentByOwner = async (ownerId: string) => {
     const [owner] = await firestore.getByParam(
       'ownerId',
@@ -57,5 +63,6 @@ export const usePaymentOwnerRepository = () => {
     getAllOwnersPayment,
     getOwnersByPayment,
     getPaymentByOwner,
+    getPaymentsByOwners,
   }
 }

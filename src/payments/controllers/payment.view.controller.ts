@@ -1,6 +1,7 @@
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   Payment,
   PaymentWithId,
@@ -99,13 +100,13 @@ export const usePaymentViewController = () => {
   }
 
   const createPaymentState = async (
-    ownerId: string,
+    ownerIds: PaymentSelectedIds[],
     payment: PaymentWithId,
   ) => {
     dispatch(setLoading(true))
     try {
       await paymentOwnerModelController.attachOwnerPayment(
-        ownerId,
+        ownerIds,
         payment,
       )
       return true
