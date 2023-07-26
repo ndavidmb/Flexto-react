@@ -4,13 +4,19 @@ import { useFirestore } from '../../shared/hooks/useFirestore'
 import {
   OwnerPayment,
   OwnerPaymentWithId,
-  PaymentWithId
+  PaymentWithId,
 } from '../interfaces/payment.interface'
+import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 
 export const usePaymentOwnerRepository = () => {
   const firestore = useFirestore<OwnerPayment>(
     FirestoreTable.OWNER_PAYMENT,
   )
+
+  const firestoreBulk =
+    useFirestoreBulk<OwnerPaymentWithId>(
+      FirestoreTable.OWNER_PAYMENT,
+    )
 
   const getAllOwnersPayment = async () => {
     const all = await firestore.getAllFirestore()
@@ -56,6 +62,24 @@ export const usePaymentOwnerRepository = () => {
     return owner as OwnerPaymentWithId
   }
 
+  const bulkOperations = async ({
+    toDeleteIds,
+    toUpdate,
+    toAdd,
+  }: {
+    toDeleteIds: string[]
+    toUpdate: OwnerPaymentWithId[]
+    toAdd: OwnerPayment[]
+  }) => {
+    const batch = firestoreBulk.getBatch()
+
+    firestoreBulk.bulkCreate(batch, toAdd)
+    firestoreBulk.bulkUpdate(batch, toUpdate, 'id')
+    firestoreBulk.bulkDelete(batch, toDeleteIds)
+
+    return firestoreBulk.commitBatch(batch)
+  }
+
   return {
     deleteOwnerPayment,
     updateOwnerPaymentState,
@@ -64,5 +88,6 @@ export const usePaymentOwnerRepository = () => {
     getOwnersByPayment,
     getPaymentByOwner,
     getPaymentsByOwners,
+    bulkOperations,
   }
 }

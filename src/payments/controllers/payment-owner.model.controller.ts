@@ -1,12 +1,15 @@
 import { FirebaseError } from 'firebase/app'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ValidateError } from '../../shared/errors/validate-error'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
+  OwnerPayment,
+  OwnerPaymentWithId,
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
-import { PaymentSelectedIds } from '../interfaces/payment-form'
+import { ParsePaymentArrays } from '../utils/parse-payments-arrays'
 
 export const usePaymentOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
@@ -61,8 +64,23 @@ export const usePaymentOwnerModelController = () => {
     ownerIds: PaymentSelectedIds[],
     formPayment: PaymentWithId,
   ) => {
-    const existingOwnersPayments =
-      await paymentOwnerRepository.getAllOwnersPayment()
+    try {
+      const bdOwnerPayments =
+        await paymentOwnerRepository.getAllOwnersPayment()
+
+      const operations =
+        ParsePaymentArrays.parseRelevantPaymentOperations(
+          ownerIds,
+          bdOwnerPayments,
+          formPayment,
+        )
+
+      await paymentOwnerRepository.bulkOperations(
+        operations,
+      )
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return {
