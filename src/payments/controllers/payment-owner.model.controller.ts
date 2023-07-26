@@ -1,11 +1,15 @@
 import { FirebaseError } from 'firebase/app'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { ValidateError } from '../../shared/errors/validate-error'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
+  OwnerPayment,
+  OwnerPaymentWithId,
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
-import { ValidateError } from '../../shared/errors/validate-error'
+import { ParsePaymentArrays } from '../utils/parse-payments-arrays'
 
 export const usePaymentOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
@@ -57,31 +61,26 @@ export const usePaymentOwnerModelController = () => {
   }
 
   const attachOwnerPayment = async (
-    ownerId: string,
-    payment: PaymentWithId,
+    ownerIds: PaymentSelectedIds[],
+    formPayment: PaymentWithId,
   ) => {
-    const existPayment =
-      await paymentOwnerRepository.getPaymentByOwner(
-        ownerId,
+    try {
+      const bdOwnerPayments =
+        await paymentOwnerRepository.getAllOwnersPayment()
+
+      const operations =
+        ParsePaymentArrays.parseRelevantPaymentOperations(
+          ownerIds,
+          bdOwnerPayments,
+          formPayment,
+        )
+
+      await paymentOwnerRepository.bulkOperations(
+        operations,
       )
-
-    const newPaymentState = {
-      paymentId: payment.id,
-      state: PaymentState.PENDING,
+    } catch (err) {
+      console.error(err)
     }
-
-    if (!existPayment) {
-      return paymentOwnerRepository.createOwnerPayment({
-        ownerId,
-        payments: [newPaymentState],
-      })
-    }
-
-    return paymentOwnerRepository.updateOwnerPaymentState({
-      id: existPayment.id,
-      ownerId,
-      payments: [...existPayment.payments, newPaymentState],
-    })
   }
 
   return {

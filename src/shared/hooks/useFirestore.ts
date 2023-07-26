@@ -1,6 +1,4 @@
 import {
-  DocumentData,
-  Query,
   QueryConstraint,
   addDoc,
   collection,
@@ -9,12 +7,12 @@ import {
   getDocs,
   query,
   updateDoc,
-  where,
+  where
 } from 'firebase/firestore/lite'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { db } from '../services/firebase.service'
 import { RootState } from '../store/store'
-import { useParams } from 'react-router-dom'
 
 export function useFirestore<T>(tableName: string) {
   const { theme } = useSelector(
@@ -100,6 +98,7 @@ export function useFirestore<T>(tableName: string) {
 
     return dataList
   }
+  
 
   return {
     getAllFirestore,

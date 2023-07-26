@@ -4,17 +4,23 @@ import { useFirestore } from '../../shared/hooks/useFirestore'
 import {
   OwnerPayment,
   OwnerPaymentWithId,
-  Payment,
   PaymentWithId,
 } from '../interfaces/payment.interface'
+import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 
 export const usePaymentOwnerRepository = () => {
   const firestore = useFirestore<OwnerPayment>(
     FirestoreTable.OWNER_PAYMENT,
   )
 
-  const getAllOwnersPayment = () => {
-    return firestore.getAllFirestore()
+  const firestoreBulk =
+    useFirestoreBulk<OwnerPaymentWithId>(
+      FirestoreTable.OWNER_PAYMENT,
+    )
+
+  const getAllOwnersPayment = async () => {
+    const all = await firestore.getAllFirestore()
+    return all as OwnerPaymentWithId[]
   }
 
   const updateOwnerPaymentState = (
@@ -42,12 +48,36 @@ export const usePaymentOwnerRepository = () => {
     ])
   }
 
+  const getPaymentsByOwners = (ownersIds: string[]) => {
+    return firestore.getAllFirestore([
+      where('ownerId', 'in', ownersIds),
+    ])
+  }
+
   const getPaymentByOwner = async (ownerId: string) => {
     const [owner] = await firestore.getByParam(
       'ownerId',
       ownerId,
     )
     return owner as OwnerPaymentWithId
+  }
+
+  const bulkOperations = async ({
+    toDeleteIds,
+    toUpdate,
+    toAdd,
+  }: {
+    toDeleteIds: string[]
+    toUpdate: OwnerPaymentWithId[]
+    toAdd: OwnerPayment[]
+  }) => {
+    const batch = firestoreBulk.getBatch()
+
+    firestoreBulk.bulkCreate(batch, toAdd)
+    firestoreBulk.bulkUpdate(batch, toUpdate, 'id')
+    firestoreBulk.bulkDelete(batch, toDeleteIds)
+
+    return firestoreBulk.commitBatch(batch)
   }
 
   return {
@@ -57,5 +87,7 @@ export const usePaymentOwnerRepository = () => {
     getAllOwnersPayment,
     getOwnersByPayment,
     getPaymentByOwner,
+    getPaymentsByOwners,
+    bulkOperations,
   }
 }

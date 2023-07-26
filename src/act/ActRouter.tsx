@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ActWrapper } from './ActWrapper'
-import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
+// import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
 import { ActDynamicPage } from './pages/ActDynamicPage'
 import { FirestoreTable } from '../shared/constants/firestore-tables'
 
 export const enum ACT_ROUTES {
   list = 'act-list',
   templates = 'act-templates',
-  templatesDeprecated = 'act-templates-deprecated',
+  // templatesDeprecated = 'act-templates-deprecated',
 }
 
 export const ActRouter = () => {
@@ -29,10 +29,10 @@ export const ActRouter = () => {
             />
           }
         />
-        <Route
+        {/* <Route
           path={ACT_ROUTES.templatesDeprecated}
           element={<ActTemplatesEditor />}
-        />
+        /> */}
         <Route
           path="*"
           element={<Navigate to={ACT_ROUTES.list} />}
