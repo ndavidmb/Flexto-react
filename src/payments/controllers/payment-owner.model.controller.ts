@@ -64,23 +64,17 @@ export const usePaymentOwnerModelController = () => {
     ownerIds: PaymentSelectedIds[],
     formPayment: PaymentWithId,
   ) => {
-    try {
-      const bdOwnerPayments =
-        await paymentOwnerRepository.getAllOwnersPayment()
+    const bdOwnerPayments =
+      await paymentOwnerRepository.getAllOwnersPayment()
 
-      const operations =
-        ParsePaymentArrays.parseRelevantPaymentOperations(
-          ownerIds,
-          bdOwnerPayments,
-          formPayment,
-        )
-
-      await paymentOwnerRepository.bulkOperations(
-        operations,
+    const operations =
+      ParsePaymentArrays.parseRelevantPaymentOperations(
+        ownerIds,
+        bdOwnerPayments,
+        formPayment,
       )
-    } catch (err) {
-      console.error(err)
-    }
+
+    await paymentOwnerRepository.bulkOperations(operations)
   }
 
   return {

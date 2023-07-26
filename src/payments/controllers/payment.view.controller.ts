@@ -1,3 +1,4 @@
+import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
@@ -110,12 +111,13 @@ export const usePaymentViewController = () => {
         payment,
       )
       return true
-    } catch {
+    } catch (err) {
+      console.error(err)
       dispatch(
         showToast({
           title:
-            'Se agrego correctamente el servicio al usuario',
-          details: [],
+            'No se pudo vincular el servicio al usuario',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
           type: 'error',
         }),
       )
