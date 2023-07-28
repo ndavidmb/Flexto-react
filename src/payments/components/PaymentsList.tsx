@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { Button } from '../../shared/styled-components/Button'
+import { ButtonLink } from '../../shared/styled-components/ButtonLink'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Table } from '../../shared/styled-components/Table'
@@ -16,7 +17,6 @@ type Props = {
   handleDelete: (id: string) => void
   handleEdit: (payment: PaymentWithId) => void
   handleCreate: () => void
-  handleAddOwner: (payment: PaymentWithId) => void
 }
 
 export const PaymentsList: FC<Props> = ({
@@ -26,7 +26,6 @@ export const PaymentsList: FC<Props> = ({
   handleDelete,
   handleEdit,
   handleCreate,
-  handleAddOwner,
 }) => {
   return (
     <DefaultContainerWithSearch
@@ -52,13 +51,11 @@ export const PaymentsList: FC<Props> = ({
               <td>{payment.price}</td>
               <td>
                 <div className="flex items-center">
-                  <Button
-                    color="secondary"
-                    className='min-w-max'
-                    onClick={() => handleAddOwner(payment)}
+                  <ButtonLink
+                    href={`./users/${payment.id}`}
                   >
-                    Agregar un usuario
-                  </Button>
+                    Ver Detalle
+                  </ButtonLink>
                 </div>
               </td>
               <td>

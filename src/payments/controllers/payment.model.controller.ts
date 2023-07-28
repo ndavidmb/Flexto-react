@@ -23,10 +23,15 @@ export const usePaymentModelController = () => {
     return paymentRepository.createPayment(payment)
   }
 
+  const getPaymentById = (paymentId: string) => {
+    return paymentRepository.getPaymentById(paymentId)
+  }
+
   return {
     getAllPayments,
     createPayment,
     updatePayment,
     deletePayment,
+    getPaymentById,
   }
 }

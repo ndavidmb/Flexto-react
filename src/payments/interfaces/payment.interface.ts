@@ -1,3 +1,5 @@
+import { OwnerDTO } from '../../owners/interfaces/owner.interface'
+
 export enum PaymentState {
   PAID = 1,
   PENDING = 2,
@@ -27,3 +29,12 @@ export interface OwnerPayment {
 export interface OwnerPaymentWithId extends OwnerPayment {
   id: string
 }
+
+export interface PaymentsWithState {
+  state: PaymentState
+  paymentId: string
+}
+
+export interface OwnerPaymentVm
+  extends OwnerDTO,
+    PaymentsWithState {}

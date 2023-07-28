@@ -2,12 +2,7 @@ import { FirebaseError } from 'firebase/app'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ValidateError } from '../../shared/errors/validate-error'
 import { PaymentSelectedIds } from '../interfaces/payment-form'
-import {
-  OwnerPayment,
-  OwnerPaymentWithId,
-  PaymentState,
-  PaymentWithId,
-} from '../interfaces/payment.interface'
+import { PaymentWithId } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
 import { ParsePaymentArrays } from '../utils/parse-payments-arrays'
 
@@ -15,14 +10,14 @@ export const usePaymentOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
   const ownerRepository = useOwnerRepository()
 
-  const getOwnersByPayment = async (
-    payment: PaymentWithId,
-  ) => {
+  const getOwnersByPayment = async (paymentId: string) => {
     try {
       const payments =
         await paymentOwnerRepository.getOwnersByPayment(
-          payment,
+          paymentId,
         )
+
+      console.log(payments)
 
       const ownerIds = payments.map(
         (payment) => payment.ownerId,
@@ -38,7 +33,7 @@ export const usePaymentOwnerModelController = () => {
         )!
         const accordingPayment = p.payments.find(
           (ownerPayment) =>
-            ownerPayment.paymentId === payment.id,
+            ownerPayment.paymentId === paymentId,
         )
         return {
           owner,

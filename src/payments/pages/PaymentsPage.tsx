@@ -1,26 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useModal } from '../../shared/hooks/useModal'
-import { PaymentAddUserForm } from '../components/PaymentAddUserForm'
+import { PaymentForm } from '../components/PaymentForm'
 import { PaymentsList } from '../components/PaymentsList'
 import { usePaymentViewController } from '../controllers/payment.view.controller'
 import {
   Payment,
   PaymentWithId,
 } from '../interfaces/payment.interface'
-import { PaymentSelectedIds } from '../interfaces/payment-form'
-import { PaymentForm } from '../components/PaymentForm'
 
 export const PaymentsPage = () => {
   const { isOpen, openModal, closeModal, data, setData } =
     useModal<PaymentWithId>()
-
-  const {
-    isOpen: isOpenAddUser,
-    openModal: openAddUserModal,
-    closeModal: closeAddUserModal,
-    data: userPaymentData,
-    setData: setUserPaymentData,
-  } = useModal<PaymentWithId>()
 
   const [payments, setPayments] = useState<PaymentWithId[]>(
     [],
@@ -91,26 +81,6 @@ export const PaymentsPage = () => {
     openModal()
   }
 
-  const handleAddOwner = (payment: PaymentWithId) => {
-    setUserPaymentData(payment)
-    openAddUserModal()
-  }
-
-  const handleOwnersIds = (ownersIds: PaymentSelectedIds[]) => {
-    paymentViewController
-      .createPaymentState(ownersIds, userPaymentData!)
-      .then((successfully) => {
-        if (successfully) {
-          handleCloseUserForm()
-        }
-      })
-  }
-
-  const handleCloseUserForm = () => {
-    setUserPaymentData(undefined)
-    closeAddUserModal()
-  }
-
   return (
     <>
       {isOpen && (
@@ -120,12 +90,6 @@ export const PaymentsPage = () => {
           handleClose={handleClose}
         />
       )}
-      {isOpenAddUser && (
-        <PaymentAddUserForm
-          handleClose={handleCloseUserForm}
-          handleOwnerIds={handleOwnersIds}
-        />
-      )}
       <PaymentsList
         payments={payments}
         allPayments={allPayments}
@@ -133,7 +97,6 @@ export const PaymentsPage = () => {
         handleDelete={handleDelete}
         handleEdit={handleEdit}
         handleCreate={handleCreate}
-        handleAddOwner={handleAddOwner}
       />
     </>
   )

@@ -6,9 +6,11 @@ type Props = {
   title: string
   close: () => void
   width?: string
+  className?: string
 }
 
 export const ModalContainer: FC<Props> = ({
+  className,
   children,
   title,
   width = 'w-96',
@@ -19,7 +21,7 @@ export const ModalContainer: FC<Props> = ({
       <div className="absolute left-0 top-0 z-10 flex justify-center items-center h-screen w-screen background-blur"></div>
 
       <section className="absolute flex justify-center items-center top-0 left-0 z-20 w-screen h-screen">
-        <div className={`bg-white shadow rounded ${width}`}>
+        <div className={`bg-white shadow rounded ${width} ${className}`}>
           <header className="flex justify-between items-center bg-menu px-5 py-2 rounded-t">
             <h2 className="text-white cursor-default">
               {title}

@@ -2,19 +2,12 @@ import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.consta
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { PaymentSelectedIds } from '../interfaces/payment-form'
-import {
-  Payment,
-  PaymentWithId,
-} from '../interfaces/payment.interface'
-import { usePaymentOwnerModelController } from './payment-owner.model.controller'
+import { Payment } from '../interfaces/payment.interface'
 import { usePaymentModelController } from './payment.model.controller'
 
 export const usePaymentViewController = () => {
   const dispatch = useAppDispatch()
   const paymentModelController = usePaymentModelController()
-  const paymentOwnerModelController =
-    usePaymentOwnerModelController()
 
   const getAllPayments = async () => {
     dispatch(setLoading(true))
@@ -100,28 +93,23 @@ export const usePaymentViewController = () => {
     }
   }
 
-  const createPaymentState = async (
-    ownerIds: PaymentSelectedIds[],
-    payment: PaymentWithId,
-  ) => {
+  const getPaymentById = async (paymentId: string) => {
     dispatch(setLoading(true))
+
     try {
-      await paymentOwnerModelController.attachOwnerPayment(
-        ownerIds,
-        payment,
+      return await paymentModelController.getPaymentById(
+        paymentId,
       )
-      return true
-    } catch (err) {
-      console.error(err)
+    } catch {
       dispatch(
         showToast({
-          title:
-            'No se pudo vincular el servicio al usuario',
+          title: 'No se pudo obtener el servicio',
           details: [SUPPORT_MESSAGES.TRY_LATER],
           type: 'error',
         }),
       )
-      return false
+
+      return null
     } finally {
       dispatch(setLoading(false))
     }
@@ -132,6 +120,6 @@ export const usePaymentViewController = () => {
     createPayment,
     updatePayment,
     deletePayment,
-    createPaymentState,
+    getPaymentById,
   }
 }

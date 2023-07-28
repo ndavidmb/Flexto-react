@@ -29,10 +29,16 @@ export const usePaymentRepository = () => {
     return await firestore.addFirestore(payment)
   }
 
+  const getPaymentById = async (id: string) => {
+    const [payment] = await firestore.getByParam('id', id)
+    return payment
+  }
+
   return {
     getAllPayments,
     deletePayment,
     createPayment,
     updatePayment,
+    getPaymentById,
   }
 }

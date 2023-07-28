@@ -1,12 +1,11 @@
 import { where } from 'firebase/firestore/lite'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
+import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 import {
   OwnerPayment,
-  OwnerPaymentWithId,
-  PaymentWithId,
+  OwnerPaymentWithId
 } from '../interfaces/payment.interface'
-import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 
 export const usePaymentOwnerRepository = () => {
   const firestore = useFirestore<OwnerPayment>(
@@ -42,10 +41,15 @@ export const usePaymentOwnerRepository = () => {
     return firestore.addFirestore(ownerPayment)
   }
 
-  const getOwnersByPayment = (payment: PaymentWithId) => {
-    return firestore.getAllFirestore([
-      where('payments', 'array-contains', payment.id),
-    ])
+  const getOwnersByPayment = async (paymentId: string) => {
+    const data = await firestore.getAllFirestore()
+    console.log(data);
+
+    return data.filter((element) =>
+      element.payments.some(
+        (payment) => payment.paymentId === paymentId,
+      ),
+    )
   }
 
   const getPaymentsByOwners = (ownersIds: string[]) => {
