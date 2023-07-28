@@ -4,6 +4,7 @@ import { ValidateError } from '../../shared/errors/validate-error'
 import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   OwnerPaymentWithId,
+  PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
@@ -75,18 +76,53 @@ export const usePaymentOwnerModelController = () => {
     await paymentOwnerRepository.bulkOperations(operations)
   }
 
-  const updateOwnerState = async (owner: OwnerPaymentWithId) => {
-    await paymentOwnerRepository.updateOwnerPaymentState(owner)
+  const updateOwnerState = async (
+    owner: OwnerPaymentWithId,
+  ) => {
+    await paymentOwnerRepository.updateOwnerPaymentState(
+      owner,
+    )
   }
 
-  const getOwnerPaymentByOwnerId = async (ownerId: string) => {
-    return await paymentOwnerRepository.getPaymentByOwner(ownerId)
+  const getOwnerPaymentByOwnerId = async (
+    ownerId: string,
+  ) => {
+    return await paymentOwnerRepository.getPaymentByOwner(
+      ownerId,
+    )
+  }
+
+  const getAllOwnerPayments = async (paymentId: string) => {
+    const all =
+      await paymentOwnerRepository.getAllOwnersPayment()
+
+    return all.filter((op) =>
+      op.payments.some((p) => p.paymentId === paymentId),
+    )
+  }
+
+  const resetUserStates = async (paymentId: string) => {
+    const activeOwners = await getAllOwnerPayments(
+      paymentId,
+    )
+
+    const toUpdate = activeOwners.map((paymentOwners) => ({
+      ...paymentOwners,
+      payments: paymentOwners.payments.map((p) =>
+        p.paymentId === paymentId
+          ? { ...p, state: PaymentState.PENDING }
+          : p,
+      ),
+    }))
+
+    await paymentOwnerRepository.updateBulkStates(toUpdate)
   }
 
   return {
     getOwnersByPayment,
     attachOwnerPayment,
     updateOwnerState,
-    getOwnerPaymentByOwnerId
+    getOwnerPaymentByOwnerId,
+    resetUserStates,
   }
 }

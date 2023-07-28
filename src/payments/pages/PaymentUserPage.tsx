@@ -84,6 +84,16 @@ export const PaymentUserPage = () => {
       })
   }
 
+  const handleResetUserStates = (paymentId: string) => {
+    ownerPaymentViewController
+      .resetUserStates(paymentId)
+      .then((successfully) => {
+        if (successfully) {
+          getOwners(paymentId!)
+        }
+      })
+  }
+
   return (
     <>
       {isOpen && (
@@ -94,6 +104,7 @@ export const PaymentUserPage = () => {
         />
       )}
       <PaymentUserList
+        handleResetUserStates={handleResetUserStates}
         handleAddUsers={handleAddUsers}
         handleChangeState={handleChangeOwnerState}
         allOwners={allOwners}

@@ -135,9 +135,35 @@ export const usePaymentOwnerViewController = () => {
     }
   }
 
+  const resetUserStates = async (
+    paymentId: string,
+  ) => {
+    dispatch(setLoading(true))
+
+    try {
+      await paymentOwnerModelController.resetUserStates(
+        paymentId,
+      )
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title:
+            'No se pudieron restablecer los estados de los usuarios',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   return {
     attachOwnerPayment,
     getAllOwnersByPaymentId,
     updateOwnerState,
+    resetUserStates,
   }
 }
