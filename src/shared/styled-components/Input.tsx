@@ -5,6 +5,7 @@ type Props = {
   name: string
   type: 'email' | 'password' | 'text' | 'number' | 'date'
   placeholder: string
+  disabled?: boolean
   className?: string
 }
 
@@ -12,6 +13,7 @@ export const Input: FC<Props> = ({
   name,
   placeholder,
   type,
+  disabled = false,
   className = '',
 }) => {
   return (
@@ -29,6 +31,7 @@ export const Input: FC<Props> = ({
       name={name}
       placeholder={placeholder}
       type={type}
+      disabled={disabled}
     />
   )
 }

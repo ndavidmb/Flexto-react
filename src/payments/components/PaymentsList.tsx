@@ -6,6 +6,7 @@ import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Table } from '../../shared/styled-components/Table'
 import { PaymentWithId } from '../interfaces/payment.interface'
+import { formattedCurrency } from '../../shared/utils/formattedCurrency'
 
 type Props = {
   payments: PaymentWithId[]
@@ -48,7 +49,7 @@ export const PaymentsList: FC<Props> = ({
           {payments.map((payment, index) => (
             <TRow index={index} key={payment.id}>
               <td>{payment.description}</td>
-              <td>{payment.price}</td>
+              <td>{formattedCurrency(payment.price)}</td>
               <td>
                 <div className="flex items-center">
                   <ButtonLink

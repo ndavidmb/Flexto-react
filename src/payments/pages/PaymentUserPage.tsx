@@ -11,11 +11,21 @@ import {
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
+import { PaymentMessageForm } from '../components/PaymentMessageForm'
 
 export const PaymentUserPage = () => {
   const [owners, setOwners] = useState<OwnerPaymentVm[]>([])
   const { closeModal, isOpen, data, openModal, setData } =
     useModal<string[]>()
+
+  const {
+    closeModal: closeMessageModal,
+    isOpen: isOpenMessageModal,
+    data: messageData,
+    openModal: openMessageModal,
+    setData: setMessageModalData,
+  } = useModal<OwnerPaymentVm>()
+
   const [payment, setPayment] =
     useState<PaymentWithId | null>(null)
   const [allOwners, setAllOwners] = useState<
@@ -94,6 +104,18 @@ export const PaymentUserPage = () => {
       })
   }
 
+  const handleSentMessage = (owner: OwnerPaymentVm) => {
+    setMessageModalData(owner)
+    openMessageModal()
+  }
+
+  const handleSubmit = (values: {
+    email: string
+    message: string
+  }) => {
+
+  }
+
   return (
     <>
       {isOpen && (
@@ -103,7 +125,17 @@ export const PaymentUserPage = () => {
           handleOwnerIds={handleOwnersIds}
         />
       )}
+
+      {isOpenMessageModal && (
+        <PaymentMessageForm
+          handleSubmit={handleSubmit}
+          closeModal={closeMessageModal}
+          owner={messageData!}
+        />
+      )}
+
       <PaymentUserList
+        handleSentMessage={handleSentMessage}
         handleResetUserStates={handleResetUserStates}
         handleAddUsers={handleAddUsers}
         handleChangeState={handleChangeOwnerState}

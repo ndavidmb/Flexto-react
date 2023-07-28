@@ -7,7 +7,7 @@ import { Select } from '../../shared/styled-components/Select'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Table } from '../../shared/styled-components/Table'
-import { formattedNumber } from '../../shared/utils/formattedCurrency'
+import { formattedCurrency } from '../../shared/utils/formattedCurrency'
 import {
   OwnerPaymentVm,
   PaymentState,
@@ -19,6 +19,7 @@ type Props = {
   owners: OwnerPaymentVm[]
   allOwners: OwnerPaymentVm[]
   payment: PaymentWithId | null
+  handleSentMessage: (owner: OwnerPaymentVm) => void
   handleResetUserStates: (paymentId: string) => void
   handleAddUsers: (ownerIds: string[]) => void
   handleChangeState: (
@@ -38,6 +39,7 @@ export const PaymentUserList: FC<Props> = ({
   handleAddUsers,
   handleChangeState,
   handleResetUserStates,
+  handleSentMessage,
 }) => {
   const navigate = useNavigate()
   const ownerIds = useMemo(
@@ -60,7 +62,7 @@ export const PaymentUserList: FC<Props> = ({
           ],
         }}
         title={`${payment?.description}` ?? 'Servicio'}
-        subtitle={`Precio ${formattedNumber(
+        subtitle={`Precio ${formattedCurrency(
           payment?.price || 0,
         )}`}
       >
@@ -113,7 +115,10 @@ export const PaymentUserList: FC<Props> = ({
                   </Select>
                 </td>
                 <td>
-                  <Button color="primary">
+                  <Button
+                    onClick={() => handleSentMessage(owner)}
+                    color="primary"
+                  >
                     Enviar un mensaje
                   </Button>
                 </td>
