@@ -37,6 +37,10 @@ const STYLE_STRING = (theme: Theme) => `
   background-color: ${theme.menuDark[0]};
 }
 
+.border-primary-search:focus {
+  border-color: ${theme.primary[0]};
+}
+
 .bg-menu-item:hover {
   background-color: ${theme.menu[0]};
   filter: brightness(85%);

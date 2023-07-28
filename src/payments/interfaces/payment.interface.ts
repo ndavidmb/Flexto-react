@@ -37,4 +37,6 @@ export interface PaymentsWithState {
 
 export interface OwnerPaymentVm
   extends OwnerDTO,
-    PaymentsWithState {}
+    PaymentsWithState {
+  ownerId: string | undefined
+}

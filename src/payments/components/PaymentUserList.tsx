@@ -1,19 +1,26 @@
-import { FC, useEffect, useMemo } from 'react'
+import { FC, useMemo } from 'react'
+import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { Button } from '../../shared/styled-components/Button'
-import { Checkbox } from '../../shared/styled-components/Checkbox'
+import { Select } from '../../shared/styled-components/Select'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Table } from '../../shared/styled-components/Table'
+import { formattedNumber } from '../../shared/utils/formattedCurrency'
 import {
   OwnerPaymentVm,
+  PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
-import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 
 type Props = {
   owners: OwnerPaymentVm[]
   allOwners: OwnerPaymentVm[]
   handleAddUsers: (ownerIds: string[]) => void
+  handleChangeState: (
+    owner: OwnerPaymentVm,
+    payment: PaymentWithId,
+    newState: PaymentState,
+  ) => void
   setOwners: React.Dispatch<
     React.SetStateAction<OwnerPaymentVm[]>
   >
@@ -25,6 +32,7 @@ export const PaymentUserList: FC<Props> = ({
   setOwners,
   payment,
   handleAddUsers,
+  handleChangeState,
 }) => {
   const ownerIds = useMemo(
     () => allOwners.map((owner) => owner.id as string),
@@ -40,13 +48,13 @@ export const PaymentUserList: FC<Props> = ({
         setItems: setOwners,
         searchKeys: ['email', 'phoneNumber', 'displayName'],
       }}
-      title={payment?.description ?? 'Servicio'}
+      title={`${payment?.description}` ?? 'Servicio'}
+      subtitle={`Precio ${formattedNumber(
+        payment?.price || 0,
+      )}`}
     >
       <Table>
         <THead>
-          <th className="w-2">
-            <Checkbox />
-          </th>
           <th>Usuario</th>
           <th>Estado</th>
           <th>Acciones</th>
@@ -54,16 +62,34 @@ export const PaymentUserList: FC<Props> = ({
         <tbody>
           {owners.map((owner, index) => (
             <TRow index={index} key={owner.id}>
-              <td className="w-2">
-                <Checkbox />
-              </td>
               <td>
                 <div className="flex flex-col">
                   {owner.displayName}
                   <small>{owner.email}</small>
                 </div>
               </td>
-              <td>{owner.state}</td>
+              <td>
+                <Select
+                  allowUndefined={false}
+                  className="w-56"
+                  value={owner.state}
+                  onChange={(ev) =>
+                    handleChangeState(
+                      owner,
+                      payment!,
+                      ev.target
+                        .value as unknown as PaymentState,
+                    )
+                  }
+                >
+                  <option value={PaymentState.PAID}>
+                    Pagó
+                  </option>
+                  <option value={PaymentState.PENDING}>
+                    Pendiente
+                  </option>
+                </Select>
+              </td>
               <td>
                 <Button color="primary">
                   Enviar un mensaje

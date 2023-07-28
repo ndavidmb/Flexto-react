@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from 'react'
+import { IoSearch } from 'react-icons/io5'
+import { VscCheckAll, VscCloseAll } from 'react-icons/vsc'
 import { useOwnerViewController } from '../../owners/controllers/owner.view.controller'
 import { Owner } from '../../owners/interfaces/owner.interface'
-import { ModalContainer } from '../../shared/components/Modal/Modal'
-import { Checkbox } from '../../shared/styled-components/Checkbox'
-import { Button } from '../../shared/styled-components/Button'
-import { PaymentSelectedIds } from '../interfaces/payment-form'
 import { SelectableOwner } from '../../owners/interfaces/selectable-owner.interface'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { Button } from '../../shared/styled-components/Button'
+import { Checkbox } from '../../shared/styled-components/Checkbox'
+import { removeAccents } from '../../shared/styled-components/SearchInput'
+import { PaymentSelectedIds } from '../interfaces/payment-form'
 
 type Props = {
   activeOwnerIds: string[]
@@ -20,6 +23,10 @@ export const PaymentAddUserForm: FC<Props> = ({
   const [owners, setOwners] = useState<SelectableOwner[]>(
     [],
   )
+
+  const [allOwners, setAllOwners] = useState<
+    SelectableOwner[]
+  >([])
 
   const ownerViewController = useOwnerViewController()
 
@@ -41,11 +48,20 @@ export const PaymentAddUserForm: FC<Props> = ({
         }
       })
 
+      setAllOwners(selectedOwners)
       setOwners(selectedOwners)
     })
   }, [])
 
   const handleChange = (checked: boolean, owner: Owner) => {
+    setAllOwners((curr) =>
+      curr.map((stateOwner) =>
+        stateOwner.id === owner.id
+          ? { ...owner, selected: checked }
+          : { ...stateOwner },
+      ),
+    )
+
     setOwners((curr) =>
       curr.map((stateOwner) =>
         stateOwner.id === owner.id
@@ -56,14 +72,70 @@ export const PaymentAddUserForm: FC<Props> = ({
   }
 
   const handleSave = () => {
-    const selectedOwners: PaymentSelectedIds[] = owners.map(
-      (owner) => ({
+    const selectedOwners: PaymentSelectedIds[] =
+      allOwners.map((owner) => ({
         ownerId: owner.id!,
         selected: owner.selected,
-      }),
-    )
+      }))
 
     handleOwnerIds(selectedOwners)
+  }
+
+  const handleBulkSelect = (selected: boolean) => {
+    const newOwners = owners.map((owner) => ({
+      ...owner,
+      selected,
+    }))
+
+    setOwners(newOwners)
+
+    setAllOwners((curr) =>
+      curr.map((owner) => {
+        const currOwner = newOwners.find(
+          (ow) => ow.id === owner.id,
+        )
+
+        return currOwner
+          ? {
+              ...owner,
+              selected: currOwner.selected,
+            }
+          : {
+              ...owner,
+              selected: owner.selected,
+            }
+      }),
+    )
+  }
+
+  const handleSearchChange = (searchText: string) => {
+    const normalizedSearch = removeAccents(searchText)
+      .toLowerCase()
+      .trim()
+
+    const filteredOwners = allOwners.filter(
+      (owner) =>
+        removeAccents(owner.name)
+          .toLowerCase()
+          .trim()
+          .includes(normalizedSearch) ||
+        removeAccents(owner.email)
+          .toLowerCase()
+          .trim()
+          .includes(normalizedSearch) ||
+        removeAccents(owner.apartment?.tower || '')
+          .toLowerCase()
+          .trim()
+          .includes(normalizedSearch) ||
+        removeAccents(
+          owner.apartment?.apartmentNumber || '',
+        )
+          .toLowerCase()
+          .trim()
+          .includes(normalizedSearch),
+    )
+
+    setOwners(filteredOwners)
   }
 
   return (
@@ -82,37 +154,26 @@ export const PaymentAddUserForm: FC<Props> = ({
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
+              <IoSearch />
             </div>
             <input
               type="text"
               id="input-group-search"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  border-primary-search block w-full pl-10 p-2.5 "
               placeholder="Search user"
+              onChange={(ev) =>
+                handleSearchChange(ev.target.value)
+              }
             />
           </div>
         </div>
         <ul
-          className="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+          className="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700"
           aria-labelledby="dropdownSearchButton"
         >
           {owners.map((owner) => (
-            <li>
-              <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+            <li key={owner.id}>
+              <div className="flex items-center p-2 rounded hover:bg-gray-100">
                 <Checkbox
                   name={owner.id!}
                   checked={owner.selected}
@@ -122,7 +183,7 @@ export const PaymentAddUserForm: FC<Props> = ({
                 />
                 <label
                   htmlFor={owner.id!}
-                  className="flex justify-between w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                  className="flex justify-between w-full ml-2 text-sm font-medium text-gray-900 rounded"
                 >
                   <div className="pl-2 flex flex-col">
                     {owner.name}
@@ -145,18 +206,24 @@ export const PaymentAddUserForm: FC<Props> = ({
         </ul>
         <a
           href="#"
-          className="flex items-center p-3 text-sm font-medium text-red-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-red-500 hover:underline"
+          className="flex gap-2 items-center p-3 text-sm font-medium border-t border-gray-200 rounded-b-lg bg-gray-50 "
         >
-          <svg
-            className="w-4 h-4 mr-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 18"
+          <Button
+            color="secondary"
+            className="flex gap-1 justify-center items-center"
+            onClick={() => handleBulkSelect(true)}
           >
-            <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-6a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2Z" />
-          </svg>
-          Delete user
+            <VscCheckAll fontSize={14} />
+            Seleccionar todos
+          </Button>
+          <Button
+            color="secondary"
+            className="flex gap-1 justify-center items-center"
+            onClick={() => handleBulkSelect(false)}
+          >
+            <VscCloseAll fontSize={18} />
+            Remover todos
+          </Button>
         </a>
       </div>
 

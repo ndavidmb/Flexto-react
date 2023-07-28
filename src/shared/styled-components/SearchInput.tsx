@@ -6,13 +6,14 @@ type Props<T> = {
   searchOptions: SearchOptions<T>
 }
 
+export const removeAccents = (str: string) =>
+  str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
 export function SearchInput<T>({
   placeholder,
   searchOptions,
 }: Props<T>) {
   const [searchValue, setSearchValue] = useState('')
-  const removeAccents = (str: string) =>
-    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
   const ignoreCase = (
     objectSearchableField: string,

@@ -8,6 +8,7 @@ import { usePaymentViewController } from '../controllers/payment.view.controller
 import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   OwnerPaymentVm,
+  PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 
@@ -32,12 +33,8 @@ export const PaymentUserPage = () => {
 
   useEffect(() => {
     if (paymentId) {
-      paymentOwnerViewController
-        .getAllOwnersByPaymentId(paymentId)
-        .then((res) => {
-          setOwners(res)
-          setAllOwners(res)
-        })
+      getOwners(paymentId)
+
       paymentViewController
         .getPaymentById(paymentId)
         .then((payment) => {
@@ -45,6 +42,15 @@ export const PaymentUserPage = () => {
         })
     }
   }, [paymentId])
+
+  const getOwners = (paymentId: string) => {
+    paymentOwnerViewController
+      .getAllOwnersByPaymentId(paymentId)
+      .then((res) => {
+        setOwners(res)
+        setAllOwners(res)
+      })
+  }
 
   const handleOwnersIds = (
     ownersIds: PaymentSelectedIds[],
@@ -54,6 +60,7 @@ export const PaymentUserPage = () => {
       .then((successfully) => {
         if (successfully) {
           closeModal()
+          getOwners(paymentId!)
         }
       })
   }
@@ -61,6 +68,20 @@ export const PaymentUserPage = () => {
   const handleAddUsers = (ownerIds: string[]) => {
     setData(ownerIds)
     openModal()
+  }
+
+  const handleChangeOwnerState = (
+    owner: OwnerPaymentVm,
+    payment: PaymentWithId,
+    newState: PaymentState,
+  ) => {
+    ownerPaymentViewController
+      .updateOwnerState(owner, payment, newState)
+      .then((successfully) => {
+        if (successfully) {
+          getOwners(paymentId!)
+        }
+      })
   }
 
   return (
@@ -74,6 +95,7 @@ export const PaymentUserPage = () => {
       )}
       <PaymentUserList
         handleAddUsers={handleAddUsers}
+        handleChangeState={handleChangeOwnerState}
         allOwners={allOwners}
         owners={owners}
         setOwners={setOwners}

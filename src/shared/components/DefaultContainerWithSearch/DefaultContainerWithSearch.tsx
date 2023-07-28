@@ -18,6 +18,7 @@ type Props<T> = {
   title: string
   children: ReactNode
   searchOptions: SearchOptions<T>
+  subtitle?: string
   action?: () => void
   actionName?: string
 }
@@ -28,14 +29,15 @@ export function DefaultContainerWithSearch<T>({
   searchOptions,
   action,
   actionName = 'Crear nuevo',
+  subtitle,
 }: Props<T>) {
   return (
     <DefaultContainer>
-      <ContainerHeader title={title}>
-        <div className='md:flex gap-2 justify-end items-center'>
+      <ContainerHeader title={title} subtitle={subtitle}>
+        <div className="md:flex gap-2 justify-end items-center">
           {action && (
             <Button
-              className='absolute top-4 right-2 md:static'
+              className="absolute top-4 right-2 md:static"
               color="primary"
               onClick={() => action()}
             >
@@ -49,7 +51,9 @@ export function DefaultContainerWithSearch<T>({
           />
         </div>
       </ContainerHeader>
-      <div className="overflow-auto mt-3 md:mt-0 md:px-4">{children}</div>
+      <div className="overflow-auto mt-3 md:mt-0 md:px-4">
+        {children}
+      </div>
     </DefaultContainer>
   )
 }

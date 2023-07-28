@@ -6,6 +6,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   OwnerPaymentVm,
+  PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerModelController } from './payment-owner.model.controller'
@@ -53,13 +54,15 @@ export const usePaymentOwnerViewController = () => {
           paymentId,
         )
 
-      return ownerPayments.map(
-        (op) =>
-          ({
-            ...op.owner,
-            ...op.payment,
-          } as OwnerPaymentVm),
+      const res: OwnerPaymentVm[] = ownerPayments.map(
+        (op) => ({
+          ...op.owner,
+          ...op.payment,
+          id: op.id,
+          ownerId: op.owner.id,
+        }),
       )
+      return res
     } catch (error) {
       if (error instanceof ValidateError) {
         dispatch(
@@ -88,5 +91,53 @@ export const usePaymentOwnerViewController = () => {
     }
   }
 
-  return { attachOwnerPayment, getAllOwnersByPaymentId }
+  const updateOwnerState = async (
+    ownerPayment: OwnerPaymentVm,
+    payment: PaymentWithId,
+    newState: PaymentState,
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      const bdRegister =
+        await paymentOwnerModelController.getOwnerPaymentByOwnerId(
+          ownerPayment.ownerId!,
+        )
+      await paymentOwnerModelController.updateOwnerState({
+        ...bdRegister,
+        payments: bdRegister.payments.map((rg) =>
+          rg.paymentId === payment.id
+            ? { ...rg, state: newState }
+            : rg,
+        ),
+      })
+
+      dispatch(
+        showToast({
+          title: `Se actualizó correctamente el estado`,
+          details: [
+            `Se actualizó el estado de ${ownerPayment.displayName} correctamente`,
+          ],
+          type: 'success',
+        }),
+      )
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title: 'No se pudo cambiar el estado del usuario',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  return {
+    attachOwnerPayment,
+    getAllOwnersByPaymentId,
+    updateOwnerState,
+  }
 }

@@ -2,9 +2,13 @@ import { FirebaseError } from 'firebase/app'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ValidateError } from '../../shared/errors/validate-error'
 import { PaymentSelectedIds } from '../interfaces/payment-form'
-import { PaymentWithId } from '../interfaces/payment.interface'
+import {
+  OwnerPaymentWithId,
+  PaymentWithId,
+} from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
 import { ParsePaymentArrays } from '../utils/parse-payments-arrays'
+import { useEmail } from '../../auth/hooks/useEmail'
 
 export const usePaymentOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
@@ -16,8 +20,6 @@ export const usePaymentOwnerModelController = () => {
         await paymentOwnerRepository.getOwnersByPayment(
           paymentId,
         )
-
-      console.log(payments)
 
       const ownerIds = payments.map(
         (payment) => payment.ownerId,
@@ -36,6 +38,7 @@ export const usePaymentOwnerModelController = () => {
             ownerPayment.paymentId === paymentId,
         )
         return {
+          id: p.id,
           owner,
           payment: accordingPayment!,
         }
@@ -72,8 +75,18 @@ export const usePaymentOwnerModelController = () => {
     await paymentOwnerRepository.bulkOperations(operations)
   }
 
+  const updateOwnerState = async (owner: OwnerPaymentWithId) => {
+    await paymentOwnerRepository.updateOwnerPaymentState(owner)
+  }
+
+  const getOwnerPaymentByOwnerId = async (ownerId: string) => {
+    return await paymentOwnerRepository.getPaymentByOwner(ownerId)
+  }
+
   return {
     getOwnersByPayment,
     attachOwnerPayment,
+    updateOwnerState,
+    getOwnerPaymentByOwnerId
   }
 }

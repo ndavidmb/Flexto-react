@@ -42,7 +42,7 @@ export const usePaymentOwnerRepository = () => {
   }
 
   const getOwnersByPayment = async (paymentId: string) => {
-    const data = await firestore.getAllFirestore()
+    const data = await firestore.getAllFirestore() as OwnerPaymentWithId[]
     console.log(data);
 
     return data.filter((element) =>
