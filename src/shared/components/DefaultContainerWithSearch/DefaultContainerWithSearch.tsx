@@ -3,6 +3,7 @@ import { Button } from '../../styled-components/Button'
 import { ContainerHeader } from '../../styled-components/ContainerHeader'
 import { SearchInput } from '../../styled-components/SearchInput'
 import { DefaultContainer } from '../DefaultContainer/DefaultContainer'
+import { useNavigate } from 'react-router-dom'
 
 type SearchKey<T> = {
   [key in keyof T]: T[key] extends string ? key : never

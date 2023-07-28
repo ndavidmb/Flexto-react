@@ -1,4 +1,6 @@
 import { FC, useMemo } from 'react'
+import { BiReset } from 'react-icons/bi'
+import { useNavigate } from 'react-router-dom'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { Button } from '../../shared/styled-components/Button'
 import { Select } from '../../shared/styled-components/Select'
@@ -11,7 +13,7 @@ import {
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
-import { BiReset } from 'react-icons/bi'
+import { IoArrowBack } from 'react-icons/io5'
 
 type Props = {
   owners: OwnerPaymentVm[]
@@ -37,6 +39,7 @@ export const PaymentUserList: FC<Props> = ({
   handleChangeState,
   handleResetUserStates,
 }) => {
+  const navigate = useNavigate()
   const ownerIds = useMemo(
     () => allOwners.map((owner) => owner.id as string),
     [allOwners],
@@ -61,6 +64,17 @@ export const PaymentUserList: FC<Props> = ({
           payment?.price || 0,
         )}`}
       >
+        <div className="px-4 pb-2">
+          <Button
+            color="secondary"
+            className="flex gap-2 items-center justify-center"
+            onClick={() => navigate(-1)}
+          >
+            <IoArrowBack />
+            Volver
+          </Button>
+        </div>
+
         <Table>
           <THead>
             <th>Usuario</th>
