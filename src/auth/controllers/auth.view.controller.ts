@@ -144,15 +144,16 @@ export function useAuthViewController(themeId: string) {
       return
     }
 
+    const url = new URL(location.href)
     if (user.role === UserRoles.CLIENT) {
-      navigate(`/${themeId}/home/request`, {
+      navigate(`/${url.pathname}t`, {
         replace: true,
       })
       return
     }
 
     if (user.role === UserRoles.ADMIN) {
-      navigate(`/${themeId}/home/owners`, {
+      navigate(`/${url.pathname}`, {
         replace: true,
       })
     }
