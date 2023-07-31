@@ -9,7 +9,7 @@ type Props = {
 export const Label: FC<Props> = ({
   children,
   htmlFor,
-  required,
+  required = false,
 }) => {
   return (
     <label

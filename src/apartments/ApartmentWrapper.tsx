@@ -20,13 +20,16 @@ export const ApartmentWrapper = () => {
   const { openModal, closeModal, isOpen, data, setData } =
     useModal<Apartment>()
 
-  const apartmentViewController = useApartmentViewController()
+  const apartmentViewController =
+    useApartmentViewController()
 
   useEffect(() => {
-    apartmentViewController.getApartments().then((apartments) => {
-      setApartments(apartments)
-      setAllApartments(apartments)
-    })
+    apartmentViewController
+      .getApartments()
+      .then((apartments) => {
+        setApartments(apartments)
+        setAllApartments(apartments)
+      })
   }, [consult])
 
   const open = (data?: Apartment) => {
@@ -41,23 +44,32 @@ export const ApartmentWrapper = () => {
     closeModal()
   }
 
-  const handleDelete = (tableApartment: ApartmentWithOwner) => {
-    apartmentViewController.deleteApartment(tableApartment).then((deleted) => {
-      if (deleted) {
-        const apartmentsWithoutDeleted = apartments.filter(
-          (apartment) => apartment.id !== tableApartment.id,
-        )
-        setApartments(apartmentsWithoutDeleted)
-      }
-    })
+  const handleDelete = (
+    tableApartment: ApartmentWithOwner,
+  ) => {
+    apartmentViewController
+      .deleteApartment(tableApartment)
+      .then((deleted) => {
+        if (deleted) {
+          const apartmentsWithoutDeleted =
+            apartments.filter(
+              (apartment) =>
+                apartment.id !== tableApartment.id,
+            )
+          setApartments(apartmentsWithoutDeleted)
+        }
+      })
   }
 
   return (
     <>
       {isOpen && (
         <ModalContainer
+          className="w-[45em]"
           close={closeModal}
-          title={`${data ? 'Editar' : 'Crear'} unidad residencial`}
+          title={`${
+            data ? 'Editar' : 'Crear'
+          } unidad residencial`}
         >
           <ApartmentForm
             data={data}

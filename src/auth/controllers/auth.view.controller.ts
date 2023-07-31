@@ -33,6 +33,7 @@ export function useAuthViewController(themeId: string) {
           credentials,
           themeId,
         )
+      console.log(extraUser)
       dispatch(login(extraUser))
       getRedirectPath(extraUser)
     } catch (err) {
@@ -145,15 +146,24 @@ export function useAuthViewController(themeId: string) {
     }
 
     const url = new URL(location.href)
+
     if (user.role === UserRoles.CLIENT) {
-      navigate(`/${url.pathname}t`, {
+      const navigateUrl = url.pathname.includes('auth')
+        ? `/${themeId}/home/request`
+        : `/${url.pathname}`
+
+      navigate(navigateUrl, {
         replace: true,
       })
       return
     }
 
     if (user.role === UserRoles.ADMIN) {
-      navigate(`/${url.pathname}`, {
+      const navigateUrl = url.pathname.includes('auth')
+        ? `/${themeId}/home/owners`
+        : `/${url.pathname}`
+
+      navigate(navigateUrl, {
         replace: true,
       })
     }
