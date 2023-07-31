@@ -6,6 +6,7 @@ import { TRow } from '../../shared/styled-components/TRow'
 import { Button } from '../../shared/styled-components/Button'
 import { REQUEST_TYPE_DICT } from '../interfaces/client-request.interface'
 import { RequestStateParser } from './RequestStateParser'
+import { HOURS_NUM_TO_STRING } from '../../public-spaces/constants/hours'
 
 type Props = {
   requests: AdminRequest[]
@@ -45,13 +46,23 @@ export const ClientRequestList: FC<Props> = ({
                 {request.dateDetail.startHour && (
                   <li>
                     Hora de inicio{' '}
-                    {request.dateDetail.startHour}
+                    {
+                      // @ts-ignore
+                      HOURS_NUM_TO_STRING[
+                        request.dateDetail.startHour
+                      ]
+                    }
                   </li>
                 )}
                 {request.dateDetail.endHour && (
                   <li>
-                    Hora de inicio{' '}
-                    {request.dateDetail.endHour}
+                    Hora de finalización{' '}
+                    {
+                      // @ts-ignore
+                      HOURS_NUM_TO_STRING[
+                        request.dateDetail.endHour
+                      ]
+                    }
                   </li>
                 )}
               </ul>

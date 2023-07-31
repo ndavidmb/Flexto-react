@@ -1,13 +1,13 @@
 import { Form, Formik } from 'formik'
 import { FC, useEffect, useState } from 'react'
+import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import {
-  PublicSpace,
-  PublicSpaceWithHours,
+  PublicSpaceWithHours
 } from '../../public-spaces/interfaces/public-space.interface'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 import { Label } from '../../shared/styled-components/Label'
-import { Select } from '../../shared/styled-components/Select'
+import { getInputInitialDate } from '../../shared/utils/formattedDate'
 import { useRequestClientViewController } from '../controllers/request-client.view.controller'
 import {
   RequestPublicSpaceDTO,
@@ -15,8 +15,6 @@ import {
 } from '../interfaces/request-public-space.interface'
 import { ClientRequestHours } from './ClientRequestHours'
 import { PublicSpacesSelect } from './PublicSpacesSelect'
-import { BookingDTO } from '../../booking/interfaces/booking.interface'
-import { getFormattedDate, getInputInitialDate } from '../../shared/utils/formattedDate'
 
 type Props = {
   handleClose: (refresh?: boolean) => void

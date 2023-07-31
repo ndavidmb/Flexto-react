@@ -67,7 +67,6 @@ export const ClientRequestHours: FC<Props> = ({
           ),
       )
 
-    console.log(startHours)
     formikContext.setFieldValue(
       'startHour',
       startHours[0][1],
@@ -91,25 +90,9 @@ export const ClientRequestHours: FC<Props> = ({
     ) {
       return
     }
-    const startHour = formikContext.values.startHour
-
-    const closestBooking = state.relevantBookings.find(
-      (booking) => booking.startHour > startHour,
-    )
 
     const endHours =
-      state.currentPublicSpace.availableHours.endHours.filter(
-        ([_, hour]) => {
-          if (!closestBooking) {
-            return hour > startHour
-          }
-
-          return (
-            hour > startHour &&
-            hour <= closestBooking.startHour
-          )
-        },
-      )
+      state.currentPublicSpace.availableHours.endHours
 
     formikContext.setFieldValue('endHour', endHours[0][1])
 
