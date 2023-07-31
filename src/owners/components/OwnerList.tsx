@@ -57,7 +57,7 @@ export const OwnerList: FC<Props> = ({
               </td>
               <th
                 scope="row"
-                className="font-medium text-gray-900 whitespace-nowrap"
+                className="font-medium text-gray-900"
               >
                 {owner.name}
               </th>

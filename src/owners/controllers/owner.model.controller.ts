@@ -123,7 +123,7 @@ export const useOwnerModelController = () => {
       bookingModelController.updateAllOwners(owner),
       authRepository.updateUserProfile(
         newData.displayName,
-        photoUrl,
+        photoUrl ?? undefined,
       ),
     ])
 

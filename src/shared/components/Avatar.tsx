@@ -2,6 +2,7 @@ import { EditProfile } from '../../profiles/components/EditProfile'
 import { useModal } from '../hooks/useModal'
 import { useAppSelector } from '../store/hooks'
 import { ModalContainer } from './Modal/Modal'
+import { FaUser } from 'react-icons/fa'
 
 export const Avatar = () => {
   const { closeModal, isOpen, openModal } = useModal()
@@ -24,15 +25,23 @@ export const Avatar = () => {
       )}
       <div
         onClick={openModal}
-        title='Editar perfil'
+        title="Editar perfil"
         className="flex flex-col items-center justify-center p-5 cursor-pointer"
       >
-        <div className="rounded-full p-1 h-32 w-32 border flex items-center justify-center">
-          <img
-            src={authState.photoUrl || undefined}
-            className="object-cover rounded-full !h-full w-full"
-            alt="avatar"
-          />
+        <div
+          className={`rounded-full p-1 h-32 w-32 border flex items-center justify-center ${
+            !authState.photoUrl && 'bg-menu-dark'
+          }`}
+        >
+          {authState.photoUrl ? (
+            <img
+              src={authState.photoUrl}
+              className="object-cover rounded-full !h-full w-full"
+              alt="avatar"
+            />
+          ) : (
+            <FaUser color="#fff" size={80} />
+          )}
         </div>
         <h3 className="text-white flex flex-col text-center font-semibold pt-2">
           {authState.displayName}

@@ -24,7 +24,7 @@ export const Register = () => {
 
   return (
     <section className="flex flex-col gap-4 justify-center items-center bg-gray-100 w-full h-screen">
-      <div className="bg-white flex flex-col p-8 gap-2 rounded shadow w-full md:w-3/4">
+      <div className="bg-white flex flex-col p-8 gap-2 rounded shadow w-full md:w-1/2 max-w-[48em]">
         <h2 className="font-semibold text-2xl flex flex-col items-center mb-3">
           Registro
           <small className="text-gray-400 font-light text-lg">

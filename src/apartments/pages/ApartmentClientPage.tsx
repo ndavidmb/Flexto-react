@@ -83,12 +83,15 @@ export const ApartmentClientPage = () => {
       <DefaultContainer className="p-4 h-screen">
         <div className="bg-white rounded p-4 h-50 shadow flex justify-between">
           <div className="md:flex gap-3">
-            <img
-              className="rounded object-cover !h-40 w-40"
-              src={owner.photoUrl}
-              width={150}
-              alt="profile_img"
-            />
+            {owner.photoUrl && (
+              <img
+                className="rounded object-cover !h-40 w-40"
+                src={owner.photoUrl}
+                width={150}
+                alt="profile_img"
+              />
+            )}
+
             <div>
               <PageTitle>{owner.displayName}</PageTitle>
               <ul className="text-gray-600">

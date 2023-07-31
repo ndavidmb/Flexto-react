@@ -59,12 +59,15 @@ export const OwnerDetailPage = () => {
     <DefaultContainer>
       <header className="px-8 py-3 flex justify-between items-start">
         <div className="md:flex gap-3">
-          <img
-            className="rounded object-cover !h-40 w-40"
-            src={ownerVm?.owner.photoUrl}
-            width={150}
-            alt="profile_img"
-          />
+          {ownerVm?.owner.photoUrl && (
+            <img
+              className="rounded object-cover !h-40 w-40"
+              src={ownerVm?.owner.photoUrl}
+              width={150}
+              alt="profile_img"
+            />
+          )}
+
           <div>
             <PageTitle>
               {ownerVm?.owner.displayName}

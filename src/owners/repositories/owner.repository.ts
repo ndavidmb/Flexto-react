@@ -41,10 +41,15 @@ export const useOwnerRepository = () => {
     id: string,
     owner: OwnerDTO,
   ) => {
-    await firestore.updateFirestore(id, {
-      ...owner,
-      accepted: true,
-    })
+    console.log(owner)
+    try {
+      await firestore.updateFirestore(id, {
+        ...owner,
+        accepted: true,
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const getOwnerByUid = async (uid: string) => {

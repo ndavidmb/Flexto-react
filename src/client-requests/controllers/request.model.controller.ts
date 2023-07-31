@@ -1,7 +1,6 @@
 import { useApartmentModelController } from '../../apartments/controllers/apartment.model.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { IUserRequest } from '../../auth/interfaces/user.interface'
-import { useAuthRepository } from '../../auth/repositories/auth.repository'
 import { useBookingModelController } from '../../booking/controllers/booking.model.controller'
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
@@ -95,6 +94,7 @@ export const useRequestModelController = () => {
       owner = await ownerRepository.getOwnerByUid(
         request.user.uid,
       )
+      console.log(owner);
 
       await Promise.all([
         ownerRepository.updateOwner(owner.id!, {
@@ -113,6 +113,7 @@ export const useRequestModelController = () => {
         ),
       ])
     } catch (err) {
+      console.log(err)
       // Restore to initial if fails
       if (owner) {
         await ownerRepository.updateOwner(owner.id!, {
