@@ -3,7 +3,6 @@ import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { OwnerDTO } from '../interfaces/owner.interface'
-import { State } from '../../states/interfaces/state.interface'
 
 export const useOwnerRepository = () => {
   const firestore = useFirestore<OwnerDTO>(

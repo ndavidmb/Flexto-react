@@ -67,6 +67,7 @@ export const ClientRequestHours: FC<Props> = ({
           ),
       )
 
+    console.log(startHours)
     formikContext.setFieldValue(
       'startHour',
       startHours[0][1],
@@ -110,10 +111,7 @@ export const ClientRequestHours: FC<Props> = ({
         },
       )
 
-    formikContext.setFieldValue(
-      'endHour',
-      endHours[0][1],
-    )
+    formikContext.setFieldValue('endHour', endHours[0][1])
 
     setState({
       ...state,

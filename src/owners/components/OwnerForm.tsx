@@ -11,7 +11,7 @@ import {
   Owner,
   OwnerFromForm,
 } from '../interfaces/owner.interface'
-import { useOwnerService } from '../services/owner.service'
+import { useOwnerViewController } from '../controllers/owner.view.controller'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -28,7 +28,7 @@ export const OwnerForm: FC<Props> = ({
   )
 
   const apartmentService = useApartmentViewController()
-  const ownerService = useOwnerService()
+  const ownerViewController = useOwnerViewController()
 
   const initialValues: OwnerFromForm = {
     // Si es string
@@ -71,23 +71,9 @@ export const OwnerForm: FC<Props> = ({
     createOwner(owner)
   }
 
-  const updateOwner = (owner: Owner) => {
-    ownerService
-      .updateOwner(data?.id as string, owner)
-      .then(() => {
-        closeModal(true)
-      })
-      .finally(() => dispatch(setLoading(false)))
-  }
+  const updateOwner = (owner: Owner) => {}
 
-  const createOwner = (owner: Owner) => {
-    ownerService
-      .addOwner(owner)
-      .then(() => {
-        closeModal(true)
-      })
-      .finally(() => dispatch(setLoading(false)))
-  }
+  const createOwner = (owner: Owner) => {}
 
   return (
     <Formik

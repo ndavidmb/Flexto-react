@@ -59,6 +59,7 @@ export const PublicSpacesPage = () => {
       getData()
     }
 
+    setData(undefined)
     closeModal()
   }
 
@@ -66,7 +67,7 @@ export const PublicSpacesPage = () => {
     <>
       {isOpen && (
         <ModalContainer
-          close={closeModal}
+          close={handleClose}
           title={data ? 'Editar' : 'Crear espacio público'}
           width="w-[500px]"
         >

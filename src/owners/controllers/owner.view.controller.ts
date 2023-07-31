@@ -1,10 +1,12 @@
-import { useOwnerModelController } from './owner.model.controller'
+import { OwnerUpdated } from '../../profiles/interfaces/profile.interface'
+import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
-import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
-import { OwnerUpdated } from '../../profiles/interfaces/profile.interface'
-import { OwnerDTO } from '../interfaces/owner.interface'
+import {
+  OwnerDTO
+} from '../interfaces/owner.interface'
+import { useOwnerModelController } from './owner.model.controller'
 
 export const useOwnerViewController = () => {
   const ownerModelController = useOwnerModelController()
@@ -107,6 +109,7 @@ export const useOwnerViewController = () => {
       dispatch(setLoading(false))
     }
   }
+
 
   return {
     getOwners,

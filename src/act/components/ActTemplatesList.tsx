@@ -24,6 +24,7 @@ export const ActTemplatesList: FC<Props> = ({
       <THead>
         <th>Nombre de {labelsName}</th>
         <th>PDF</th>
+        <th>Fecha</th>
         <th>Acción</th>
       </THead>
       <tbody>
@@ -33,7 +34,7 @@ export const ActTemplatesList: FC<Props> = ({
             <td>
               <a
                 href={template.documentUrl}
-                target='_blank'
+                target="_blank"
                 className="flex gap-1 items-center"
               >
                 <AiOutlineFileWord
@@ -45,7 +46,7 @@ export const ActTemplatesList: FC<Props> = ({
                 </span>
               </a>
             </td>
-
+            <td>{template.date}</td>
             <td>
               <div className="flex gap-2">
                 {labelsName === 'plantilla' && (

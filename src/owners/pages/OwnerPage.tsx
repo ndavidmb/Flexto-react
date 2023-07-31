@@ -7,6 +7,7 @@ import { OwnerForm } from '../components/OwnerForm'
 import { OwnerList } from '../components/OwnerList'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
 import { Owner } from '../interfaces/owner.interface'
+import { Register } from '../../auth/components/Register'
 
 export const OwnerPage = () => {
   // States
@@ -48,7 +49,8 @@ export const OwnerPage = () => {
           close={closeModal}
           title={`${data ? 'Editar' : 'Crear'} propietario`}
         >
-          <OwnerForm data={data} closeModal={handleClose} />
+          {/* <OwnerForm data={data} closeModal={handleClose} /> */}
+          <Register />
         </ModalContainer>
       )}
 
@@ -60,6 +62,7 @@ export const OwnerPage = () => {
             setItems: setOwners,
           }}
           title="Propietarios"
+          action={open}
         >
           <OwnerList
             openEdit={open}

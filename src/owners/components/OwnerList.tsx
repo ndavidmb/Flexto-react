@@ -12,7 +12,6 @@ import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
 import { Owner } from '../interfaces/owner.interface'
-import { useOwnerService } from './../services/owner.service'
 
 type Props = {
   owners: Owner[]
@@ -27,16 +26,14 @@ export const OwnerList: FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
 
-  const ownerService = useOwnerService()
-
   const handleDelete = (id: string) => {
-    dispatch(setLoading(true))
-    ownerService
-      .deleteOwner(id)
-      .then(() => {
-        setOwners(owners.filter((owner) => owner.id !== id))
-      })
-      .finally(() => dispatch(setLoading(false)))
+    // dispatch(setLoading(true))
+    // ownerService
+    //   .deleteOwner(id)
+    //   .then(() => {
+    //     setOwners(owners.filter((owner) => owner.id !== id))
+    //   })
+    //   .finally(() => dispatch(setLoading(false)))
   }
 
   return (
