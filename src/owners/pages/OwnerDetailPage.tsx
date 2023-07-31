@@ -60,7 +60,7 @@ export const OwnerDetailPage = () => {
       <header className="px-8 py-3 flex justify-between items-start">
         <div className="md:flex gap-3">
           <img
-            className="rounded"
+            className="rounded object-cover !h-40 w-40"
             src={ownerVm?.owner.photoUrl}
             width={150}
             alt="profile_img"
