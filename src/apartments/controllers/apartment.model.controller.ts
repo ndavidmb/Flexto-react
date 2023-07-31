@@ -96,8 +96,20 @@ export const useApartmentModelController = () => {
     )
   }
 
+  const getApartmentByOwner = async (uid: string) => {
+    const apartment =
+      await apartmentRepository.getApartmentByOwner(uid)
+    const owner = await ownerRepository.getOwnerByUid(uid)
+
+    return {
+      apartment,
+      owner,
+    }
+  }
+
   return {
     getApartmentsWithOwners,
+    getApartmentByOwner,
     addApartment,
     deleteApartment,
     updateApartment,

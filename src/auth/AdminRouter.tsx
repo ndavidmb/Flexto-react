@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ActRouter } from '../act/ActRouter'
-import { ApartmentWrapper } from '../apartments/ApartmentWrapper'
+import { ApartmentWrapper } from '../apartments/pages/ApartmentWrapper'
 import { AdminRequestPage } from '../client-requests/pages/AdminRequestPage'
 import { CustomizationWrapper } from '../customizations/CustomizationWrapper'
 import { OwnerPage } from '../owners/pages/OwnerPage'

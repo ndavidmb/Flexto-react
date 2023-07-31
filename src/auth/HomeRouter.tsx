@@ -6,6 +6,7 @@ import { RootState } from '../shared/store/store'
 import { AdminRouter } from './AdminRouter'
 import { AuthWaitApproved } from '../auth/pages/AuthWaitApproved'
 import { BookingRouter } from '../booking/BookingRouter'
+import { ApartmentClientPage } from '../apartments/pages/ApartmentClientPage'
 
 export const HomeRouter = () => {
   const { role } = useSelector(
@@ -24,6 +25,10 @@ export const HomeRouter = () => {
     return (
       <Routes>
         <Route
+          path="apartment"
+          element={<ApartmentClientPage />}
+        />
+        <Route
           path="request"
           element={<ClientRequestsWrapper />}
         />
@@ -31,7 +36,10 @@ export const HomeRouter = () => {
           path="wait-approved"
           element={<AuthWaitApproved />}
         />
-        <Route path="booking/*" element={<BookingRouter />} />
+        <Route
+          path="booking/*"
+          element={<BookingRouter />}
+        />
         <Route
           path="*"
           element={<Navigate to="/NotFound" replace />}

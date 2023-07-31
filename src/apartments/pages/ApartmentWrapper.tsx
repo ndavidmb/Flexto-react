@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { DefaultContainerWithSearch } from '../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
-import { ModalContainer } from '../shared/components/Modal/Modal'
-import { useModal } from '../shared/hooks/useModal'
-import { ApartmentForm } from './components/ApartmentForm'
-import { ApartmentList } from './components/ApartmentList'
-import { useApartmentViewController } from './controllers/apartment.view.controller'
-import { Apartment } from './interfaces/apartment.interface'
-import { ApartmentWithOwner } from './components/AparmentWithOwner'
+import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { useModal } from '../../shared/hooks/useModal'
+import { ApartmentForm } from '../components/ApartmentForm'
+import { ApartmentList } from '../components/ApartmentList'
+import { useApartmentViewController } from '../controllers/apartment.view.controller'
+import { Apartment } from '../interfaces/apartment.interface'
+import { ApartmentWithOwner } from '../components/AparmentWithOwner'
 
 export const ApartmentWrapper = () => {
   const [consult, setConsult] = useState(0)

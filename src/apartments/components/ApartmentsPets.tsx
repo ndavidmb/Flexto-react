@@ -42,11 +42,13 @@ export const ApartmentsPets = () => {
           <th>Tipo de mascota*</th>
           <th>Descripción</th>
           <th>Cantidad*</th>
-          <th></th>
+          <th className="w-8"></th>
         </thead>
         <tbody>
-          {values.pets.map((pet) => (
-            <tr>
+          {values.pets.map((pet, index) => (
+            <tr
+              key={`${pet.type}${pet.description}${pet.quantity}${index}`}
+            >
               <td className="text-center">
                 {PET_TYPE[pet.type]}
               </td>
@@ -56,7 +58,7 @@ export const ApartmentsPets = () => {
               <td className="text-center">
                 {pet.quantity}
               </td>
-              <td>
+              <td className="w-8">
                 <button
                   type="button"
                   onClick={() => removePet(pet)}
@@ -96,7 +98,7 @@ export const ApartmentsPets = () => {
                 type="number"
               />
             </td>
-            <td>
+            <td className="w-8">
               <button
                 type="button"
                 onClick={() => addPet()}

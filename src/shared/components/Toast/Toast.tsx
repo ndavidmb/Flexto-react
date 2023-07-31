@@ -52,7 +52,7 @@ export const Toast = () => {
             <ToastIcon />
             <div>
               <span className="font-medium">
-                {toastState.title}:
+                {toastState.title}{toastState.details.length > 0 && ':'}
               </span>
 
               <ToastList
