@@ -1,6 +1,7 @@
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
 import { PublicSpaceWithHours } from '../../public-spaces/interfaces/public-space.interface'
+import { ValidateError } from '../../shared/errors/validate-error'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
@@ -59,6 +60,20 @@ export const useRequestClientViewController = () => {
       )
       return true
     } catch (error) {
+      if (error instanceof ValidateError) {
+        dispatch(
+          showToast({
+            title: 'No se pudo crear la solicitud',
+            details: [
+              'El día seleccionado no cumple con el horario adecuado',
+              error.message,
+            ],
+            type: 'info',
+          }),
+        )
+        return false
+      }
+
       dispatch(
         showToast({
           title: 'No se pudo crear la solicitud',

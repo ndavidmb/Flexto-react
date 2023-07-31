@@ -6,7 +6,9 @@ import { useBookingModelController } from '../../booking/controllers/booking.mod
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { DAYS_DICT } from '../../public-spaces/constants/days'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
+import { ValidateError } from '../../shared/errors/validate-error'
 import { useAppSelector } from '../../shared/store/hooks'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import { RequestType } from '../interfaces/client-request.interface'
@@ -141,8 +143,29 @@ export const useRequestModelController = () => {
   const createPublicSpaceRequest = async (
     request: RequestPublicSpaceDTO,
   ) => {
-    const { phoneNumber } =
-      await ownerRepository.getOwnerByUid(userState.uid)
+    const [owner, publicSpace] = await Promise.all([
+      ownerRepository.getOwnerByUid(userState.uid),
+      publicSpaceController.getPublicSpaceById(
+        request.space.id!,
+      ),
+    ])
+
+    const requestedDay = new Date(request.date).getDay() + 1
+
+    console.log({
+      requestedDay,
+      days: publicSpace.schedule.days,
+    })
+
+    if (!publicSpace.schedule.days.includes(requestedDay)) {
+      throw new ValidateError(
+        'Días disponibles: ' +
+          publicSpace.schedule.days.map(
+            (d) => `${DAYS_DICT[d]}`,
+          ),
+      )
+    }
+
     await requestRepository.createRequest({
       description: `Solicitud de reserva: "${request.space.name}"`,
       endHour: request.endHour,
@@ -151,7 +174,7 @@ export const useRequestModelController = () => {
       displayName: userState.displayName,
       uid: userState.uid,
       email: userState.email,
-      phoneNumber,
+      phoneNumber: owner.phoneNumber,
       date: request.date,
       foreignId: request.space.id!,
     })

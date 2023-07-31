@@ -38,7 +38,6 @@ export const Sidebar = () => {
       handleClickOutside,
     )
     return () => {
-      console.log('clean');
       document.removeEventListener(
         'mousedown',
         handleClickOutside,
