@@ -21,7 +21,6 @@ import { useRequestRepository } from '../repositories/request.repository'
 
 export const useRequestModelController = () => {
   const requestRepository = useRequestRepository()
-  const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
   const publicSpaceController =
     usePublicSpacesModelController()
@@ -151,11 +150,6 @@ export const useRequestModelController = () => {
     ])
 
     const requestedDay = new Date(request.date).getDay() + 1
-
-    console.log({
-      requestedDay,
-      days: publicSpace.schedule.days,
-    })
 
     if (!publicSpace.schedule.days.includes(requestedDay)) {
       throw new ValidateError(
