@@ -26,10 +26,10 @@ export const Avatar = () => {
       <div
         onClick={openModal}
         title="Editar perfil"
-        className="flex flex-col items-center justify-center p-5 cursor-pointer"
+        className="flex items-center justify-center p-5 cursor-pointer"
       >
         <div
-          className={`rounded-full p-1 h-32 w-32 border flex items-center justify-center ${
+          className={`rounded-full p-1 h-24 w-24 gap-2 border flex items-center justify-center ${
             !authState.photoUrl && 'bg-menu-dark'
           }`}
         >
@@ -43,7 +43,7 @@ export const Avatar = () => {
             <FaUser color="#fff" size={80} />
           )}
         </div>
-        <h3 className="text-white flex flex-col text-center font-semibold pt-2">
+        <h3 className="text-white flex flex-col text-center font-semibold w-[165px]">
           {authState.displayName}
           <small className="font-normal text-gray-400">
             {authState.email}
