@@ -48,6 +48,13 @@ export const PaymentAddUserForm: FC<Props> = ({
         }
       })
 
+      console.log(
+        selectedOwners.map((s) => ({
+          email: s.email,
+          selected: s.selected,
+        })),
+      )
+
       setAllOwners(selectedOwners)
       setOwners(selectedOwners)
     })
@@ -142,7 +149,7 @@ export const PaymentAddUserForm: FC<Props> = ({
     <ModalContainer
       close={handleClose}
       title="Agregar usuarios"
-      className="w-1/2"
+      className="w-[28em]"
     >
       <div className="bg-white rounded-lg shadow w-full">
         <div className="p-3">
@@ -206,7 +213,7 @@ export const PaymentAddUserForm: FC<Props> = ({
         </ul>
         <a
           href="#"
-          className="flex gap-2 items-center p-3 text-sm font-medium border-t border-gray-200 rounded-b-lg bg-gray-50 "
+          className="flex gap-2 items-center justify-center p-3 text-sm font-medium border-t border-gray-200 rounded-b-lg bg-gray-50 "
         >
           <Button
             color="secondary"

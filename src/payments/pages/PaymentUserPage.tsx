@@ -112,9 +112,7 @@ export const PaymentUserPage = () => {
   const handleSubmit = (values: {
     email: string
     message: string
-  }) => {
-
-  }
+  }) => {}
 
   return (
     <>

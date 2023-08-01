@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -47,6 +48,7 @@ export function useFirestore<T>(tableName: string) {
     if (!theme.id && !id) {
       return []
     }
+
     const customization = `customizations/${id || theme.id}`
     const q = extraFilters
       ? query(
@@ -98,7 +100,17 @@ export function useFirestore<T>(tableName: string) {
 
     return dataList
   }
-  
+
+  const getById = async (id: string) => {
+    const ref = doc(db, `${tableName}/${id}`)
+    const docSnap = await getDoc(ref)
+
+    return { id: docSnap.id, ...docSnap.data() } as T
+  }
+
+  const getDocRef = (id: string) => {
+    return doc(db, `${tableName}/${id}`)
+  }
 
   return {
     getAllFirestore,
@@ -106,5 +118,7 @@ export function useFirestore<T>(tableName: string) {
     deleteFirestore,
     addFirestore,
     getByParam,
+    getById,
+    getDocRef,
   }
 }

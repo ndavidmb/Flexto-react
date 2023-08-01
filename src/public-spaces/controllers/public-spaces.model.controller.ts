@@ -52,7 +52,7 @@ export const usePublicSpacesModelController = () => {
   }
 
   const getPublicSpaceById = async (id: string) => {
-    const [space] =
+    const space =
       await publicSpacesRepository.getPublicSpaceById(id)
     return space
   }

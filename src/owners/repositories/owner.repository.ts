@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore/lite'
+import { documentId, where } from 'firebase/firestore/lite'
 import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
@@ -19,6 +19,7 @@ export const useOwnerRepository = () => {
     return await firestore.getAllFirestore([
       where('role', '==', UserRoles.CLIENT),
       where('accepted', '==', true),
+      where('deleted', '==', false),
     ])
   }
 
@@ -58,11 +59,7 @@ export const useOwnerRepository = () => {
   }
 
   const getOwnerById = async (ownerId: string) => {
-    const [owner] = await firestore.getByParam(
-      'id',
-      ownerId,
-    )
-    return owner
+    return await firestore.getById(ownerId)
   }
 
   const updateOwner = async (
@@ -83,8 +80,15 @@ export const useOwnerRepository = () => {
 
   const getOwnersWithIds = (ids: string[]) => {
     return firestore.getAllFirestore([
-      where('id', 'in', ids),
+      where(documentId(), 'in', ids),
     ])
+  }
+
+  const deleteTemporallyUser = (owner: OwnerDTO) => {
+    return firestore.updateFirestore(owner.id!, {
+      ...owner,
+      deleted: true,
+    })
   }
 
   return {
@@ -95,6 +99,7 @@ export const useOwnerRepository = () => {
     getOwnerByEmail,
     getActiveOwners,
     activateOwnerAccount,
+    deleteTemporallyUser,
     deleteOwner,
     createOwner,
     getOwnersByState,

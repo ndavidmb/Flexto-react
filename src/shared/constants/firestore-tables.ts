@@ -11,4 +11,5 @@ export const enum FirestoreTable {
   BOOKING = 'booking',
   PAYMENT = 'payment',
   OWNER_PAYMENT = 'owner-payment',
+  MAIL = 'mail',
 }

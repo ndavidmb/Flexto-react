@@ -1,41 +1,21 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction
-} from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { IoSearch } from 'react-icons/io5'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { Button } from '../../shared/styled-components/Button'
-import { Table } from '../../shared/styled-components/Table'
 import { THead } from '../../shared/styled-components/THead'
 import { TRow } from '../../shared/styled-components/TRow'
+import { Table } from '../../shared/styled-components/Table'
 import { Owner } from '../interfaces/owner.interface'
 
 type Props = {
   owners: Owner[]
-  setOwners: Dispatch<SetStateAction<Owner[]>>
-  openEdit: (data?: Owner) => void
+  handleDelete: (owner: Owner) => void
 }
 
 export const OwnerList: FC<Props> = ({
-  openEdit: open,
   owners,
-  setOwners,
+  handleDelete,
 }) => {
-  const dispatch = useDispatch()
-
-  const handleDelete = (id: string) => {
-    // dispatch(setLoading(true))
-    // ownerService
-    //   .deleteOwner(id)
-    //   .then(() => {
-    //     setOwners(owners.filter((owner) => owner.id !== id))
-    //   })
-    //   .finally(() => dispatch(setLoading(false)))
-  }
-
   return (
     <>
       <Table>
@@ -76,15 +56,7 @@ export const OwnerList: FC<Props> = ({
               <td className="flex gap-2">
                 <Button
                   color="link"
-                  onClick={() => open(owner)}
-                >
-                  Editar
-                </Button>
-                <Button
-                  color="link"
-                  onClick={() =>
-                    handleDelete(owner.id as string)
-                  }
+                  onClick={() => handleDelete(owner)}
                 >
                   Eliminar
                 </Button>

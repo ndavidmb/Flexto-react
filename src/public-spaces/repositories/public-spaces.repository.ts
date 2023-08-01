@@ -24,7 +24,7 @@ export const usePublicSpacesRepository = () => {
   }
 
   const getPublicSpaceById = async (id: string) => {
-    return await firestore.getByParam('id', id)
+    return await firestore.getById(id)
   }
 
   return {

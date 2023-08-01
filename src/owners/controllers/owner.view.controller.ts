@@ -4,7 +4,8 @@ import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import {
-  OwnerDTO
+  Owner,
+  OwnerDTO,
 } from '../interfaces/owner.interface'
 import { useOwnerModelController } from './owner.model.controller'
 
@@ -35,7 +36,7 @@ export const useOwnerViewController = () => {
   const getOwnerDetail = async (ownerId: string) => {
     dispatch(setLoading(true))
     try {
-      return await ownerModelController.getOwnerDetail(
+      return await ownerModelController.getOwnerDetailBooking(
         ownerId,
       )
     } catch {
@@ -110,11 +111,90 @@ export const useOwnerViewController = () => {
     }
   }
 
+  const createOwner = async (owner: Owner) => {
+    dispatch(setLoading(true))
+
+    try {
+      await ownerModelController.createOwner(owner)
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title: 'No se pudo crear el propietario',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  const updateOwner = async (owner: Owner) => {
+    dispatch(setLoading(true))
+    try {
+      const bdOwner =
+        await ownerModelController.getOwnerById(owner.id!)
+
+      await ownerModelController.updateOwner(
+        {
+          displayName: owner.name,
+          phoneNumber: owner.phone,
+        },
+        bdOwner,
+      )
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title: 'No se pudo actualizar el usuario',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  const deleteUserTemporally = async (owner: Owner) => {
+    try {
+      await ownerModelController.deleteTemporallyUser(
+        owner.id!,
+      )
+
+      dispatch(
+        showToast({
+          title: 'Se borró el usuario correctamente',
+          details: [
+            `"${owner.name}" fue eliminado correctamente`,
+          ],
+          type: 'success',
+        }),
+      )
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title:
+            'No se pudo eliminar el usuario correctamente',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    }
+  }
 
   return {
     getOwners,
     getOwnerDetail,
     getOwnerProfileDetail,
     updateOwnerProfile,
+    createOwner,
+    updateOwner,
+    deleteUserTemporally,
   }
 }

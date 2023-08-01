@@ -27,6 +27,10 @@ export interface Apartment {
   id?: string
 }
 
+export interface ApartmentWithId extends Apartment {
+  id: string
+}
+
 export const enum ApartmentType {
   HOUSE = 'house',
   APARTMENT = 'apartment',
@@ -50,7 +54,7 @@ export interface ApartmentFromForm {
 }
 
 export const PET_TYPE = {
-  'cat': 'Gato',
-  'dog': 'Perro',
-  'other': 'Otro'
+  cat: 'Gato',
+  dog: 'Perro',
+  other: 'Otro',
 }

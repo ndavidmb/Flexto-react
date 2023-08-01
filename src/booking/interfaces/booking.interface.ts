@@ -14,3 +14,7 @@ export interface BookingDTO {
 export interface BookingVm extends BookingDTO {
   publicSpaceName: string
 }
+
+export interface BookingWithId extends BookingDTO {
+  id: string
+}

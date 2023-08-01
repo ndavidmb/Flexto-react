@@ -14,6 +14,7 @@ import { authFirebase } from '../../shared/services/firebase.service'
 import { RegisterError } from '../errors/register.error'
 import { RegisterFallback } from '../interfaces/register-fallback.interface'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
+import { FirebaseError } from 'firebase/app'
 
 export const useAuthRepository = () => {
   const firestoreDocs = useFirestoreDocs()
@@ -42,24 +43,33 @@ export const useAuthRepository = () => {
   }
 
   const removeUserImage = async (name: string) => {
-    await firestoreDocs.deleteFile(
-      name,
-      CloudStorageFolders.PICTURES,
-    )
+    try {
+      await firestoreDocs.deleteFile(
+        name,
+        CloudStorageFolders.PICTURES,
+      )
+      return true
+    } catch (err) {
+      if (
+        err instanceof FirebaseError &&
+        err.code === 'storage/object-not-found'
+      ) {
+        return true
+      }
+
+      throw err
+    }
   }
 
   const updateUserProfile = async (
+    user: User,
     displayName: string,
     photoURL?: string,
   ) => {
-    if (authFirebase.currentUser) {
-      return await updateProfile(authFirebase.currentUser, {
-        displayName,
-        photoURL,
-      })
-    }
-
-    return Promise.reject(new Error('No existe el usuario'))
+    return await updateProfile(user, {
+      displayName,
+      photoURL,
+    })
   }
 
   const deleteFirebaseUser = async (user: User) => {
@@ -93,7 +103,7 @@ export const useAuthRepository = () => {
       })
 
       newUserInstance = newUser
-      let photoUrl;
+      let photoUrl
       if (registerFb.photo) {
         photoUrl = await uploadUserImage(
           registerFb.photo.blob,
@@ -102,6 +112,7 @@ export const useAuthRepository = () => {
       }
 
       await updateUserProfile(
+        newUser,
         registerFb.displayName,
         photoUrl,
       )

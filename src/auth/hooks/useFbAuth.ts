@@ -15,6 +15,7 @@ export const useFbAuth = (id: string) => {
   }
 
   const getRedirectPath = async (user: User | null) => {
+    console.log(user);
     await authController.signInFirebase(user);
   }
 

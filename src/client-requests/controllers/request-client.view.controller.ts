@@ -58,8 +58,10 @@ export const useRequestClientViewController = () => {
       await requestModelController.createPublicSpaceRequest(
         request,
       )
+      console.log('works');
       return true
     } catch (error) {
+      console.log(error);
       if (error instanceof ValidateError) {
         dispatch(
           showToast({

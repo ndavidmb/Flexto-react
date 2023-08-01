@@ -68,7 +68,7 @@ export class ParsePaymentArrays {
     bdRegisters: OwnerPaymentWithId[],
     formPayment: PaymentWithId,
   ) {
-    const deleteCompletely: string[] = []
+    const deleteCompletely: OwnerPaymentWithId[] = []
     const updatePayments: OwnerPaymentWithId[] = []
 
     noSelectedOwnerIds.forEach((ownerId) => {
@@ -86,7 +86,7 @@ export class ParsePaymentArrays {
 
       if (newPayments.length === 0) {
         // Delete the relation because the owner has not payments
-        deleteCompletely.push(register.id)
+        deleteCompletely.push(register)
         return
       }
 

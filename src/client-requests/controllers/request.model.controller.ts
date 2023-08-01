@@ -143,6 +143,7 @@ export const useRequestModelController = () => {
   const createPublicSpaceRequest = async (
     request: RequestPublicSpaceDTO,
   ) => {
+    console.log(request.space.id);
     const [owner, publicSpace] = await Promise.all([
       ownerRepository.getOwnerByUid(userState.uid),
       publicSpaceController.getPublicSpaceById(

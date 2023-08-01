@@ -4,7 +4,6 @@ import { RequestType } from '../../client-requests/interfaces/client-request.int
 import { useRequestRepository } from '../../client-requests/repositories/request.repository'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ValidateError } from '../../shared/errors/validate-error'
-import { useAppSelector } from '../../shared/store/hooks'
 import {
   IUserState,
   USER_APPROVED_STATES,
@@ -15,10 +14,12 @@ import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthRepository } from '../repositories/auth.repository'
+import { useOwnerModelController } from '../../owners/controllers/owner.model.controller'
 
 export const useAuthModelController = () => {
   const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
+  const ownerModelController = useOwnerModelController()
   const requestRepository = useRequestRepository()
 
   const registerUser = async (
@@ -41,6 +42,7 @@ export const useAuthModelController = () => {
         displayName: newUserInstance.displayName as string,
         email: newUserInstance.email as string,
         photoUrl: newUserInstance.photoURL as string,
+        deleted: false,
       })
 
       const { id } = await requestRepository.createRequest({
@@ -87,11 +89,13 @@ export const useAuthModelController = () => {
     )
     if (extraUser) {
       return {
+        ...extraUser,
         uid: extraUser.uid,
         email: user.email as string,
         displayName: user.displayName as string,
         photoUrl: user.photoURL as string,
         role: extraUser.role,
+        deleted: extraUser.deleted,
         agreement,
         userState: extraUser.accepted
           ? USER_APPROVED_STATES.APPROVED
@@ -114,7 +118,14 @@ export const useAuthModelController = () => {
       credentials.password,
     )
 
-    return getExtraUser(agreement, user)
+    const extraUser = await getExtraUser(agreement, user)
+
+    if (extraUser.deleted) {
+      await deleteUser(extraUser.id!, user)
+      throw new ValidateError('user_deleted')
+    }
+
+    return extraUser
   }
 
   const sendRecoveryPasswordEmail = async (
@@ -139,7 +150,7 @@ export const useAuthModelController = () => {
       authRepository.deleteAppUser({
         newUserInstance: user,
       }),
-      ownerRepository.deleteOwner(ownerId),
+      ownerModelController.deleteUserTotally(ownerId),
     ])
   }
 

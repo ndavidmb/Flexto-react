@@ -16,6 +16,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { useAuthModelController } from './auth.model.controller'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
+import { ValidateError } from '../../shared/errors/validate-error'
 
 export function useAuthViewController(themeId: string) {
   const authModelController = useAuthModelController()
@@ -27,16 +28,36 @@ export function useAuthViewController(themeId: string) {
     password: string
   }) => {
     dispatch(setLoading(true))
+
     try {
       const extraUser =
         await authModelController.signInWithEmailAndPassword(
           credentials,
           themeId,
         )
-      console.log(extraUser)
+
       dispatch(login(extraUser))
       getRedirectPath(extraUser)
     } catch (err) {
+      console.error(err)
+      if (
+        err instanceof ValidateError &&
+        err.message === 'user_deleted'
+      ) {
+        dispatch(
+          showToast({
+            title:
+              'Su cuenta ha sido eliminada por el administrador',
+            details: [
+              'Puede contactar con el administrador para validar esta información',
+            ],
+            type: 'info',
+          }),
+        )
+        logOut()
+        return
+      }
+
       if (err instanceof FirebaseError) {
         dispatch(
           showToast({

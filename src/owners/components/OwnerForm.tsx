@@ -39,8 +39,6 @@ export const OwnerForm: FC<Props> = ({
     apartmentId: data?.apartment?.id || '',
   }
 
-  const dispatch = useDispatch()
-
   useEffect(() => {
     apartmentService.getApartments().then((apt) => {
       setApartments(apt)
@@ -52,7 +50,6 @@ export const OwnerForm: FC<Props> = ({
     if (emptyFields(values)) {
       return
     }
-    dispatch(setLoading(true))
 
     const owner = {
       name: values.name,
@@ -71,9 +68,26 @@ export const OwnerForm: FC<Props> = ({
     createOwner(owner)
   }
 
-  const updateOwner = (owner: Owner) => {}
+  const updateOwner = (owner: Owner) => {
+    owner.id = data!.id!
+    ownerViewController
+      .updateOwner(owner)
+      .then((successfully) => {
+        if (successfully) {
+          closeModal(true)
+        }
+      })
+  }
 
-  const createOwner = (owner: Owner) => {}
+  const createOwner = (owner: Owner) => {
+    ownerViewController
+      .createOwner(owner)
+      .then((successfully) => {
+        if (successfully) {
+          closeModal(true)
+        }
+      })
+  }
 
   return (
     <Formik
@@ -118,6 +132,8 @@ export const OwnerForm: FC<Props> = ({
             Unidad residencial
           </label>
           <Select
+            disabled={Boolean(data)}
+            className="disabled:text-gray-500 disabled:bg-gray-100"
             formik={true}
             id="apartmentId"
             name="apartmentId"
@@ -143,10 +159,11 @@ export const OwnerForm: FC<Props> = ({
             Correo
           </label>
           <Field
+            disabled={Boolean(data)}
             id="email"
             name="email"
             type="email"
-            className="border bg-white px-2 py-1"
+            className="border bg-white px-2 py-1 disabled:text-gray-500 disabled:bg-gray-100"
             placeholder="Correo"
           ></Field>
         </div>

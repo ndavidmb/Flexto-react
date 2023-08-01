@@ -43,7 +43,7 @@ export const PaymentUserList: FC<Props> = ({
 }) => {
   const navigate = useNavigate()
   const ownerIds = useMemo(
-    () => allOwners.map((owner) => owner.id as string),
+    () => allOwners.map((owner) => owner.ownerId as string),
     [allOwners],
   )
 

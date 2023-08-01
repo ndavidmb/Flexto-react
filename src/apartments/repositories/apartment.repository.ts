@@ -1,10 +1,7 @@
 import { where } from 'firebase/firestore/lite'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
-import {
-  Apartment,
-  ApartmentExtraInfo,
-} from '../interfaces/apartment.interface'
+import { Apartment } from '../interfaces/apartment.interface'
 
 export const useApartmentRepository = () => {
   const firestore = useFirestore<Apartment>(
@@ -44,13 +41,22 @@ export const useApartmentRepository = () => {
     return apartment
   }
 
+  const getApartmentById = async (id: string) => {
+    return await firestore.getById(id)
+  }
+
+  const getApartmentRef = (id: string) => {
+    return firestore.getDocRef(id)
+  }
 
   return {
     getApartments,
     getApartmentByOwner,
+    getApartmentById,
     addApartment,
     deleteApartment,
     updateApartment,
     getAvailableApartments,
+    getApartmentRef,
   }
 }

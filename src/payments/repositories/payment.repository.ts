@@ -30,7 +30,8 @@ export const usePaymentRepository = () => {
   }
 
   const getPaymentById = async (id: string) => {
-    const [payment] = await firestore.getByParam('id', id)
+    const payment = await firestore.getById(id)
+    console.log(payment);
     return payment
   }
 

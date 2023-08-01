@@ -44,7 +44,6 @@ export const usePaymentOwnerRepository = () => {
   const getOwnersByPayment = async (paymentId: string) => {
     const data =
       (await firestore.getAllFirestore()) as OwnerPaymentWithId[]
-    console.log(data)
 
     return data.filter((element) =>
       element.payments.some(
@@ -72,7 +71,7 @@ export const usePaymentOwnerRepository = () => {
     toUpdate,
     toAdd,
   }: {
-    toDeleteIds: string[]
+    toDeleteIds: OwnerPaymentWithId[]
     toUpdate: OwnerPaymentWithId[]
     toAdd: OwnerPayment[]
   }) => {
@@ -94,6 +93,10 @@ export const usePaymentOwnerRepository = () => {
     return firestoreBulk.commitBatch(batch)
   }
 
+  const getPaymentOwnerRef = (id: string) => {
+    return firestore.getDocRef(id)
+  }
+
   return {
     deleteOwnerPayment,
     updateOwnerPaymentState,
@@ -103,6 +106,7 @@ export const usePaymentOwnerRepository = () => {
     getOwnersByPayment,
     getPaymentByOwner,
     getPaymentsByOwners,
+    getPaymentOwnerRef,
     bulkOperations,
   }
 }

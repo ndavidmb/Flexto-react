@@ -102,7 +102,7 @@ export const usePaymentOwnerViewController = () => {
         await paymentOwnerModelController.getOwnerPaymentByOwnerId(
           ownerPayment.ownerId!,
         )
-      await paymentOwnerModelController.updateOwnerState({
+      await paymentOwnerModelController.updateOwnerState(payment, newState, {
         ...bdRegister,
         payments: bdRegister.payments.map((rg) =>
           rg.paymentId === payment.id

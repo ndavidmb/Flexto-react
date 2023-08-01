@@ -13,7 +13,9 @@ import {
 } from 'firebase/firestore/lite'
 import { db } from '../services/firebase.service'
 
-export function useFirestoreBulk<T>(tableName: string) {
+export function useFirestoreBulk<T extends { id: string }>(
+  tableName: string,
+) {
   const { theme } = useSelector(
     (state: RootState) => state.themeState,
   )
@@ -33,9 +35,9 @@ export function useFirestoreBulk<T>(tableName: string) {
     const documentSnapshots = await getDocs(q)
 
     const dataList = documentSnapshots.docs.map((doc) => ({
-      id: doc.id,
-      docRef: doc.ref,
       ...(doc.data() as T),
+      docRef: doc.ref,
+      id: doc.id,
     }))
 
     return dataList
@@ -43,9 +45,9 @@ export function useFirestoreBulk<T>(tableName: string) {
 
   const bulkDelete = (
     dbBatch: WriteBatch,
-    deleteIds: string[],
+    deleteIds: T[],
   ) => {
-    deleteIds.forEach((id) => {
+    deleteIds.forEach(({ id }) => {
       const ref = doc(db, `${tableName}/${id}`)
       dbBatch.delete(ref)
     })
