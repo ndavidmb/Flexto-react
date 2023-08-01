@@ -16,6 +16,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { useAuthModelController } from './auth.model.controller'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
+import { ValidateError } from '../../shared/errors/validate-error'
 
 export function useAuthViewController(themeId: string) {
   const authModelController = useAuthModelController()
@@ -27,15 +28,36 @@ export function useAuthViewController(themeId: string) {
     password: string
   }) => {
     dispatch(setLoading(true))
+
     try {
       const extraUser =
         await authModelController.signInWithEmailAndPassword(
           credentials,
           themeId,
         )
+
       dispatch(login(extraUser))
       getRedirectPath(extraUser)
     } catch (err) {
+      console.error(err)
+      if (
+        err instanceof ValidateError &&
+        err.message === 'user_deleted'
+      ) {
+        dispatch(
+          showToast({
+            title:
+              'Su cuenta ha sido eliminada por el administrador',
+            details: [
+              'Puede contactar con el administrador para validar esta información',
+            ],
+            type: 'info',
+          }),
+        )
+        logOut()
+        return
+      }
+
       if (err instanceof FirebaseError) {
         dispatch(
           showToast({
@@ -59,10 +81,11 @@ export function useAuthViewController(themeId: string) {
 
     dispatch(setLoading(true))
     try {
-      const extraUser = await authModelController.getExtraUser(
-        themeId,
-        user,
-      )
+      const extraUser =
+        await authModelController.getExtraUser(
+          themeId,
+          user,
+        )
       dispatch(login(extraUser))
       getRedirectPath(extraUser)
     } catch (err) {
@@ -102,7 +125,9 @@ export function useAuthViewController(themeId: string) {
     dispatch(setLoading(true))
 
     try {
-      const res = await authModelController.registerUser(registerFb)
+      const res = await authModelController.registerUser(
+        registerFb,
+      )
       if (!res) {
         return
       }
@@ -118,6 +143,7 @@ export function useAuthViewController(themeId: string) {
         replace: true,
       })
     } catch (err) {
+      console.error(err)
       if (err instanceof FirebaseError) {
         dispatch(
           showToast({
@@ -140,15 +166,25 @@ export function useAuthViewController(themeId: string) {
       return
     }
 
+    const url = new URL(location.href)
+
     if (user.role === UserRoles.CLIENT) {
-      navigate(`/${themeId}/home/request`, {
+      const navigateUrl = url.pathname.includes('auth')
+        ? `/${themeId}/home/request`
+        : `/${url.pathname}`
+
+      navigate(navigateUrl, {
         replace: true,
       })
       return
     }
 
     if (user.role === UserRoles.ADMIN) {
-      navigate(`/${themeId}/home/owners`, {
+      const navigateUrl = url.pathname.includes('auth')
+        ? `/${themeId}/home/owners`
+        : `/${url.pathname}`
+
+      navigate(navigateUrl, {
         replace: true,
       })
     }

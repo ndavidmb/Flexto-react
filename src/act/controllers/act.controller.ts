@@ -8,6 +8,10 @@ import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folders.constants'
 import { ActFormData } from '../interfaces/act-form-data.interface'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
+import { showToast } from '../../shared/store/slices/toast/toastSlice'
+import { ValidateError } from '../../shared/errors/validate-error'
+import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
+import { validateFormat } from '../utils/validate-format'
 
 export const useActController = (
   actType:
@@ -39,30 +43,36 @@ export const useActController = (
   const addTemplate = async (formData: ActFormData) => {
     dispatch(setLoading(true))
 
-    if (!formData.documentName.includes('.docx')) {
-      return
+    try {
+      const { documentName } = formData
+      if (
+        !documentName.includes('.docx') &&
+        !documentName.includes('.pdf')
+      ) {
+        throw new ValidateError('incorrect_format')
+      }
+
+      const url = await fireStoreDocs.uploadFile({
+        file: formData.file,
+        filename: formData.documentName,
+        filepath: CloudStorageFolders.TEMPLATES,
+      })
+
+      await fireStore.addFirestore({
+        customization: theme.id,
+        documentName: formData.documentName,
+        templateName: formData.templateName,
+        documentUrl: url,
+        date: getFormattedDate(new Date()),
+        permissionsOwnersAct:[]
+      })
+      return true
+    } catch (error) {
+      dispatch(showToast(validateFormat(error)))
+      return false
+    } finally {
+      dispatch(setLoading(false))
     }
-
-    const url = await fireStoreDocs.uploadFile({
-      file: formData.file,
-      filename: formData.documentName,
-      filepath: CloudStorageFolders.TEMPLATES,
-    })
-
-    if (!theme?.id) {
-      return
-    }
-
-    await fireStore.addFirestore({
-      customization: theme.id,
-      documentName: formData.documentName,
-      templateName: formData.templateName,
-      documentUrl: url,
-      date: getFormattedDate(new Date()),
-      permissionsOwnersAct:[]
-    })
-
-    dispatch(setLoading(false))
   }
 
   const updateTemplate = async (data: {
@@ -71,27 +81,41 @@ export const useActController = (
     formData: ActFormData
   }) => {
     dispatch(setLoading(true))
+    try {
+      const { id, oldTemplate, formData } = data
+      const { documentName } = formData
 
-    const { id, oldTemplate, formData } = data
-    const url = await fireStoreDocs.uploadFile({
-      file: formData.file,
-      filename: formData.documentName,
-      filepath: CloudStorageFolders.TEMPLATES,
-    })
+      if (
+        !documentName.includes('.docx') &&
+        !documentName.includes('.pdf')
+      ) {
+        throw new ValidateError('incorrect_format')
+      }
 
-    await fireStore.updateFirestore(id, {
-      ...oldTemplate,
-      documentUrl: url,
-      documentName: formData.documentName,
-      templateName: formData.templateName,
-    })
+      const url = await fireStoreDocs.uploadFile({
+        file: formData.file,
+        filename: formData.documentName,
+        filepath: CloudStorageFolders.TEMPLATES,
+      })
 
-    await fireStoreDocs.deleteFile(
-      oldTemplate.documentName,
-      CloudStorageFolders.TEMPLATES,
-    )
+      await fireStore.updateFirestore(id, {
+        ...oldTemplate,
+        documentUrl: url,
+        documentName: formData.documentName,
+        templateName: formData.templateName,
+      })
 
-    dispatch(setLoading(false))
+      await fireStoreDocs.deleteFile(
+        oldTemplate.documentName,
+        CloudStorageFolders.TEMPLATES,
+      )
+      return true
+    } catch (error) {
+      dispatch(showToast(validateFormat(error)))
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
 
   const deleteTemplate = async (templateId: string) => {

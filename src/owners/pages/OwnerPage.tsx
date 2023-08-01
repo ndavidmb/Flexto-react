@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useOutlet } from 'react-router-dom'
+import { Register } from '../../auth/components/Register'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { ModalContainer } from '../../shared/components/Modal/Modal'
 import { useModal } from '../../shared/hooks/useModal'
-import { OwnerForm } from '../components/OwnerForm'
 import { OwnerList } from '../components/OwnerList'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
 import { Owner } from '../interfaces/owner.interface'
+import { OwnerForm } from '../components/OwnerForm'
 
 export const OwnerPage = () => {
   // States
@@ -41,6 +42,17 @@ export const OwnerPage = () => {
     closeModal()
   }
 
+  const handleDelete = (owner: Owner) => {
+    ownerViewController
+      .deleteUserTemporally(owner)
+      .then((successfully) => {
+        if (successfully) {
+          setOwners((currOwners) =>
+            currOwners.filter((o) => o.id !== owner.id),
+          )
+        }
+      })
+  }
   return (
     <>
       {isOpen && (
@@ -60,11 +72,11 @@ export const OwnerPage = () => {
             setItems: setOwners,
           }}
           title="Propietarios"
+          action={open}
         >
           <OwnerList
-            openEdit={open}
             owners={owners}
-            setOwners={setOwners}
+            handleDelete={handleDelete}
           />
         </DefaultContainerWithSearch>
       )}

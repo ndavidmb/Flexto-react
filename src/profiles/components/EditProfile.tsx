@@ -43,9 +43,11 @@ export const EditProfile: FC<Props> = ({
   }
 
   useEffect(() => {
+    console.log(authState.uid);
     ownerViewController
       .getOwnerProfileDetail(authState.uid)
       .then((owner) => {
+        console.log(owner);
         setOwnerVw(owner)
       })
   }, [])

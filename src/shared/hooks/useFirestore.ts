@@ -1,20 +1,19 @@
 import {
-  DocumentData,
-  Query,
   QueryConstraint,
   addDoc,
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
-  where,
+  where
 } from 'firebase/firestore/lite'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { db } from '../services/firebase.service'
 import { RootState } from '../store/store'
-import { useParams } from 'react-router-dom'
 
 export function useFirestore<T>(tableName: string) {
   const { theme } = useSelector(
@@ -49,6 +48,7 @@ export function useFirestore<T>(tableName: string) {
     if (!theme.id && !id) {
       return []
     }
+
     const customization = `customizations/${id || theme.id}`
     const q = extraFilters
       ? query(
@@ -101,11 +101,24 @@ export function useFirestore<T>(tableName: string) {
     return dataList
   }
 
+  const getById = async (id: string) => {
+    const ref = doc(db, `${tableName}/${id}`)
+    const docSnap = await getDoc(ref)
+
+    return { id: docSnap.id, ...docSnap.data() } as T
+  }
+
+  const getDocRef = (id: string) => {
+    return doc(db, `${tableName}/${id}`)
+  }
+
   return {
     getAllFirestore,
     updateFirestore,
     deleteFirestore,
     addFirestore,
     getByParam,
+    getById,
+    getDocRef,
   }
 }

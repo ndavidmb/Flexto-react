@@ -21,7 +21,7 @@ export const usePublicSpacesViewController = () => {
       dispatch(
         showToast({
           title:
-            'No se pudieron traer los espacios públicos',
+            'No se pudieron traer las zonas comunes',
           details: [
             'Hubo un error del sistema contacte con soporte o intente más tarde',
           ],

@@ -3,10 +3,14 @@ import { useNavigate, NavLink } from 'react-router-dom'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 import { useAuthDefaultController } from '../hooks/useAuthDefaultController'
+import { useAppSelector } from '../../shared/store/hooks'
 
 export const Login = () => {
   const navigate = useNavigate()
   const { authController } = useAuthDefaultController()
+  const { theme } = useAppSelector(
+    (store) => store.themeState,
+  )
 
   const handleSubmit = async (values: {
     email: string
@@ -21,6 +25,11 @@ export const Login = () => {
 
   return (
     <section className="flex flex-col gap-4 justify-center items-center bg-gray-100 w-full h-screen">
+      {theme.logo && (
+        <div className="flex justify-center">
+          <img src={theme.logo} width={150} />
+        </div>
+      )}
       <div className="bg-white flex flex-col p-8 gap-2 rounded shadow">
         <h2 className="font-semibold text-2xl flex flex-col items-center mb-3">
           Ingreso

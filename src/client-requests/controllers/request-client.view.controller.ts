@@ -1,6 +1,7 @@
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
 import { PublicSpaceWithHours } from '../../public-spaces/interfaces/public-space.interface'
+import { ValidateError } from '../../shared/errors/validate-error'
 import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
@@ -33,7 +34,7 @@ export const useRequestClientViewController = () => {
       dispatch(
         showToast({
           title:
-            'No se pudieron obtener los espacios públicos disponibles',
+            'No se pudieron obtener las zonas comunes disponibles',
           details: [
             'Intente más tarde o contacte con soporte',
           ],
@@ -57,8 +58,24 @@ export const useRequestClientViewController = () => {
       await requestModelController.createPublicSpaceRequest(
         request,
       )
+      console.log('works');
       return true
     } catch (error) {
+      console.log(error);
+      if (error instanceof ValidateError) {
+        dispatch(
+          showToast({
+            title: 'No se pudo crear la solicitud',
+            details: [
+              'El día seleccionado no cumple con el horario adecuado',
+              error.message,
+            ],
+            type: 'info',
+          }),
+        )
+        return false
+      }
+
       dispatch(
         showToast({
           title: 'No se pudo crear la solicitud',

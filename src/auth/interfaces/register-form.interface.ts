@@ -19,5 +19,5 @@ export interface IRegisterFirebase
   photo: {
     blob: Blob
     name: string
-  }
+  } | null
 }

@@ -1,23 +1,25 @@
 import { FirebaseError } from 'firebase/app'
 import { User } from 'firebase/auth'
-import { useRequestModelController } from '../../client-requests/controllers/request.model.controller'
+import { RequestType } from '../../client-requests/interfaces/client-request.interface'
+import { useRequestRepository } from '../../client-requests/repositories/request.repository'
+import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { ValidateError } from '../../shared/errors/validate-error'
 import {
   IUserState,
   USER_APPROVED_STATES,
 } from '../../shared/store/interfaces/auth/auth.interface'
+import { getFormattedDate } from '../../shared/utils/formattedDate'
+import { RegisterError } from '../errors/register.error'
 import { IRegisterFirebase } from '../interfaces/register-form.interface'
 import { UserRoles } from '../interfaces/user-roles.enums'
 import { IUser } from '../interfaces/user.interface'
 import { useAuthRepository } from '../repositories/auth.repository'
-import { useRequestRepository } from '../../client-requests/repositories/request.repository'
-import { RequestType } from '../../client-requests/interfaces/client-request.interface'
-import { RegisterError } from '../errors/register.error'
-import { useOwnerRepository } from '../../owners/repositories/owner.repository'
-import { getFormattedDate } from '../../shared/utils/formattedDate'
+import { useOwnerModelController } from '../../owners/controllers/owner.model.controller'
 
 export const useAuthModelController = () => {
   const authRepository = useAuthRepository()
   const ownerRepository = useOwnerRepository()
+  const ownerModelController = useOwnerModelController()
   const requestRepository = useRequestRepository()
 
   const registerUser = async (
@@ -40,6 +42,7 @@ export const useAuthModelController = () => {
         displayName: newUserInstance.displayName as string,
         email: newUserInstance.email as string,
         photoUrl: newUserInstance.photoURL as string,
+        deleted: false,
       })
 
       const { id } = await requestRepository.createRequest({
@@ -50,6 +53,7 @@ export const useAuthModelController = () => {
         description: registerFb.requestDescription,
         phoneNumber: registerFb.phoneNumber,
         date: getFormattedDate(new Date()),
+        foreignId: '',
       })
 
       extraUserId = id
@@ -60,7 +64,7 @@ export const useAuthModelController = () => {
           uid: newUserInstance.uid,
           displayName:
             newUserInstance.displayName as string,
-          photoUrl,
+          photoUrl: photoUrl ?? '',
           role: UserRoles.CLIENT,
         },
       }
@@ -85,11 +89,13 @@ export const useAuthModelController = () => {
     )
     if (extraUser) {
       return {
+        ...extraUser,
         uid: extraUser.uid,
         email: user.email as string,
         displayName: user.displayName as string,
         photoUrl: user.photoURL as string,
         role: extraUser.role,
+        deleted: extraUser.deleted,
         agreement,
         userState: extraUser.accepted
           ? USER_APPROVED_STATES.APPROVED
@@ -112,7 +118,40 @@ export const useAuthModelController = () => {
       credentials.password,
     )
 
-    return getExtraUser(agreement, user)
+    const extraUser = await getExtraUser(agreement, user)
+
+    if (extraUser.deleted) {
+      await deleteUser(extraUser.id!, user)
+      throw new ValidateError('user_deleted')
+    }
+
+    return extraUser
+  }
+
+  const sendRecoveryPasswordEmail = async (
+    email: string,
+  ) => {
+    const owner = await ownerRepository.getOwnerByEmail(
+      email,
+    )
+
+    if (!owner) {
+      throw new ValidateError('El usuario no existe')
+    }
+
+    return await authRepository.changePasswordEmail(email)
+  }
+
+  const deleteUser = async (
+    ownerId: string,
+    user: User,
+  ) => {
+    await Promise.all([
+      authRepository.deleteAppUser({
+        newUserInstance: user,
+      }),
+      ownerModelController.deleteUserTotally(ownerId),
+    ])
   }
 
   return {
@@ -120,5 +159,7 @@ export const useAuthModelController = () => {
     signInWithEmailAndPassword,
     logOut: authRepository.logOut,
     getExtraUser,
+    sendRecoveryPasswordEmail,
+    deleteUser,
   }
 }

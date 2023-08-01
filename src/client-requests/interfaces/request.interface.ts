@@ -47,5 +47,5 @@ export interface ClientRequestDTO extends IUserRequest {
   endHour?: number
 
   // This could be foreign id to act or public space
-  foreignId?: string
+  foreignId: string
 }

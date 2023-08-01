@@ -30,7 +30,7 @@ export const BookingList: FC<Props> = ({
                 {booking.publicSpace.name}
               </th>
               <td>
-                <div className="flex flex-col">
+                <div className="flex flex-col min-w-max">
                   {booking.date}
                   <span>
                     {`Hora ${

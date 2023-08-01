@@ -34,16 +34,29 @@ export const useApartmentRepository = () => {
   }
 
   const getApartmentByOwner = async (uid: string) => {
-    const [apartment] =  await firestore.getByParam('owner', uid)
+    const [apartment] = await firestore.getByParam(
+      'owner',
+      uid,
+    )
     return apartment
+  }
+
+  const getApartmentById = async (id: string) => {
+    return await firestore.getById(id)
+  }
+
+  const getApartmentRef = (id: string) => {
+    return firestore.getDocRef(id)
   }
 
   return {
     getApartments,
     getApartmentByOwner,
+    getApartmentById,
     addApartment,
     deleteApartment,
     updateApartment,
     getAvailableApartments,
+    getApartmentRef,
   }
 }

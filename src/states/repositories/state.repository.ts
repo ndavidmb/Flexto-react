@@ -26,8 +26,8 @@ export const useStateRepository = () => {
   const getState = async (id: string) => {
     return await firestore.getByParam('id', id)
   }
-
-  return {
+ 
+ return {
     deleteState,
     updateState,
     addState,

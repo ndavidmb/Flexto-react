@@ -30,7 +30,7 @@ export const Button: FC<Props> = ({
   return type === 'submit' ? (
     <button
       type={type}
-      className={`${buttonClass} ${className}`}
+      className={`min-w-max ${buttonClass} ${className}`}
     >
       {children}
     </button>
@@ -38,7 +38,7 @@ export const Button: FC<Props> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${buttonClass} ${className}`}
+      className={`min-w-max ${buttonClass} ${className}`}
     >
       {children}
     </button>

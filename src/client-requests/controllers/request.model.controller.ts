@@ -5,7 +5,9 @@ import { useBookingModelController } from '../../booking/controllers/booking.mod
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
+import { DAYS_DICT } from '../../public-spaces/constants/days'
 import { usePublicSpacesModelController } from '../../public-spaces/controllers/public-spaces.model.controller'
+import { ValidateError } from '../../shared/errors/validate-error'
 import { useAppSelector } from '../../shared/store/hooks'
 import { getFormattedDate } from '../../shared/utils/formattedDate'
 import {
@@ -80,6 +82,7 @@ export const useRequestModelController = () => {
       description: accessRequest.description,
       phoneNumber: accessRequest.phoneNumber,
       date: getFormattedDate(new Date()),
+      foreignId: '',
     })
   }
 
@@ -93,6 +96,7 @@ export const useRequestModelController = () => {
       owner = await ownerRepository.getOwnerByUid(
         request.user.uid,
       )
+      console.log(owner);
 
       await Promise.all([
         ownerRepository.updateOwner(owner.id!, {
@@ -111,6 +115,7 @@ export const useRequestModelController = () => {
         ),
       ])
     } catch (err) {
+      console.log(err)
       // Restore to initial if fails
       if (owner) {
         await ownerRepository.updateOwner(owner.id!, {
@@ -140,8 +145,25 @@ export const useRequestModelController = () => {
   const createPublicSpaceRequest = async (
     request: RequestPublicSpaceDTO,
   ) => {
-    const { phoneNumber } =
-      await ownerRepository.getOwnerByUid(userState.uid)
+    console.log(request.space.id);
+    const [owner, publicSpace] = await Promise.all([
+      ownerRepository.getOwnerByUid(userState.uid),
+      publicSpaceController.getPublicSpaceById(
+        request.space.id!,
+      ),
+    ])
+
+    const requestedDay = new Date(request.date).getDay() + 1
+
+    if (!publicSpace.schedule.days.includes(requestedDay)) {
+      throw new ValidateError(
+        'Días disponibles: ' +
+          publicSpace.schedule.days.map(
+            (d) => `${DAYS_DICT[d]}`,
+          ),
+      )
+    }
+
     await requestRepository.createRequest({
       description: `Solicitud de reserva: "${request.space.name}"`,
       endHour: request.endHour,
@@ -150,7 +172,7 @@ export const useRequestModelController = () => {
       displayName: userState.displayName,
       uid: userState.uid,
       email: userState.email,
-      phoneNumber,
+      phoneNumber: owner.phoneNumber,
       date: request.date,
       foreignId: request.space.id!,
     })

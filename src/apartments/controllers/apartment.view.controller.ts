@@ -4,6 +4,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { ApartmentWithOwner } from '../components/AparmentWithOwner'
 import { Apartment } from '../interfaces/apartment.interface'
 import { useApartmentModelController } from './apartment.model.controller'
+import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
 
 export function useApartmentViewController() {
   const dispatch = useDispatch()
@@ -19,7 +20,7 @@ export function useApartmentViewController() {
     } catch (err) {
       dispatch(
         showToast({
-          title: 'No se pudo crear el apartamento',
+          title: 'No se pudo crear la unidad residencial',
           details: [
             'Intente más tarde o contacte con soporte',
           ],
@@ -45,8 +46,10 @@ export function useApartmentViewController() {
       dispatch(
         showToast({
           type: 'error',
-          title: 'Error al borrar el apartamento',
-          details: ['No se pudo eliminar el apartamento'],
+          title: 'Error al borrar la unidad residencial',
+          details: [
+            'No se pudo eliminar la unidad residencial',
+          ],
         }),
       )
       return false
@@ -61,21 +64,29 @@ export function useApartmentViewController() {
   ) => {
     dispatch(setLoading(true))
     try {
-      return await apartmentModelController.updateApartment(
-        {
-          ...apartment,
-          id,
-        },
+      await apartmentModelController.updateApartment({
+        ...apartment,
+        id,
+      })
+      dispatch(
+        showToast({
+          title:
+            'Se ha actualizado el perfil correctamente',
+          details: [],
+          type: 'success',
+        }),
       )
+
+      return true
     } catch (err) {
       dispatch({
         type: 'error',
-        title: 'Error al actualizar el apartamento',
+        title: 'Error al actualizar la unidad residencial',
         details: [
-          `No se pudo actualizar el apartamento ${apartment.apartmentNumber} del bloque ${apartment.tower}`,
+          `No se pudo actualizar la unidad residencial ${apartment.apartmentNumber} del bloque ${apartment.tower}`,
         ],
       })
-      return []
+      return false
     } finally {
       dispatch(setLoading(false))
     }
@@ -90,9 +101,10 @@ export function useApartmentViewController() {
     } catch (err) {
       dispatch({
         type: 'error',
-        title: 'Error al obtener los apartamentos',
+        title:
+          'Error al obtener las unidades residenciales',
         details: [
-          'No se pudieron obtener los apartamentos',
+          'No se pudieron obtener las unidades residenciales',
         ],
       })
       return []
@@ -109,13 +121,34 @@ export function useApartmentViewController() {
       dispatch(
         showToast({
           type: 'error',
-          title: 'Error al obtener los apartamentos',
+          title:
+            'Error al obtener las unidades residenciales',
           details: [
-            'No se pudieron obtener los apartamentos',
+            'No se pudieron obtener las unidades residenciales',
           ],
         }),
       )
       return []
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  const getApartmentByOwner = async (uid: string) => {
+    dispatch(setLoading(true))
+    try {
+      return await apartmentModelController.getApartmentByOwner(
+        uid,
+      )
+    } catch {
+      dispatch(
+        showToast({
+          title: 'No se pudo obtener el apartamento',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return null
     } finally {
       dispatch(setLoading(false))
     }
@@ -127,5 +160,6 @@ export function useApartmentViewController() {
     updateApartment,
     getApartments,
     getAvailableApartments,
+    getApartmentByOwner,
   }
 }

@@ -6,6 +6,7 @@ const initialValue: {
 } = {
   theme: {
     id: '',
+    logo: '',
     menu: ['', ''],
     menuDark: ['', ''],
     primary: ['', ''],

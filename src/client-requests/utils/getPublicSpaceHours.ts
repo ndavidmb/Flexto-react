@@ -9,16 +9,16 @@ export function getPublicSpaceHours(
 
   Object.entries(HOURS_STRING_TO_NUM)
     .filter(
-      ([_, hour]) => hour >= startHour && hour <= endHour,
+      ([_, hour]) => hour >= startHour || hour <= endHour,
     )
-    .forEach(([label, hour], index, arr) => {
-      if (index === 0) {
-        startHours[label] = hour
+    .forEach(([label, hour]) => {
+      if (hour === endHour) {
+        endHours[label] = hour
         return
       }
 
-      if (index === arr.length - 1) {
-        endHours[label] = hour
+      if (hour === startHour) {
+        startHours[label] = hour
         return
       }
 

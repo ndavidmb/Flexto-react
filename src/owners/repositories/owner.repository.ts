@@ -1,9 +1,8 @@
-import { where } from 'firebase/firestore/lite'
+import { documentId, where } from 'firebase/firestore/lite'
 import { UserRoles } from '../../auth/interfaces/user-roles.enums'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { OwnerDTO } from '../interfaces/owner.interface'
-import { State } from '../../states/interfaces/state.interface'
 
 export const useOwnerRepository = () => {
   const firestore = useFirestore<OwnerDTO>(
@@ -13,6 +12,14 @@ export const useOwnerRepository = () => {
   const getAllOwners = async () => {
     return await firestore.getAllFirestore([
       where('role', '==', UserRoles.CLIENT),
+    ])
+  }
+
+  const getActiveOwners = async () => {
+    return await firestore.getAllFirestore([
+      where('role', '==', UserRoles.CLIENT),
+      where('accepted', '==', true),
+      where('deleted', '==', false),
     ])
   }
 
@@ -35,10 +42,15 @@ export const useOwnerRepository = () => {
     id: string,
     owner: OwnerDTO,
   ) => {
-    await firestore.updateFirestore(id, {
-      ...owner,
-      accepted: true,
-    })
+    console.log(owner)
+    try {
+      await firestore.updateFirestore(id, {
+        ...owner,
+        accepted: true,
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const getOwnerByUid = async (uid: string) => {
@@ -47,8 +59,7 @@ export const useOwnerRepository = () => {
   }
 
   const getOwnerById = async (ownerId: string) => {
-    const [owner] = await firestore.getByParam('id', ownerId)
-    return owner
+    return await firestore.getById(ownerId)
   }
 
   const updateOwner = async (
@@ -58,11 +69,37 @@ export const useOwnerRepository = () => {
     await firestore.updateFirestore(id, updatedUser)
   }
 
+  const getOwnerByEmail = async (email: string) => {
+    const [owner] = await firestore.getByParam(
+      'email',
+      email,
+    )
+
+    return owner
+  }
+
+  const getOwnersWithIds = (ids: string[]) => {
+    return firestore.getAllFirestore([
+      where(documentId(), 'in', ids),
+    ])
+  }
+
+  const deleteTemporallyUser = (owner: OwnerDTO) => {
+    return firestore.updateFirestore(owner.id!, {
+      ...owner,
+      deleted: true,
+    })
+  }
+
   return {
     getOwnerByUid,
     getAllOwners,
+    getOwnersWithIds,
     getOwnerById,
+    getOwnerByEmail,
+    getActiveOwners,
     activateOwnerAccount,
+    deleteTemporallyUser,
     deleteOwner,
     createOwner,
     getOwnersByState,

@@ -11,7 +11,7 @@ import {
   Owner,
   OwnerFromForm,
 } from '../interfaces/owner.interface'
-import { useOwnerService } from '../services/owner.service'
+import { useOwnerViewController } from '../controllers/owner.view.controller'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -28,7 +28,7 @@ export const OwnerForm: FC<Props> = ({
   )
 
   const apartmentService = useApartmentViewController()
-  const ownerService = useOwnerService()
+  const ownerViewController = useOwnerViewController()
 
   const initialValues: OwnerFromForm = {
     // Si es string
@@ -38,8 +38,6 @@ export const OwnerForm: FC<Props> = ({
     // Si es number, boolean, etc
     apartmentId: data?.apartment?.id || '',
   }
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     apartmentService.getApartments().then((apt) => {
@@ -52,7 +50,6 @@ export const OwnerForm: FC<Props> = ({
     if (emptyFields(values)) {
       return
     }
-    dispatch(setLoading(true))
 
     const owner = {
       name: values.name,
@@ -72,22 +69,24 @@ export const OwnerForm: FC<Props> = ({
   }
 
   const updateOwner = (owner: Owner) => {
-    ownerService
-      .updateOwner(data?.id as string, owner)
-      .then(() => {
-        closeModal(true)
+    owner.id = data!.id!
+    ownerViewController
+      .updateOwner(owner)
+      .then((successfully) => {
+        if (successfully) {
+          closeModal(true)
+        }
       })
-      .finally(() => dispatch(setLoading(false)))
   }
 
-  // Esto llama al service, y agrega un apartamento
   const createOwner = (owner: Owner) => {
-    ownerService
-      .addOwner(owner)
-      .then(() => {
-        closeModal(true)
+    ownerViewController
+      .createOwner(owner)
+      .then((successfully) => {
+        if (successfully) {
+          closeModal(true)
+        }
       })
-      .finally(() => dispatch(setLoading(false)))
   }
 
   return (
@@ -130,9 +129,11 @@ export const OwnerForm: FC<Props> = ({
             htmlFor="apartmentId"
             className="font-semibold p-1"
           >
-            Apartamento
+            Unidad residencial
           </label>
           <Select
+            disabled={Boolean(data)}
+            className="disabled:text-gray-500 disabled:bg-gray-100"
             formik={true}
             id="apartmentId"
             name="apartmentId"
@@ -158,10 +159,11 @@ export const OwnerForm: FC<Props> = ({
             Correo
           </label>
           <Field
+            disabled={Boolean(data)}
             id="email"
             name="email"
             type="email"
-            className="border bg-white px-2 py-1"
+            className="border bg-white px-2 py-1 disabled:text-gray-500 disabled:bg-gray-100"
             placeholder="Correo"
           ></Field>
         </div>

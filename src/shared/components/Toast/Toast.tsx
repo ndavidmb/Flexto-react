@@ -35,7 +35,7 @@ export const Toast = () => {
           className={`
             absolute
             w-1/4
-            z-10
+            z-40
             right-1
             bottom-2
             shadow
@@ -52,7 +52,7 @@ export const Toast = () => {
             <ToastIcon />
             <div>
               <span className="font-medium">
-                {toastState.title}:
+                {toastState.title}{toastState.details.length > 0 && ':'}
               </span>
 
               <ToastList

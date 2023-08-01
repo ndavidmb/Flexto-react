@@ -44,7 +44,7 @@ export const AdminRequestModal: FC<Props> = ({
   return (
     <ModalContainer
       close={closeModal}
-      title="Vincular apartamento"
+      title="Vincular unidad residencial"
     >
       <AdminRequestConnectOwnerForm
         closeModal={handleCloseModal}

@@ -26,4 +26,6 @@ export interface OwnerWithStates extends Owner {
   states: State[]
 }
 
-export interface OwnerDTO extends IUser, IExtraUser {}
+export interface OwnerDTO extends IUser, IExtraUser {
+  deleted: boolean
+}

@@ -19,8 +19,8 @@ export const usePublicSpacesModelController = () => {
 
     const publicWithHours = publicSpaces.map((space) => {
       const availableHours = getPublicSpaceHours(
-        space.schedule.rangeStartHour,
-        space.schedule.rangeEndHour,
+        Number(space.schedule.rangeStartHour),
+        Number(space.schedule.rangeEndHour),
       )
 
       return {
@@ -52,7 +52,7 @@ export const usePublicSpacesModelController = () => {
   }
 
   const getPublicSpaceById = async (id: string) => {
-    const [space] =
+    const space =
       await publicSpacesRepository.getPublicSpaceById(id)
     return space
   }

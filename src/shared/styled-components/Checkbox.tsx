@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { Days } from '../../public-spaces/interfaces/public-space.interface'
 
 type Props = {
-  name: string
+  name?: string
   formik?: boolean
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   value?: Days
@@ -26,6 +26,7 @@ export const Checkbox: FC<Props> = ({
   ) : (
     <input
       id={name}
+      name={name}
       type="checkbox"
       onChange={onChange}
       value={value}

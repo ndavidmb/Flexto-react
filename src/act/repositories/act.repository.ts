@@ -17,7 +17,7 @@ export const useActRepository = () => {
     actUpdate: ActTemplate,
     uid: string,
   ) => {
-    return firestore.updateFirestore(actUpdate.id, {
+    return firestore.updateFirestore(actUpdate.id||'', {
       ...actUpdate,
       permissionsOwnersAct: [
         ...actUpdate.permissionsOwnersAct,

@@ -8,6 +8,7 @@ import {
   RequestStates,
 } from '../interfaces/request.interface'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { ValidateError } from '../../shared/errors/validate-error'
 
 export const useRequestViewController = () => {
   const requestModelController = useRequestModelController()
@@ -68,7 +69,19 @@ export const useRequestViewController = () => {
   const deleteRequest = async (request: AdminRequest) => {
     dispatch(setLoading(true))
     try {
-      requestModelController.deleteRequest(request.id!)
+      await requestModelController.deleteRequest(
+        request.id!,
+      )
+      dispatch(
+        showToast({
+          title: 'Solicitud cancelada exitosamente',
+          details: [
+            `La solicitud ${request.description} se cancelo correctamente`,
+          ],
+          type: 'success',
+        }),
+      )
+
       return true
     } catch (err) {
       console.error(err)
@@ -102,7 +115,7 @@ export const useRequestViewController = () => {
     } catch (err) {
       dispatch(
         showToast({
-          title: `No se pudo vincular el apartamento al usuario ${request.user.displayName}`,
+          title: `No se pudo vincular la unidad residencial al usuario ${request.user.displayName}`,
           details: [
             'Por favor intente mas tarde o contacte con soporte',
           ],
@@ -124,7 +137,22 @@ export const useRequestViewController = () => {
         request,
       )
       return true
-    } catch {
+    } catch (err) {
+      if (err instanceof ValidateError) {
+        dispatch(
+          showToast({
+            title:
+              'No se pudo aceptar correctamente la solicitud',
+            details: [
+              'La zona común no se alquila para el día seleccionado',
+              err.message,
+            ],
+            type: 'error',
+          }),
+        )
+        return false
+      }
+
       dispatch(
         showToast({
           title:

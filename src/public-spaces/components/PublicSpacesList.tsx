@@ -31,7 +31,7 @@ export const PublicSpacesList: FC<Props> = ({
           <TRow key={space.id} index={index}>
             <td>{space.name}</td>
             <td>
-              <ul>
+              <ul className='min-w-max'>
                 <li>
                   Cantidad por hora{' '}
                   {space.schedule.maxPerHour}

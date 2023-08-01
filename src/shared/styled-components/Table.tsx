@@ -5,7 +5,7 @@ type Props = {
 }
 export const Table: FC<Props> = ({ children }) => {
   return (
-    <table className="w-full text-sm text-left text-gray-500 shadow">
+    <table className="w-full text-sm text-left text-gray-500 shadow my-1">
       {children}
     </table>
   )

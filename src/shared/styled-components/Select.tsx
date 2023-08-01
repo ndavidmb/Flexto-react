@@ -15,7 +15,7 @@ export const Select: FC<Props> = ({
   allowUndefined = true,
   ...props
 }) => {
-  let customClass = 'border bg-white px-2 py-1 outline-none'
+  let customClass = 'border rounded bg-white px-2 py-1 h-8 outline-none'
 
   if (className) {
     customClass = `${customClass} ${className}`

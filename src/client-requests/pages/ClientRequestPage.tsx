@@ -8,10 +8,10 @@ import { ClientRequestForm } from '../components/ClientRequestForm'
 import { ClientRequestList } from '../components/ClientRequestList'
 import { useRequestClientViewController } from '../controllers/request-client.view.controller'
 import { AdminRequest } from '../interfaces/request.interface'
+import { useRequestViewController } from '../controllers/request.view.controller'
 
 export const ClientRequestPage = () => {
-  const { closeModal, openModal, setData, data, isOpen } =
-    useModal()
+  const { closeModal, openModal, isOpen } = useModal()
   const [requestStates, setRequestStates] = useState<
     AdminRequest[]
   >([])
@@ -19,6 +19,8 @@ export const ClientRequestPage = () => {
     AdminRequest[]
   >([])
 
+  const requestAdminViewController =
+    useRequestViewController()
   const requestClientViewController =
     useRequestClientViewController()
   const user = useSelector(
@@ -45,6 +47,16 @@ export const ClientRequestPage = () => {
     closeModal()
   }
 
+  const handleDeleteRequest = (request: AdminRequest) => {
+    requestAdminViewController
+      .deleteRequest(request)
+      .then((successfully) => {
+        if (successfully) {
+          consultData()
+        }
+      })
+  }
+
   return (
     <>
       {isOpen && (
@@ -67,9 +79,9 @@ export const ClientRequestPage = () => {
       >
         <ClientRequestList
           requests={requestStates}
-          cancelRequest={() => {
-            console.log('canceled')
-          }}
+          cancelRequest={(request) =>
+            handleDeleteRequest(request)
+          }
         />
       </DefaultContainerWithSearch>
     </>

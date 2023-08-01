@@ -11,7 +11,7 @@ const diffRowColor = (index: number) => {
 
 export const TRow: FC<Props> = ({ children, index }) => {
   return (
-    <tr className={`${diffRowColor(index)} border-b`}>
+    <tr className={`${diffRowColor(index)} border-b overflow-auto`}>
       {Children.map(children, (child) =>
         cloneElement(child, {
           className: `py-4 px-6 ${

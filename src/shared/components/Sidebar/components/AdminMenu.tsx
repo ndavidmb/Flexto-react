@@ -1,15 +1,17 @@
 import { FC } from 'react'
 import {
-  IoBuild,
   IoBusiness,
-  IoCheckmarkDoneCircle,
   IoHandRightOutline,
   IoPeople,
 } from 'react-icons/io5'
-import { MdOutlineBedroomParent } from 'react-icons/md'
+import {
+  MdOutlineBedroomParent,
+  MdOutlinePayments,
+} from 'react-icons/md'
+import { SiReadthedocs } from 'react-icons/si'
+import { TbBrandBooking } from 'react-icons/tb'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
-import { TbBrandBooking } from 'react-icons/tb'
 
 type Props = {
   id: string | undefined
@@ -25,19 +27,21 @@ export const AdminMenu: FC<Props> = ({ id }) => {
         <IoPeople className="text-xl" />
         Propietarios
       </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.ADMIN}
+        href={`/${id}/home/payments`}
+      >
+        <MdOutlinePayments className="text-xl" />
+        Servicios
+      </MenuLink>
+
       <MenuLink
         permissionsRole={UserRoles.ADMIN}
         href={`/${id}/home/apartments`}
       >
         <IoBusiness className="text-xl" />
-        Apartamentos
-      </MenuLink>
-      <MenuLink
-        permissionsRole={UserRoles.ADMIN}
-        href={`/${id}/home/states`}
-      >
-        <IoCheckmarkDoneCircle className="text-xl" />
-        Estados
+        Unidades residenciales
       </MenuLink>
       <MenuLink
         permissionsRole={UserRoles.ADMIN}
@@ -51,8 +55,8 @@ export const AdminMenu: FC<Props> = ({ id }) => {
         permissionsRole={UserRoles.ADMIN}
         href={`/${id}/home/act`}
       >
-        <IoBuild className="text-xl" />
-        Actas
+        <SiReadthedocs className="text-xl" />
+        Actas y Documentos
       </MenuLink>
 
       <MenuLink
@@ -60,7 +64,7 @@ export const AdminMenu: FC<Props> = ({ id }) => {
         href={`/${id}/home/public-spaces`}
       >
         <MdOutlineBedroomParent className="text-xl" />
-        Espacios públicos
+        Zonas comunes
       </MenuLink>
 
       <MenuLink
