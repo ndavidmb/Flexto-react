@@ -55,7 +55,9 @@ export const PaymentMessageForm: FC<Props> = ({
           </div>
 
           <div className="flex justify-end mt-2">
-            <Button color="primary">Enviar</Button>
+            <Button type="submit" color="primary">
+              Enviar
+            </Button>
           </div>
         </Form>
       </Formik>

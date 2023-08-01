@@ -109,10 +109,22 @@ export const PaymentUserPage = () => {
     openMessageModal()
   }
 
-  const handleSubmit = (values: {
+  const handleSubmit = ({
+    email,
+    message,
+  }: {
     email: string
     message: string
-  }) => {}
+  }) => {
+    paymentViewController
+      .sentUserEmail(email, message)
+      .then((successfully) => {
+        console.log(successfully)
+        if (successfully) {
+          closeMessageModal()
+        }
+      })
+  }
 
   return (
     <>
