@@ -1,4 +1,5 @@
 import { useEmail } from '../../auth/hooks/useEmail'
+import { IUserRequest } from '../../auth/interfaces/user.interface'
 import { HOURS_NUM_TO_STRING } from '../../public-spaces/constants/hours'
 import { useAppSelector } from '../../shared/store/hooks'
 import {
@@ -54,10 +55,24 @@ export const useBookingModelController = () => {
     }))
   }
 
+  const updateAllOwners = async (owner: IUserRequest) => {
+    const bookings =
+      await bookingRepository.getBookingsByOwner(owner.uid)
+    bookings.map((booking) =>
+      bookingRepository.updateBookingUser({
+        ...booking,
+        owner: {
+          ...owner,
+        },
+      }),
+    )
+  }
+
   return {
     addBooking,
     deleteBooking,
     getBookingsByOwner,
     getBookings,
+    updateAllOwners
   }
 }

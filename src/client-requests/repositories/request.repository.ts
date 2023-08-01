@@ -13,6 +13,7 @@ import {
   query,
   where,
 } from 'firebase/firestore/lite'
+import { IUserRequest } from '../../auth/interfaces/user.interface'
 
 export const useRequestRepository = () => {
   const firestore = useFirestore<AdminRequest>(
@@ -78,11 +79,25 @@ export const useRequestRepository = () => {
     ])
   }
 
+  const updateOwner = async (
+    request: AdminRequest,
+    owner: IUserRequest,
+  ) => {
+    return await firestore.updateFirestore(request.id!, {
+      ...request,
+      user: {
+        ...request.user,
+        ...owner,
+      },
+    })
+  }
+
   return {
     createRequest,
     getAdminRequest,
     changeRequestState,
     deleteRequest,
     getOwnerRequests,
+    updateOwner,
   }
 }

@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 import { Button } from '../../shared/styled-components/Button'
 import { Input } from '../../shared/styled-components/Input'
 import { useAuthDefaultController } from '../hooks/useAuthDefaultController'
@@ -69,7 +69,12 @@ export const Login = () => {
 
       <p className="text-gray-500">
         ¿Olvido su contraseña?&nbsp;
-        <Button color="link">Click aquí</Button>
+        <NavLink
+          className="text-primary hover:underline cursor-pointer"
+          to="../forgot-password"
+        >
+          Click aquí
+        </NavLink>
       </p>
     </section>
   )

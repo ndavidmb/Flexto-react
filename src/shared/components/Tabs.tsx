@@ -1,12 +1,5 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { NavLink } from 'react-router-dom'
-
-type Props = {
-  tabs: {
-    label: string
-    redirectTo: string
-  }[]
-}
 
 const TAB_TYPE = {
   active:
@@ -15,7 +8,14 @@ const TAB_TYPE = {
     'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300',
 }
 
-export const ActTabs: FC<Props> = ({ tabs }) => {
+type Props = {
+  tabs: {
+    label: string
+    redirectTo: string
+  }[]
+}
+
+export const Tabs: FC<Props> = ({ tabs }) => {
   return (
     <div className="text-sm h-14 font-medium text-center text-gray-500 border-b border-gray-200">
       <ul className="flex flex-wrap">

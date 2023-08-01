@@ -26,10 +26,18 @@ export const useBookingRepository = () => {
     ])
   }
 
+  const updateBookingUser = async (booking: BookingDTO) => {
+    return await firestore.updateFirestore(
+      booking.id!,
+      booking,
+    )
+  }
+
   return {
     addBooking,
     getAllBookings,
     getBookingsByOwner,
     deleteBooking,
+    updateBookingUser,
   }
 }

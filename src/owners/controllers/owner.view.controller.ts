@@ -3,6 +3,8 @@ import { useAppDispatch } from '../../shared/store/hooks'
 import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
 import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import { SUPPORT_MESSAGES } from '../../shared/constants/support-messages.constants'
+import { OwnerUpdated } from '../../profiles/interfaces/profile.interface'
+import { OwnerDTO } from '../interfaces/owner.interface'
 
 export const useOwnerViewController = () => {
   const ownerModelController = useOwnerModelController()
@@ -23,16 +25,6 @@ export const useOwnerViewController = () => {
         }),
       )
       return []
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }
-
-  const getOwnerWithStates = async (id: string) => {
-    dispatch(setLoading(true))
-    try {
-      // TODO: Add functions with states
-      // const [] = await Promise.all([ownerModelController])
     } finally {
       dispatch(setLoading(false))
     }
@@ -60,9 +52,66 @@ export const useOwnerViewController = () => {
     }
   }
 
+  const getOwnerProfileDetail = async (uid: string) => {
+    dispatch(setLoading(true))
+    try {
+      return await ownerModelController.getOwnerDetailUid(
+        uid,
+      )
+    } catch {
+      dispatch(
+        showToast({
+          title:
+            'No se pudo obtener el detalle del cliente',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return null
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  const updateOwnerProfile = async (
+    updatedData: OwnerUpdated,
+    oldOwner: OwnerDTO,
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      await ownerModelController.updateOwner(
+        updatedData,
+        oldOwner,
+      )
+
+      dispatch(
+        showToast({
+          title:
+            'Se ha actualizado el perfil correctamente',
+          details: [],
+          type: 'success',
+        }),
+      )
+
+      return true
+    } catch {
+      dispatch(
+        showToast({
+          title: 'No se pudo actualizar el perfil',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   return {
     getOwners,
-    getOwnerWithStates,
     getOwnerDetail,
+    getOwnerProfileDetail,
+    updateOwnerProfile,
   }
 }

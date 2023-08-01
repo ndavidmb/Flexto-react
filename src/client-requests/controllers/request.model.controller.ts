@@ -1,5 +1,6 @@
 import { useApartmentModelController } from '../../apartments/controllers/apartment.model.controller'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
+import { IUserRequest } from '../../auth/interfaces/user.interface'
 import { useBookingModelController } from '../../booking/controllers/booking.model.controller'
 import { BookingDTO } from '../../booking/interfaces/booking.interface'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
@@ -202,6 +203,17 @@ export const useRequestModelController = () => {
     }
   }
 
+  const updateAllUsers = async (user: IUserRequest) => {
+    const ownerRequests =
+      await requestRepository.getOwnerRequests(user.uid)
+
+    const requestPromises = ownerRequests.map((req) =>
+      requestRepository.updateOwner(req, user),
+    )
+
+    await Promise.all(requestPromises)
+  }
+
   return {
     getAdminRequest,
     changeRequestState,
@@ -212,5 +224,6 @@ export const useRequestModelController = () => {
     acceptPublicSpaceRequest,
     getOwnerRequest,
     createActRequest,
+    updateAllUsers,
   }
 }
