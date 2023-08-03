@@ -87,7 +87,7 @@ export const usePaymentOwnerModelController = () => {
 
     email.sendBulkEmails(emails, {
       subject: 'Actualización de estado FlexTo',
-      body: `<p>Se acaba de actualizar su estado en el servicio <b>${formPayment.description}</b> entre a la app para revisar su estado actual.</p>`,
+      body: `<p>Se acaba de actualizar su estado en el servicio <b>${formPayment.description}</b> entre a la app para revisar su estado actual, en la pestaña de <b>servicios</b>. </p>`,
     })
   }
 
