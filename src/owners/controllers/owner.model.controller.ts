@@ -39,10 +39,6 @@ export const useOwnerModelController = () => {
   const authRepository = useAuthRepository()
   const firestoreDocs = useFirestoreDocs()
 
-  const { role } = useAppSelector(
-    (store) => store.authState,
-  )
-
   const {
     getBatch,
     commitBatch,
