@@ -119,7 +119,6 @@ export const PaymentUserPage = () => {
     paymentViewController
       .sentUserEmail(email, message)
       .then((successfully) => {
-        console.log(successfully)
         if (successfully) {
           closeMessageModal()
         }

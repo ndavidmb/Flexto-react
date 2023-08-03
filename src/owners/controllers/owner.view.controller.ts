@@ -97,7 +97,8 @@ export const useOwnerViewController = () => {
       )
 
       return true
-    } catch {
+    } catch (err) {
+      console.error(err);
       dispatch(
         showToast({
           title: 'No se pudo actualizar el perfil',

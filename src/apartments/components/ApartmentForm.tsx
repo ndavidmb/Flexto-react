@@ -60,8 +60,6 @@ export const ApartmentForm: FC<Props> = ({
       },
     }
 
-    console.log(apartment)
-
     if (data) {
       updateApt(apartment)
       return

@@ -94,7 +94,6 @@ export const useRequestModelController = () => {
       owner = await ownerRepository.getOwnerByUid(
         request.user.uid,
       )
-      console.log(owner);
 
       await Promise.all([
         ownerRepository.updateOwner(owner.id!, {
@@ -113,7 +112,7 @@ export const useRequestModelController = () => {
         ),
       ])
     } catch (err) {
-      console.log(err)
+      console.error(err)
       // Restore to initial if fails
       if (owner) {
         await ownerRepository.updateOwner(owner.id!, {
@@ -135,7 +134,7 @@ export const useRequestModelController = () => {
     try {
       return await requestRepository.getOwnerRequests(uid)
     } catch (err) {
-      console.log(err)
+      console.error(err)
       return []
     }
   }
@@ -143,7 +142,6 @@ export const useRequestModelController = () => {
   const createPublicSpaceRequest = async (
     request: RequestPublicSpaceDTO,
   ) => {
-    console.log(request.space.id);
     const [owner, publicSpace] = await Promise.all([
       ownerRepository.getOwnerByUid(userState.uid),
       publicSpaceController.getPublicSpaceById(

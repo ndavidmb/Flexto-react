@@ -84,12 +84,10 @@ export const useAuthModelController = () => {
     agreement: string,
     user: User,
   ) => {
-    console.log(user.uid);
     const extraUser = await ownerRepository.getOwnerByUid(
       user.uid,
     )
 
-    console.log(extraUser);
     if (extraUser) {
       return {
         ...extraUser,

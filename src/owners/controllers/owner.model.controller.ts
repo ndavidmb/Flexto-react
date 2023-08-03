@@ -15,7 +15,10 @@ import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folder
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
-import { useAppDispatch } from '../../shared/store/hooks'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../shared/store/hooks'
 import { updateOwnerState } from '../../shared/store/slices/auth/authSlice'
 import { generatePassword } from '../../shared/utils/generatePassword'
 import {
@@ -35,6 +38,10 @@ export const useOwnerModelController = () => {
   const paymentOwnerRepository = usePaymentOwnerRepository()
   const authRepository = useAuthRepository()
   const firestoreDocs = useFirestoreDocs()
+
+  const { role } = useAppSelector(
+    (store) => store.authState,
+  )
 
   const {
     getBatch,
@@ -104,6 +111,11 @@ export const useOwnerModelController = () => {
     updatedData: OwnerUpdated,
     oldOwner: OwnerDTO,
   ) => {
+    const user = authRepository.getCurrentUser()
+    if (!user) {
+      return
+    }
+
     let newPhotoUrl: null | string = null
     if (updatedData.name && updatedData.blob) {
       const [, photoUrl] = await Promise.all([
@@ -131,9 +143,14 @@ export const useOwnerModelController = () => {
       uid: oldOwner.uid,
     }
 
-    const photoUrl = newPhotoUrl ?? oldOwner.photoUrl
+    const photoUrl = newPhotoUrl ?? user.photoURL
 
-    await Promise.all([
+    const toUpdatePromises = [
+      authRepository.updateUserProfile(
+        user,
+        newData.displayName,
+        photoUrl ?? undefined,
+      ),
       ownerRepository.updateOwner(oldOwner.id!, {
         ...oldOwner,
         ...newData,
@@ -141,12 +158,9 @@ export const useOwnerModelController = () => {
       }),
       requestModelController.updateAllUsers(owner),
       bookingModelController.updateAllOwners(owner),
-      authRepository.updateUserProfile(
-        {} as User,
-        newData.displayName,
-        photoUrl ?? undefined,
-      ),
-    ])
+    ]
+
+    await Promise.all(toUpdatePromises)
 
     dispatch(
       updateOwnerState({
