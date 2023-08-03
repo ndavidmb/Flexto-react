@@ -7,7 +7,7 @@ type Props = {
 export const WarningSave: FC<Props> = ({ title, text }) => {
   return (
     <div
-      className="flex items-center w-full p-4 shadow text-sm border border-yellow-400 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+      className="flex items-center w-full p-4 shadow text-sm border border-yellow-400 text-yellow-800 rounded-lg bg-yellow-50"
       role="alert"
     >
       <svg

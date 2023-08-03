@@ -54,7 +54,9 @@ export const useOwnerRepository = () => {
   }
 
   const getOwnerByUid = async (uid: string) => {
+    console.log(uid);
     const [owner] = await firestore.getByParam('uid', uid)
+    console.log(owner);
     return owner
   }
 

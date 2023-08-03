@@ -98,7 +98,7 @@ export const ApartmentClientPage = () => {
         </ModalContainer>
       )}
       <DefaultContainer className="p-4 h-screen">
-        <div className="bg-white rounded p-4 h-50 shadow flex justify-between">
+        <div className="bg-white rounded p-4 h-50 shadow flex flex-col md:flex-row justify-between">
           <div className="md:flex gap-3">
             {owner.photoUrl && (
               <img
@@ -134,7 +134,7 @@ export const ApartmentClientPage = () => {
               </ul>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <Button
               onClick={handleChangePassword}
               className="gap-2"
