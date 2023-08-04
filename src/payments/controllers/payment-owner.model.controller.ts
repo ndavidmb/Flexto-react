@@ -5,15 +5,19 @@ import { ValidateError } from '../../shared/errors/validate-error'
 import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   OwnerPaymentWithId,
+  PAYMENT_TYPE_LABELS,
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { usePaymentOwnerRepository } from '../repositories/payment-owner.repository'
 import { ParsePaymentArrays } from '../utils/parse-payments-arrays'
+import { usePaymentRepository } from '../repositories/payment.repository'
+import { OwnerPaymentsComplete } from '../interfaces/owner-payment-complete'
 
 export const usePaymentOwnerModelController = () => {
   const email = useEmail()
   const paymentOwnerRepository = usePaymentOwnerRepository()
+  const paymentRepository = usePaymentRepository()
   const ownerRepository = useOwnerRepository()
 
   const getOwnersByPayment = async (paymentId: string) => {
@@ -150,11 +154,40 @@ export const usePaymentOwnerModelController = () => {
     await paymentOwnerRepository.updateBulkStates(toUpdate)
   }
 
+  const getOwnerWithPayments = async (
+    uid: string,
+  ): Promise<OwnerPaymentsComplete> => {
+    const owner = await ownerRepository.getOwnerByUid(uid)
+    const data = await getOwnerPaymentByOwnerId(owner.id!)
+    const paymentIDs = data.payments.map(
+      (pay) => pay.paymentId,
+    )
+    const payments =
+      await paymentRepository.getPaymentsByIds(paymentIDs)
+
+    const paymentsWithState = payments.map((payment) => ({
+      ...payment,
+      price: String(payment.price),
+      state:
+        PAYMENT_TYPE_LABELS[
+          data.payments.find(
+            (d) => d.paymentId === payment.id,
+          )!.state
+        ],
+    }))
+
+    return {
+      ...owner,
+      payments: paymentsWithState,
+    }
+  }
+
   return {
     getOwnersByPayment,
     attachOwnerPayment,
     updateOwnerState,
     getOwnerPaymentByOwnerId,
     resetUserStates,
+    getOwnerWithPayments,
   }
 }

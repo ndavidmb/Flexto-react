@@ -40,7 +40,7 @@ export const Avatar = () => {
               alt="avatar"
             />
           ) : (
-            <FaUser color="#fff" size={80} />
+            <FaUser color="#fff" size={70} />
           )}
         </div>
         <h3 className="text-white flex flex-col text-center font-semibold w-[165px]">

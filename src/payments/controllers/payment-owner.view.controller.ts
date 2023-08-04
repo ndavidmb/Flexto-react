@@ -102,14 +102,18 @@ export const usePaymentOwnerViewController = () => {
         await paymentOwnerModelController.getOwnerPaymentByOwnerId(
           ownerPayment.ownerId!,
         )
-      await paymentOwnerModelController.updateOwnerState(payment, newState, {
-        ...bdRegister,
-        payments: bdRegister.payments.map((rg) =>
-          rg.paymentId === payment.id
-            ? { ...rg, state: newState }
-            : rg,
-        ),
-      })
+      await paymentOwnerModelController.updateOwnerState(
+        payment,
+        newState,
+        {
+          ...bdRegister,
+          payments: bdRegister.payments.map((rg) =>
+            rg.paymentId === payment.id
+              ? { ...rg, state: newState }
+              : rg,
+          ),
+        },
+      )
 
       dispatch(
         showToast({
@@ -135,9 +139,7 @@ export const usePaymentOwnerViewController = () => {
     }
   }
 
-  const resetUserStates = async (
-    paymentId: string,
-  ) => {
+  const resetUserStates = async (paymentId: string) => {
     dispatch(setLoading(true))
 
     try {
@@ -160,10 +162,32 @@ export const usePaymentOwnerViewController = () => {
     }
   }
 
+  const getPaymentOwnerByOwnerId = async (uid: string) => {
+    dispatch(setLoading(true))
+    try {
+      return paymentOwnerModelController.getOwnerWithPayments(
+        uid,
+      )
+    } catch (error) {
+      console.error(error)
+      dispatch(
+        showToast({
+          title: 'No se pudieron obtener los servicios',
+          details: [SUPPORT_MESSAGES.TRY_LATER],
+          type: 'error',
+        }),
+      )
+      return null
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   return {
     attachOwnerPayment,
     getAllOwnersByPaymentId,
     updateOwnerState,
     resetUserStates,
+    getPaymentOwnerByOwnerId,
   }
 }

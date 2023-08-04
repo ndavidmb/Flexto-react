@@ -1,3 +1,4 @@
+import { documentId, where } from 'firebase/firestore/lite'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import {
@@ -34,11 +35,18 @@ export const usePaymentRepository = () => {
     return payment
   }
 
+  const getPaymentsByIds = (ids: string[]) => {
+    return firestore.getAllFirestore([
+      where(documentId(), 'in', ids),
+    ])
+  }
+
   return {
     getAllPayments,
     deletePayment,
     createPayment,
     updatePayment,
     getPaymentById,
+    getPaymentsByIds,
   }
 }

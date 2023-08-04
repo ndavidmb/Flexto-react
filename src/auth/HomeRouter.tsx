@@ -7,6 +7,7 @@ import { AdminRouter } from './AdminRouter'
 import { AuthWaitApproved } from '../auth/pages/AuthWaitApproved'
 import { BookingRouter } from '../booking/BookingRouter'
 import { ApartmentClientPage } from '../apartments/pages/ApartmentClientPage'
+import { PaymentOwnerPage } from '../payments/pages/PaymentOwnerPage'
 
 export const HomeRouter = () => {
   const { role } = useSelector(
@@ -40,6 +41,12 @@ export const HomeRouter = () => {
           path="booking/*"
           element={<BookingRouter />}
         />
+
+        <Route
+          path="payments"
+          element={<PaymentOwnerPage />}
+        />
+
         <Route
           path="*"
           element={<Navigate to="/NotFound" replace />}
