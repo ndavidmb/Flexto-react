@@ -27,7 +27,8 @@ export const ApartmentForm: FC<Props> = ({
     // Si es string
     tower: data?.tower || '',
     apartmentNumber: data?.apartmentNumber || '',
-    licensePlate: '',
+    licensePlate:
+      data?.extraInfo.vehicle.licensePlate || '',
 
     memberName: '',
     memberPhone: '',

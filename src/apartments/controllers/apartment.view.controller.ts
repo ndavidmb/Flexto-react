@@ -43,6 +43,7 @@ export function useApartmentViewController() {
 
       return true
     } catch (err) {
+      console.error(err)
       dispatch(
         showToast({
           type: 'error',

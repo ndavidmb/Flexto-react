@@ -75,7 +75,7 @@ export const useOwnerModelController = () => {
   const getOwnerDetailBooking = async (
     ownerId: string,
   ): Promise<OwnerViewWithBookings> => {
-    const owner = await ownerRepository.getOwnerById(
+    const owner = await ownerRepository.getOwnerByUid(
       ownerId,
     )
 
