@@ -168,12 +168,54 @@ export const useRequestViewController = () => {
       dispatch(setLoading(false))
     }
   }
+  const acceptActRequest = async (
+    request: AdminRequest,
+    ids:string[]
+  ) => {
+    dispatch(setLoading(true))
+    try {
+      await requestModelController.acceptActRequest(
+        request,
+        ids
+      )
+      return true
+    } catch (err) {
+      if (err instanceof ValidateError) {
+        dispatch(
+          showToast({
+            title:
+              'No se pudo aceptar correctamente la solicitud',
+            details: [
+              'La acta solicitada no pudo ser entregada',
+              err.message,
+            ],
+            type: 'error',
+          }),
+        )
+        return false
+      }
 
+      dispatch(
+        showToast({
+          title:
+            'No se pudo aceptar correctamente la solicitud',
+          details: [
+            'Intente más tarde o contacte con soporte',
+          ],
+          type: 'error',
+        }),
+      )
+      return false
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
   return {
     getAdminRequest,
     changeRequestState,
     deleteRequest,
     acceptPublicSpaceRequest,
     acceptAccessRequest,
+    acceptActRequest
   }
 }

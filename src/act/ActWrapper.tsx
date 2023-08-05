@@ -3,7 +3,7 @@ import { DefaultContainer } from '../shared/components/DefaultContainer/DefaultC
 import { Tabs } from '../shared/components/Tabs'
 import { ACT_ROUTES } from './ActRouter'
 
-export const ActWrapper = () => {
+export const ActAdminWrapper = () => {
   return (
     <DefaultContainer>
       <Tabs

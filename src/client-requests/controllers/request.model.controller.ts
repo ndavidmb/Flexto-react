@@ -224,6 +224,32 @@ export const useRequestModelController = () => {
       throw err
     }
   }
+  const acceptActRequest = async (
+    request: AdminRequest,
+    ids:string[]
+  ) => {
+    let owner: OwnerDTO | null = null
+    try {
+      if (request.user.uid !== undefined) {
+        owner = await ownerRepository.getOwnerByUid(
+          request.user.uid,
+        )
+      }
+      else{
+       throw new Error("ID is undefined");
+      }
+      await Promise.all([
+        ownerRepository.updateActOwner(owner.id!, {
+          ...owner,
+          actsAccess: ids,
+        }),
+        changeRequestState(RequestStates.ACCEPTED, request),
+      ])
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
 
   const updateAllUsers = async (user: IUserRequest) => {
     const ownerRequests =
@@ -247,5 +273,6 @@ export const useRequestModelController = () => {
     getOwnerRequest,
     createActRequest,
     updateAllUsers,
+    acceptActRequest
   }
 }

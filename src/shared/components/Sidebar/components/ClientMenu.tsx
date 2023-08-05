@@ -4,6 +4,7 @@ import { IoMail } from 'react-icons/io5'
 import { TbBrandBooking } from 'react-icons/tb'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
+import { SiReadthedocs } from 'react-icons/si'
 
 type Props = {
   id: string | undefined
@@ -34,6 +35,14 @@ export const ClientMenu: FC<Props> = ({ id }) => {
       >
         <TbBrandBooking className="text-xl" />
         Reservas
+      </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.CLIENT}
+        href={`/${id}/home/act`}
+      >
+        <SiReadthedocs className="text-xl" />
+        Actas
       </MenuLink>
     </>
   )

@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore/lite'
+import { documentId, where } from 'firebase/firestore/lite'
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestore } from '../../shared/hooks/useFirestore'
 import { ActTemplate } from '../interfaces/act-templates.interface'
@@ -13,21 +13,13 @@ export const useActRepository = () => {
       where('date', '==', date),
     ])
   }
-  const updatePermissionsOwnersAct = (
-    actUpdate: ActTemplate,
-    uid: string,
-  ) => {
-    return firestore.updateFirestore(actUpdate.id||'', {
-      ...actUpdate,
-      permissionsOwnersAct: [
-        ...actUpdate.permissionsOwnersAct,
-        uid,
-      ],
-    })
+  const getActsByOwner = async (ids:string[]) => {
+    return firestore.getAllFirestore([
+      where(documentId(), 'in', ids),
+    ])
   }
-
   return {
     getActsByDate,
-    updatePermissionsOwnersAct,
+    getActsByOwner,
   }
 }

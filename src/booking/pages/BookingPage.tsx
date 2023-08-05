@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BookingDefault } from '../components/BookingDefault'
 import { useBookingViewController } from '../controllers/booking.view.controller'
 

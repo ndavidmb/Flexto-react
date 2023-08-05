@@ -53,7 +53,7 @@ export const AdminMenu: FC<Props> = ({ id }) => {
 
       <MenuLink
         permissionsRole={UserRoles.ADMIN}
-        href={`/${id}/home/act`}
+        href={`/${id}/home/act/admin/*`}
       >
         <SiReadthedocs className="text-xl" />
         Actas y Documentos

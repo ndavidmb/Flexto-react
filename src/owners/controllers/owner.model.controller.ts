@@ -186,6 +186,7 @@ export const useOwnerModelController = () => {
       email: newUserInstance.email as string,
       photoUrl: newUserInstance.photoURL as string,
       deleted: false,
+      // esteban
     })
 
     await email.sendEmail({

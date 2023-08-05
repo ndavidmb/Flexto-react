@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { ActWrapper } from './ActWrapper'
+import { ActAdminWrapper } from './ActWrapper'
 // import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
 import { ActDynamicPage } from './pages/ActDynamicPage'
 import { FirestoreTable } from '../shared/constants/firestore-tables'
+import { BookingPage } from '../booking/pages/BookingPage'
+import { ActPage } from './pages/ActPage'
 
 export const enum ACT_ROUTES {
   list = 'act-list',
@@ -13,7 +15,8 @@ export const enum ACT_ROUTES {
 export const ActRouter = () => {
   return (
     <Routes>
-      <Route path="*" element={<ActWrapper />}>
+      <Route index element={<ActPage />} />
+      <Route path="admin" element={<ActAdminWrapper />}>
         <Route
           path={ACT_ROUTES.list}
           element={

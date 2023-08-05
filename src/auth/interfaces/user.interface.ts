@@ -33,4 +33,5 @@ export interface IExtraUser {
   apartmentId: string
   customization?: string
   id?: string
+  actsAccess?:string[]
 }

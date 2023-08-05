@@ -7,6 +7,7 @@ import { AdminRouter } from './AdminRouter'
 import { AuthWaitApproved } from '../auth/pages/AuthWaitApproved'
 import { BookingRouter } from '../booking/BookingRouter'
 import { ApartmentClientPage } from '../apartments/pages/ApartmentClientPage'
+import { ActRouter } from '../act/ActRouter'
 
 export const HomeRouter = () => {
   const { role } = useSelector(
@@ -39,6 +40,10 @@ export const HomeRouter = () => {
         <Route
           path="booking/*"
           element={<BookingRouter />}
+        />
+        <Route
+          path="act"
+          element={<ActRouter />}
         />
         <Route
           path="*"

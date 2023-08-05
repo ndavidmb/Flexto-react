@@ -21,6 +21,7 @@ export const BookingDefault: FC<Props> = ({
   const bookingViewController = useBookingViewController()
 
   useEffect(() => {
+
     getBookings().then((bookings) => {
       setAllBookings(bookings)
       setBookings(bookings)

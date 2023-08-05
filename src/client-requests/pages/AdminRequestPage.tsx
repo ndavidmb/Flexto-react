@@ -12,11 +12,19 @@ import { ModalContainer } from '../../shared/components/Modal/Modal'
 import { AdminRequestConnectOwnerForm } from '../components/AdminRequestConnectOwnerForm'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { AdminRequestModal } from '../components/AdminRequestModal'
+import { ActRequestModal } from '../components/ActRequestModal'
 import { RequestType } from '../interfaces/client-request.interface'
 
 export const AdminRequestPage = () => {
   const { isOpen, openModal, closeModal, setData, data } =
     useModal<AdminRequest>()
+  const {
+    isOpen: isOpenActModal,
+    openModal: openActModal,
+    closeModal: closeActModal,
+    setData: setActData,
+    data: dataAct,
+  } = useModal<AdminRequest>()
   const [adminRequests, setAdminRequests] = useState<
     AdminRequest[]
   >([])
@@ -64,10 +72,9 @@ export const AdminRequestPage = () => {
     }
 
     if (request.type === RequestType.ACT) {
-      alert('entro')
       console.log(request)
-      openModal()
-      setData(request)
+      openActModal()
+      setActData(request)
     }
   }
 
@@ -105,6 +112,13 @@ export const AdminRequestPage = () => {
         <AdminRequestModal
           data={data!}
           closeModal={closeModal}
+          refreshState={refreshState}
+        />
+      )}
+      {isOpenActModal && (
+        <ActRequestModal
+          data={dataAct!}
+          closeModal={closeActModal}
           refreshState={refreshState}
         />
       )}

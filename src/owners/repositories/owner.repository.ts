@@ -68,6 +68,13 @@ export const useOwnerRepository = () => {
   ) => {
     await firestore.updateFirestore(id, updatedUser)
   }
+  
+  const updateActOwner = async (
+    id: string,
+    updatedUser: OwnerDTO,
+  ) => {
+    await firestore.updateFirestore(id, updatedUser)
+  }
 
   const getOwnerByEmail = async (email: string) => {
     const [owner] = await firestore.getByParam(
@@ -104,5 +111,6 @@ export const useOwnerRepository = () => {
     createOwner,
     getOwnersByState,
     updateOwner,
+    updateActOwner
   }
 }
