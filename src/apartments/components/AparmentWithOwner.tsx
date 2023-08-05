@@ -4,6 +4,6 @@ import { Apartment } from '../interfaces/apartment.interface'
 export interface ApartmentWithOwner
   extends Apartment,
     BasicOwner {
-  ownerId?: string
+  owner?: string
   hasOwner: boolean
 }

@@ -148,6 +148,10 @@ export const useAuthRepository = () => {
     await sendPasswordResetEmail(authFirebase, email)
   }
 
+  const getCurrentUser = () => {
+    return authFirebase.currentUser
+  }
+
   return {
     createUser,
     deleteAppUser,
@@ -159,5 +163,6 @@ export const useAuthRepository = () => {
     logOut,
     createCompleteUser,
     changePasswordEmail,
+    getCurrentUser,
   }
 }

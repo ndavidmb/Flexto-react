@@ -2,7 +2,7 @@ import { Children, cloneElement, FC } from 'react'
 
 type Props = {
   index: number
-  children: JSX.Element[]
+  children: JSX.Element[] | JSX.Element
 }
 
 const diffRowColor = (index: number) => {
@@ -11,7 +11,11 @@ const diffRowColor = (index: number) => {
 
 export const TRow: FC<Props> = ({ children, index }) => {
   return (
-    <tr className={`${diffRowColor(index)} border-b overflow-auto`}>
+    <tr
+      className={`${diffRowColor(
+        index,
+      )} border-b overflow-auto`}
+    >
       {Children.map(children, (child) =>
         cloneElement(child, {
           className: `py-4 px-6 ${

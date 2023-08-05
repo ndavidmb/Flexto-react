@@ -36,13 +36,15 @@ export const ApartmentsPets = () => {
   }
 
   return (
-    <div className="bg-gray-50 rounded p-2">
+    <div className="bg-gray-50 rounded p-2 overflow-auto">
       <table className="w-full">
-        <thead className='border-b'>
-          <th>Tipo de mascota*</th>
-          <th>Descripción</th>
-          <th>Cantidad*</th>
-          <th className="w-8"></th>
+        <thead className="border-b">
+          <tr>
+            <th>Tipo de mascota*</th>
+            <th>Descripción</th>
+            <th>Cantidad*</th>
+            <th className="w-8"></th>
+          </tr>
         </thead>
         <tbody>
           {values.pets.map((pet, index) => (

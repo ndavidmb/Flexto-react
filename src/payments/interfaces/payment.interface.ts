@@ -14,8 +14,11 @@ export interface PaymentWithId extends Payment {
   id: string
 }
 
-export interface PaymentWithState extends Payment {
-  state: PaymentState
+export interface PaymentWithState {
+  id: string
+  description: string
+  price: string
+  state: string
 }
 
 export interface OwnerPayment {
@@ -39,4 +42,9 @@ export interface OwnerPaymentVm
   extends OwnerDTO,
     PaymentsWithState {
   ownerId: string | undefined
+}
+
+export const PAYMENT_TYPE_LABELS = {
+  [PaymentState.PAID]: 'Pagó',
+  [PaymentState.PENDING]: 'Pendiente',
 }

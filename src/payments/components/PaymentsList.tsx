@@ -53,6 +53,7 @@ export const PaymentsList: FC<Props> = ({
               <td>
                 <div className="flex items-center">
                   <ButtonLink
+                    className="w-max"
                     href={`./users/${payment.id}`}
                   >
                     Ver Detalle

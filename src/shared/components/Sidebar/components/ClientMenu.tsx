@@ -4,6 +4,7 @@ import { IoMail } from 'react-icons/io5'
 import { TbBrandBooking } from 'react-icons/tb'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
 import { MenuLink } from '../../../styled-components/MenuLink'
+import { MdOutlinePayments } from 'react-icons/md'
 import { SiReadthedocs } from 'react-icons/si'
 
 type Props = {
@@ -19,6 +20,14 @@ export const ClientMenu: FC<Props> = ({ id }) => {
       >
         <AiOutlineHome className="text-xl" />
         Unidad residencial
+      </MenuLink>
+
+      <MenuLink
+        permissionsRole={UserRoles.CLIENT}
+        href={`/${id}/home/payments`}
+      >
+        <MdOutlinePayments className="text-xl" />
+        Servicios
       </MenuLink>
 
       <MenuLink

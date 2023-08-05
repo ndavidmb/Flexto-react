@@ -1,3 +1,7 @@
+import {
+  Owner,
+  OwnerDTO,
+} from '../../owners/interfaces/owner.interface'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
 import { ApartmentWithOwner } from '../components/AparmentWithOwner'
 import {
@@ -59,15 +63,18 @@ export const useApartmentModelController = () => {
   }
 
   const deleteApartment = async (apartment: Apartment) => {
-    const [owner] = await Promise.all([
-      ownerRepository.getOwnerByUid(apartment.owner!),
-      apartmentRepository.deleteApartment(apartment.id!),
-    ])
+    await apartmentRepository.deleteApartment(apartment.id!)
+    let owner: OwnerDTO | null = null
 
-    await ownerRepository.updateOwner(owner.id!, {
-      ...owner,
-      apartmentId: '',
-    })
+    if (apartment.owner && apartment.owner !== '') {
+      owner = await ownerRepository.getOwnerByUid(
+        apartment.owner!,
+      )
+      await ownerRepository.updateOwner(owner.id!, {
+        ...owner,
+        apartmentId: '',
+      })
+    }
   }
 
   const updateApartment = async (apartment: Apartment) => {

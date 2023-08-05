@@ -43,7 +43,7 @@ export const ApartmentList: FC<Props> = ({
             <td>
               {apartment.hasOwner ? (
                 <Link
-                  to={`../owners/${apartment.ownerId}`}
+                  to={`../owners/${apartment.owner}`}
                   className="flex flex-col hover:underline text-primary"
                 >
                   {apartment.name}

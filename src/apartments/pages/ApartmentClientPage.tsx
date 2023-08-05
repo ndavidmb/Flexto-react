@@ -1,5 +1,8 @@
 import { Form, Formik } from 'formik'
 import { useEffect, useState } from 'react'
+import { BsPencilSquare } from 'react-icons/bs'
+import { RiLockPasswordFill } from 'react-icons/ri'
+import { useForgetPasswordViewController } from '../../auth/controllers/forget-password.view.controller'
 import { OwnerView } from '../../owners/interfaces/owner.view.interface'
 import { EditProfile } from '../../profiles/components/EditProfile'
 import { DefaultContainer } from '../../shared/components/DefaultContainer/DefaultContainer'
@@ -11,12 +14,13 @@ import { Label } from '../../shared/styled-components/Label'
 import { PageTitle } from '../../shared/styled-components/PageTitle'
 import { ApartmentMembers } from '../components/ApartmentMembers'
 import { ApartmentsPets } from '../components/ApartmentsPets'
+import { WarningSave } from '../components/WarningSave'
 import { useApartmentViewController } from '../controllers/apartment.view.controller'
-import { BsPencilSquare } from 'react-icons/bs'
 import {
   MemberInfo,
   Pet,
 } from '../interfaces/apartment.interface'
+import { Input } from '../../shared/styled-components/Input'
 
 export const ApartmentClientPage = () => {
   const [ownerVw, setOwnerVw] = useState<OwnerView | null>(
@@ -26,6 +30,8 @@ export const ApartmentClientPage = () => {
 
   const { isOpen, openModal, closeModal } = useModal()
 
+  const forgetPasswordViewController =
+    useForgetPasswordViewController()
   const apartmentViewController =
     useApartmentViewController()
 
@@ -44,9 +50,11 @@ export const ApartmentClientPage = () => {
   const handleSubmit = ({
     members,
     pets,
+    licensePlate,
   }: {
     members: MemberInfo[]
     pets: Pet[]
+    licensePlate: string
   }) => {
     if (!ownerVw) {
       return
@@ -57,6 +65,9 @@ export const ApartmentClientPage = () => {
       ...apartment,
       extraInfo: {
         ...apartment.extraInfo,
+        vehicle: {
+          licensePlate,
+        },
         members,
         pets,
       },
@@ -65,6 +76,12 @@ export const ApartmentClientPage = () => {
 
   const handleEdit = () => {
     openModal()
+  }
+
+  const handleChangePassword = () => {
+    forgetPasswordViewController.sendValidationEmail(
+      ownerVw!.owner.email,
+    )
   }
 
   return (
@@ -81,7 +98,7 @@ export const ApartmentClientPage = () => {
         </ModalContainer>
       )}
       <DefaultContainer className="p-4 h-screen">
-        <div className="bg-white rounded p-4 h-50 shadow flex justify-between">
+        <div className="bg-white rounded p-4 h-50 shadow flex flex-col md:flex-row justify-between">
           <div className="md:flex gap-3">
             {owner.photoUrl && (
               <img
@@ -117,15 +134,24 @@ export const ApartmentClientPage = () => {
               </ul>
             </div>
           </div>
-
-          <Button
-            onClick={handleEdit}
-            className="gap-2"
-            color="primary"
-          >
-            <BsPencilSquare />
-            Editar
-          </Button>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Button
+              onClick={handleChangePassword}
+              className="gap-2"
+              color="primary"
+            >
+              <RiLockPasswordFill />
+              Cambiar contraseña
+            </Button>
+            <Button
+              onClick={handleEdit}
+              className="gap-2"
+              color="primary"
+            >
+              <BsPencilSquare />
+              Editar
+            </Button>
+          </div>
         </div>
         <Formik
           enableReinitialize={true}
@@ -138,23 +164,42 @@ export const ApartmentClientPage = () => {
             petQuantity: '1',
             petType: 'cat',
             pets: ownerVw?.apartment.extraInfo?.pets ?? [],
+            licensePlate:
+              ownerVw?.apartment.extraInfo?.vehicle
+                .licensePlate ?? '',
           }}
           onSubmit={handleSubmit}
         >
           <Form className="h-[calc(100vh-15rem)]">
-            <div className="bg-white rounded p-4 h-[90%] shadow mt-2 overflow-auto">
-              <ApartmentMembers />
+            <div className="bg-white mt-2 flex flex-col justify-between rounded h-[90%] shadow">
+              <div className="overflow-auto p-4">
+                <div className="w-full flex flex-col mb-2">
+                  <Label htmlFor="licensePlate">
+                    Licencia del vehículo
+                  </Label>
+                  <Input
+                    name="licensePlate"
+                    placeholder="Licencia de vehículo (Este campo es opcional y debe registrar la placa si tiene moto o carro)"
+                    type="text"
+                  />
+                </div>
 
-              <div className="w-full">
-                <Label htmlFor="petType">Mascotas</Label>
-                <ApartmentsPets />
+                <ApartmentMembers />
+
+                <div className="w-full">
+                  <Label htmlFor="petType">Mascotas</Label>
+                  <ApartmentsPets />
+                </div>
               </div>
-            </div>
-
-            <div className="mt-2 flex justify-end">
-              <Button type="submit" color="primary">
-                Guardar
-              </Button>
+              <div className="flex bg-gray-50 flex-col gap-2 border-t shadow-md justify-between items-end h-min p-4">
+                <WarningSave
+                  title="¡No olvide guardar los cambios!"
+                  text="Antes de salir de esta página no olvide guardar los cambios"
+                />
+                <Button type="submit" color="primary">
+                  Guardar
+                </Button>
+              </div>
             </div>
           </Form>
         </Formik>

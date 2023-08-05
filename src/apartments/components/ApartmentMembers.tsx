@@ -67,7 +67,10 @@ export const ApartmentMembers = () => {
         </div>
         <ul className="ml-2 mt-2">
           {values.members.map((member) => (
-            <li className="border-t">
+            <li
+              key={member.name + member.phone}
+              className="border-t"
+            >
               <div className="flex justify-between">
                 <div className="flex flex-col">
                   {member.name}

@@ -48,13 +48,6 @@ export const PaymentAddUserForm: FC<Props> = ({
         }
       })
 
-      console.log(
-        selectedOwners.map((s) => ({
-          email: s.email,
-          selected: s.selected,
-        })),
-      )
-
       setAllOwners(selectedOwners)
       setOwners(selectedOwners)
     })

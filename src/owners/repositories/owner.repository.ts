@@ -42,14 +42,13 @@ export const useOwnerRepository = () => {
     id: string,
     owner: OwnerDTO,
   ) => {
-    console.log(owner)
     try {
       await firestore.updateFirestore(id, {
         ...owner,
         accepted: true,
       })
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 

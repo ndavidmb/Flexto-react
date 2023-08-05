@@ -12,6 +12,7 @@ import {
   OwnerFromForm,
 } from '../interfaces/owner.interface'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
+import { Label } from '../../shared/styled-components/Label'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -40,9 +41,11 @@ export const OwnerForm: FC<Props> = ({
   }
 
   useEffect(() => {
-    apartmentService.getApartments().then((apt) => {
-      setApartments(apt)
-    })
+    apartmentService
+      .getAvailableApartments()
+      .then((apt) => {
+        setApartments(apt)
+      })
   }, [])
 
   const handleSubmit = (values: OwnerFromForm) => {
@@ -96,47 +99,41 @@ export const OwnerForm: FC<Props> = ({
     >
       <Form className="flex flex-col gap-2">
         <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="name"
-            className="font-semibold p-1"
-          >
+          <Label htmlFor="name" required={true}>
             Nombre
-          </label>
+          </Label>
           <Field
             id="name"
             name="name"
             className="border bg-white px-2 py-1"
             placeholder="Nombre"
+            required
           />
         </div>
         <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="phone"
-            className="font-semibold p-1"
-          >
+          <Label htmlFor="phone" required={true}>
             Teléfono
-          </label>
+          </Label>
           <Field
             type="number"
             id="phone"
             name="phone"
             className="border bg-white px-2 py-1"
             placeholder="Teléfono"
+            required
           />
         </div>
         <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="apartmentId"
-            className="font-semibold p-1"
-          >
+          <Label htmlFor="apartmentId" required={true}>
             Unidad residencial
-          </label>
+          </Label>
           <Select
             disabled={Boolean(data)}
             className="disabled:text-gray-500 disabled:bg-gray-100"
             formik={true}
             id="apartmentId"
             name="apartmentId"
+            required
           >
             {apartments.map((apartment) => {
               return (
@@ -152,12 +149,9 @@ export const OwnerForm: FC<Props> = ({
           </Select>
         </div>
         <div className="flex flex-col text-gray-900">
-          <label
-            htmlFor="email"
-            className="font-semibold p-1"
-          >
+          <Label htmlFor="email" required={true}>
             Correo
-          </label>
+          </Label>
           <Field
             disabled={Boolean(data)}
             id="email"
@@ -165,6 +159,7 @@ export const OwnerForm: FC<Props> = ({
             type="email"
             className="border bg-white px-2 py-1 disabled:text-gray-500 disabled:bg-gray-100"
             placeholder="Correo"
+            required
           ></Field>
         </div>
         <div className="flex flex-row-reverse gap-3 pt-3">
