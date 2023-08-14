@@ -9,8 +9,8 @@ import { ActTemplate } from '../interfaces/act-templates.interface'
 type Props = {
   templates: ActTemplate[]
   labelsName: string
-  editTemplate: (data: ActTemplate) => void
-  deleteTemplate: (templateId: string) => void
+  editTemplate?: (data: ActTemplate) => void
+  deleteTemplate: (templateId: ActTemplate) => void
 }
 
 export const ActTemplatesList: FC<Props> = ({
@@ -19,10 +19,11 @@ export const ActTemplatesList: FC<Props> = ({
   editTemplate,
   deleteTemplate,
 }) => {
+  console.log(templates);
   return (
     <Table>
       <THead>
-        <th>Nombre de {labelsName}</th>
+        <th>Nombre {labelsName}</th>
         <th>PDF</th>
         <th>Fecha</th>
         <th>Acción</th>
@@ -49,18 +50,19 @@ export const ActTemplatesList: FC<Props> = ({
             <td>{template.date}</td>
             <td>
               <div className="flex gap-2">
-                {labelsName === 'plantilla' && (
-                  <Button
-                    onClick={() => editTemplate(template)}
-                    color="link"
-                  >
-                    Actualizar
-                  </Button>
-                )}
+                {labelsName === 'plantilla' &&
+                  editTemplate && (
+                    <Button
+                      onClick={() => editTemplate(template)}
+                      color="link"
+                    >
+                      Actualizar
+                    </Button>
+                  )}
 
                 <Button
                   onClick={() =>
-                    deleteTemplate(template.id!)
+                    deleteTemplate(template)
                   }
                   color="link"
                 >

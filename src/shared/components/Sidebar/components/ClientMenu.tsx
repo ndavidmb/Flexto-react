@@ -35,7 +35,7 @@ export const ClientMenu: FC<Props> = ({ id }) => {
         href={`/${id}/home/request`}
       >
         <IoMail className="text-xl" />
-        Enviar petición
+        Enviar solicitud
       </MenuLink>
 
       <MenuLink
@@ -51,7 +51,7 @@ export const ClientMenu: FC<Props> = ({ id }) => {
         href={`/${id}/home/act`}
       >
         <SiReadthedocs className="text-xl" />
-        Actas
+        Actas y Documentos
       </MenuLink>
     </>
   )

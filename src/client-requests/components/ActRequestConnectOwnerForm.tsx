@@ -24,22 +24,20 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
   }
 
   const handleOnChange = (actId: string) => {
+    console.log(actId);
     if (
       chooseAct.some((id) => {
         return id === actId
       })
     ) {
       setChooseAct(chooseAct.filter((id) => id !== actId))
-    }
-    else{
+    } else {
       setChooseAct([...chooseAct, actId])
     }
-
   }
 
   return (
     <section>
-      {JSON.stringify(chooseAct)}
       <Label htmlFor="acts" required={true}>
         Actas disponibles
       </Label>

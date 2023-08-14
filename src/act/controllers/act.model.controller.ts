@@ -1,13 +1,8 @@
-import { documentId, where } from 'firebase/firestore/lite'
 import { OwnerDTO } from '../../owners/interfaces/owner.interface'
-import { FirestoreTable } from '../../shared/constants/firestore-tables'
-import { useFirestore } from '../../shared/hooks/useFirestore'
-import { useActRepository } from '../repositories/act.repository'
-import { ActTemplate } from '../interfaces/act-templates.interface'
-import { useAppSelector } from '../../shared/store/hooks'
 import { useOwnerRepository } from '../../owners/repositories/owner.repository'
-import { useDispatch } from 'react-redux'
-import { setLoading } from '../../shared/store/slices/loading/loadingSlice'
+import { useAppSelector } from '../../shared/store/hooks'
+import { ActTemplate } from '../interfaces/act-templates.interface'
+import { useActRepository } from '../repositories/act.repository'
 
 export const useActModelController = () => {
   const actRepository = useActRepository()
@@ -16,8 +11,6 @@ export const useActModelController = () => {
   const userState = useAppSelector(
     (state) => state.authState,
   )
-
-  const dispatch = useDispatch()
 
   const getAvailableActs = async (date: string) => {
     return await actRepository.getActsByDate(date)
@@ -29,22 +22,42 @@ export const useActModelController = () => {
       owner = await ownerRepository.getOwnerByUid(
         userState.uid,
       )
-      if(owner.actsAccess!==undefined){
-        const allActs = await actRepository.getActsByOwner( owner.actsAccess )
-        return allActs
+
+      if (
+        !owner.actsAccess ||
+        owner.actsAccess.length === 0
+      ) {
+        return []
       }
-      else{
-        throw new Error("ID is undefined");
-       }
-       
+
+      const allActs = await actRepository.getActsByOwner(
+        owner.actsAccess,
+      )
+      return allActs
     } catch (err) {
       console.error(err)
       throw err
     }
   }
 
+  const deleteUserPermissionAct = async (
+    act: ActTemplate,
+  ) => {
+    const owner = await ownerRepository.getOwnerByUid(
+      userState.uid,
+    )
+
+    ownerRepository.updateActOwner(owner.id!, {
+      ...owner,
+      actsAccess: owner.actsAccess?.filter(
+        (actId) => actId !== act.id,
+      ),
+    })
+  }
+
   return {
     getAvailableActs,
     getActsByIds,
+    deleteUserPermissionAct,
   }
 }

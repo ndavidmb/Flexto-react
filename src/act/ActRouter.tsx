@@ -4,7 +4,7 @@ import { ActAdminWrapper } from './ActWrapper'
 import { ActDynamicPage } from './pages/ActDynamicPage'
 import { FirestoreTable } from '../shared/constants/firestore-tables'
 import { BookingPage } from '../booking/pages/BookingPage'
-import { ActPage } from './pages/ActPage'
+import { ActPage } from './pages/ActUserPage'
 
 export const enum ACT_ROUTES {
   list = 'act-list',
@@ -20,7 +20,7 @@ export const ActRouter = () => {
         <Route
           path={ACT_ROUTES.list}
           element={
-            <ActDynamicPage actType={FirestoreTable.ACT} labelsName='acta' />
+            <ActDynamicPage actType={FirestoreTable.ACT} labelsName='del documento' />
           }
         />
         <Route
@@ -28,7 +28,7 @@ export const ActRouter = () => {
           element={
             <ActDynamicPage
               actType={FirestoreTable.ACT_TEMPLATES}
-              labelsName='plantilla'
+              labelsName='de la plantilla'
             />
           }
         />

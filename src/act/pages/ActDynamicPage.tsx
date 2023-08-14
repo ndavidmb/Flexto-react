@@ -45,6 +45,7 @@ export const ActDynamicPage: FC<Props> = ({
     if (newTemplate) {
       handleFormInfo(newTemplate)
     }
+    closeModal()
   }
 
   const handleOpenModal = (data?: ActTemplate) => {
@@ -52,8 +53,8 @@ export const ActDynamicPage: FC<Props> = ({
     openModal()
   }
 
-  const handleDelete = async (id: string) => {
-    await actController.deleteTemplate(id)
+  const handleDelete = async (act: ActTemplate) => {
+    await actController.deleteTemplate(act.id!)
     getTemplates()
   }
 
@@ -100,7 +101,9 @@ export const ActDynamicPage: FC<Props> = ({
       {isOpen && (
         <ModalContainer
           close={closeModal}
-          title={`${data ? 'Editar' : 'Crear'} ${labelsName}`}
+          title={`${
+            data ? 'Editar' : 'Crear'
+          } ${labelsName}`}
           width="300px"
         >
           <ActTemplatesForm
@@ -114,7 +117,7 @@ export const ActDynamicPage: FC<Props> = ({
         templates={templates}
         labelsName={labelsName}
         editTemplate={(data) => handleOpenModal(data)}
-        deleteTemplate={(id) => handleDelete(id)}
+        deleteTemplate={(act) => handleDelete(act)}
       />
       <div className="absolute bottom-10 right-10 shadow">
         <Button
