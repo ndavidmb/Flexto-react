@@ -116,7 +116,8 @@ export const ActDynamicPage: FC<Props> = ({
       <ActTemplatesList
         templates={templates}
         labelsName={labelsName}
-        editTemplate={(data) => handleOpenModal(data)}
+        actionLabel='Editar'
+        openActModal={(data) => handleOpenModal(data)}
         deleteTemplate={(act) => handleDelete(act)}
       />
       <div className="absolute bottom-10 right-10 shadow">

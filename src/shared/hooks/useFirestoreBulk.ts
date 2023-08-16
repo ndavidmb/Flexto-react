@@ -1,17 +1,16 @@
-import { useSelector } from 'react-redux'
-import { RootState } from '../store/store'
-import { useParams } from 'react-router-dom'
 import {
-  DocumentReference,
   WriteBatch,
   collection,
   doc,
   getDocs,
   query,
   where,
-  writeBatch,
+  writeBatch
 } from 'firebase/firestore/lite'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { db } from '../services/firebase.service'
+import { RootState } from '../store/store'
 
 export function useFirestoreBulk<T extends { id: string }>(
   tableName: string,

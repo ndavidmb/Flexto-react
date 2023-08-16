@@ -1,5 +1,5 @@
 import { ActUserList } from '../components/ActUserList'
 
-export const ActPage = () => {
+export const ActUserPage = () => {
   return <ActUserList />
 }

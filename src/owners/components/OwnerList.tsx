@@ -56,7 +56,9 @@ export const OwnerList: FC<Props> = ({
                 </div>
               </td>
               <td>
-                <span className='break-words'>{owner.email}</span>
+                <span className="break-words">
+                  {owner.email}
+                </span>
               </td>
               <td className="flex gap-2">
                 <Button

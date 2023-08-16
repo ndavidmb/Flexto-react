@@ -13,13 +13,20 @@ export const useActRepository = () => {
       where('date', '==', date),
     ])
   }
-  const getActsByOwner = async (ids:string[]) => {
+
+  const getActsByOwner = async (ids: string[]) => {
     return firestore.getAllFirestore([
       where(documentId(), 'in', ids),
     ])
   }
+
+  const getActs = async () => {
+    return firestore.getAllFirestore()
+  }
+
   return {
     getActsByDate,
     getActsByOwner,
+    getActs,
   }
 }

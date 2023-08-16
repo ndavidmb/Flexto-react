@@ -30,7 +30,10 @@ export interface OwnerDTO extends IUser, IExtraUser {
   deleted: boolean
 }
 
+export interface OwnerWithId extends OwnerDTO {
+  id: string
+}
+
 export interface OwnerWithApartment extends OwnerDTO {
   apartment: Apartment
 }
-

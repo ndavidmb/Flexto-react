@@ -1,10 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ActAdminWrapper } from './ActWrapper'
 // import { ActTemplatesEditor } from './pages/ActTemplatesEditor'
-import { ActDynamicPage } from './pages/ActDynamicPage'
 import { FirestoreTable } from '../shared/constants/firestore-tables'
-import { BookingPage } from '../booking/pages/BookingPage'
-import { ActPage } from './pages/ActUserPage'
+import { ActDynamicPage } from './pages/ActDynamicPage'
+import { ActPage } from './pages/ActPage'
+import { ActUserPage } from './pages/ActUserPage'
 
 export const enum ACT_ROUTES {
   list = 'act-list',
@@ -15,20 +15,18 @@ export const enum ACT_ROUTES {
 export const ActRouter = () => {
   return (
     <Routes>
-      <Route index element={<ActPage />} />
+      <Route index element={<ActUserPage />} />
       <Route path="admin" element={<ActAdminWrapper />}>
         <Route
           path={ACT_ROUTES.list}
-          element={
-            <ActDynamicPage actType={FirestoreTable.ACT} labelsName='del documento' />
-          }
+          element={<ActPage />}
         />
         <Route
           path={ACT_ROUTES.templates}
           element={
             <ActDynamicPage
               actType={FirestoreTable.ACT_TEMPLATES}
-              labelsName='de la plantilla'
+              labelsName="de la plantilla"
             />
           }
         />

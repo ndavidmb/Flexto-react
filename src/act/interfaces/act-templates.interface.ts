@@ -7,3 +7,7 @@ export interface ActTemplate {
   id?: string
   customization?: string
 }
+
+export interface ActWithOwnersAccess extends ActTemplate {
+  ownerAccess: string[]
+}

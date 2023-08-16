@@ -43,7 +43,7 @@ export const useAuthModelController = () => {
         email: newUserInstance.email as string,
         photoUrl: newUserInstance.photoURL as string,
         deleted: false,
-        // esteban
+        actsAccess: [],
       })
 
       const { id } = await requestRepository.createRequest({

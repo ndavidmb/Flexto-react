@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth'
+import { useParams } from 'react-router-dom'
 import { Apartment } from '../../apartments/interfaces/apartment.interface'
 import { useApartmentRepository } from '../../apartments/repositories/apartment.repository'
 import { useEmail } from '../../auth/hooks/useEmail'
@@ -15,10 +15,7 @@ import { CloudStorageFolders } from '../../shared/constants/cloud-storage-folder
 import { FirestoreTable } from '../../shared/constants/firestore-tables'
 import { useFirestoreBulk } from '../../shared/hooks/useFirestoreBulk'
 import { useFirestoreDocs } from '../../shared/hooks/useFirestoreDocs'
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '../../shared/store/hooks'
+import { useAppDispatch } from '../../shared/store/hooks'
 import { updateOwnerState } from '../../shared/store/slices/auth/authSlice'
 import { generatePassword } from '../../shared/utils/generatePassword'
 import {
@@ -28,7 +25,6 @@ import {
 } from '../interfaces/owner.interface'
 import { OwnerViewWithBookings } from '../interfaces/owner.view.interface'
 import { useOwnerRepository } from '../repositories/owner.repository'
-import { useParams } from 'react-router-dom'
 
 export const useOwnerModelController = () => {
   const ownerRepository = useOwnerRepository()
@@ -60,7 +56,6 @@ export const useOwnerModelController = () => {
       ownerRepository.getActiveOwners(),
       apartmentRepository.getApartments(),
     ])
-    console.log(owners)
     return owners.map((owner) => {
       const apartment = apartments.find(
         (apartment) => apartment.owner === owner.uid,
@@ -198,7 +193,7 @@ export const useOwnerModelController = () => {
       email: newUserInstance.email as string,
       photoUrl: newUserInstance.photoURL as string,
       deleted: false,
-      // esteban
+      actsAccess: [],
     })
 
     await email.sendEmail({
