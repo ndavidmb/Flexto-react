@@ -14,6 +14,7 @@ import {
 import { formattedCurrency } from '../../shared/utils/formattedCurrency'
 
 export const PaymentOwnerPage = () => {
+  const [noData, setNoData] = useState(false)
   const [payments, setPayments] = useState<
     PaymentWithState[]
   >([])
@@ -31,7 +32,9 @@ export const PaymentOwnerPage = () => {
         if (res) {
           setPayments(res.payments)
           setAllPayments(res.payments)
+          return
         }
+        setNoData(true)
       })
   }, [])
 
@@ -51,7 +54,9 @@ export const PaymentOwnerPage = () => {
           <th>Estado</th>
         </THead>
         <tbody>
-          {payments && payments.length !== 0 ? (
+          {payments &&
+            payments.length !== 0 &&
+
             payments.map((payment, index) => (
               <TRow key={payment.id} index={index}>
                 <td>{payment.description}</td>
@@ -77,10 +82,10 @@ export const PaymentOwnerPage = () => {
                   </div>
                 </td>
               </TRow>
-            ))
-          ) : (
+            ))}
+          {noData && (
             <TRow index={0}>
-              <td className='font-bold' colSpan={3}>
+              <td className="font-bold" colSpan={3}>
                 No se encontraron servicios
               </td>
             </TRow>

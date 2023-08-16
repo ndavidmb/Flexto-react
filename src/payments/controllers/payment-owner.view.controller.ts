@@ -165,7 +165,7 @@ export const usePaymentOwnerViewController = () => {
   const getPaymentOwnerByOwnerId = async (uid: string) => {
     dispatch(setLoading(true))
     try {
-      return paymentOwnerModelController.getOwnerWithPayments(
+      return await paymentOwnerModelController.getOwnerWithPayments(
         uid,
       )
     } catch (error) {
