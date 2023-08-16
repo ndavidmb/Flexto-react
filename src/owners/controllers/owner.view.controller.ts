@@ -6,6 +6,7 @@ import { showToast } from '../../shared/store/slices/toast/toastSlice'
 import {
   Owner,
   OwnerDTO,
+  OwnerWithApartment,
 } from '../interfaces/owner.interface'
 import { useOwnerModelController } from './owner.model.controller'
 
@@ -39,7 +40,8 @@ export const useOwnerViewController = () => {
       return await ownerModelController.getOwnerDetailBooking(
         ownerId,
       )
-    } catch {
+    } catch (err) {
+      console.error(err)
       dispatch(
         showToast({
           title:
@@ -98,7 +100,7 @@ export const useOwnerViewController = () => {
 
       return true
     } catch (err) {
-      console.error(err);
+      console.error(err)
       dispatch(
         showToast({
           title: 'No se pudo actualizar el perfil',
@@ -160,7 +162,9 @@ export const useOwnerViewController = () => {
     }
   }
 
-  const deleteUserTemporally = async (owner: Owner) => {
+  const deleteUserTemporally = async (
+    owner: OwnerWithApartment,
+  ) => {
     try {
       await ownerModelController.deleteTemporallyUser(
         owner.id!,
@@ -170,7 +174,7 @@ export const useOwnerViewController = () => {
         showToast({
           title: 'Se borró el usuario correctamente',
           details: [
-            `"${owner.name}" fue eliminado correctamente`,
+            `"${owner.displayName}" fue eliminado correctamente`,
           ],
           type: 'success',
         }),

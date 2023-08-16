@@ -41,8 +41,8 @@ export const OwnerDetailPage = () => {
       .then((successfully) => {
         if (successfully) {
           setOwnerVm({
-            owner: ownerVm!.owner!,
-            apartment: ownerVm!.apartment,
+          owner: ownerVm!.owner!,
+          apartment: ownerVm!.apartment,
             bookings: ownerVm!.bookings.filter(
               (b) => b.id !== booking.id,
             ),

@@ -10,13 +10,14 @@ import { emptyFields } from '../../shared/utils/emptyFields'
 import {
   Owner,
   OwnerFromForm,
+  OwnerWithApartment,
 } from '../interfaces/owner.interface'
 import { useOwnerViewController } from '../controllers/owner.view.controller'
 import { Label } from '../../shared/styled-components/Label'
 
 // Estos varían en el tipo de la data
 type Props = {
-  data?: Owner
+  data?: OwnerWithApartment
   closeModal: (refresh?: boolean) => void
 }
 
@@ -33,8 +34,8 @@ export const OwnerForm: FC<Props> = ({
 
   const initialValues: OwnerFromForm = {
     // Si es string
-    name: data?.name || '',
-    phone: data?.phone || '',
+    name: data?.displayName || '',
+    phone: data?.phoneNumber || '',
     email: data?.email || '',
     // Si es number, boolean, etc
     apartmentId: data?.apartment?.id || '',
@@ -57,6 +58,7 @@ export const OwnerForm: FC<Props> = ({
     const owner = {
       name: values.name,
       phone: values.phone,
+      uid: '',
       email: values.email,
       apartment: apartments.find(
         (apt) => apt.id === values.apartmentId,

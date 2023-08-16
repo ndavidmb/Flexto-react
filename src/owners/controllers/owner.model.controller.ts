@@ -24,6 +24,7 @@ import { generatePassword } from '../../shared/utils/generatePassword'
 import {
   Owner,
   OwnerDTO,
+  OwnerWithApartment,
 } from '../interfaces/owner.interface'
 import { OwnerViewWithBookings } from '../interfaces/owner.view.interface'
 import { useOwnerRepository } from '../repositories/owner.repository'
@@ -52,11 +53,14 @@ export const useOwnerModelController = () => {
 
   const dispatch = useAppDispatch()
 
-  const getOwners = async (): Promise<Owner[]> => {
+  const getOwners = async (): Promise<
+    OwnerWithApartment[]
+  > => {
     const [owners, apartments] = await Promise.all([
       ownerRepository.getActiveOwners(),
       apartmentRepository.getApartments(),
     ])
+    console.log(owners)
     return owners.map((owner) => {
       const apartment = apartments.find(
         (apartment) => apartment.owner === owner.uid,
@@ -64,10 +68,7 @@ export const useOwnerModelController = () => {
 
       return {
         apartment,
-        email: owner.email,
-        name: owner.displayName,
-        phone: owner.phoneNumber,
-        id: owner.id,
+        ...owner,
       }
     })
   }
@@ -75,6 +76,7 @@ export const useOwnerModelController = () => {
   const getOwnerDetailBooking = async (
     ownerId: string,
   ): Promise<OwnerViewWithBookings> => {
+    console.log(ownerId)
     const owner = await ownerRepository.getOwnerByUid(
       ownerId,
     )

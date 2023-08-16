@@ -29,3 +29,8 @@ export interface OwnerWithStates extends Owner {
 export interface OwnerDTO extends IUser, IExtraUser {
   deleted: boolean
 }
+
+export interface OwnerWithApartment extends OwnerDTO {
+  apartment: Apartment
+}
+

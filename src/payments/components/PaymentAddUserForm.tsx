@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import { IoSearch } from 'react-icons/io5'
 import { VscCheckAll, VscCloseAll } from 'react-icons/vsc'
 import { useOwnerViewController } from '../../owners/controllers/owner.view.controller'
-import { Owner } from '../../owners/interfaces/owner.interface'
+import { OwnerWithApartment } from '../../owners/interfaces/owner.interface'
 import { SelectableOwner } from '../../owners/interfaces/selectable-owner.interface'
 import { ModalContainer } from '../../shared/components/Modal/Modal'
 import { Button } from '../../shared/styled-components/Button'
@@ -53,7 +53,10 @@ export const PaymentAddUserForm: FC<Props> = ({
     })
   }, [])
 
-  const handleChange = (checked: boolean, owner: Owner) => {
+  const handleChange = (
+    checked: boolean,
+    owner: OwnerWithApartment,
+  ) => {
     setAllOwners((curr) =>
       curr.map((stateOwner) =>
         stateOwner.id === owner.id
@@ -115,7 +118,7 @@ export const PaymentAddUserForm: FC<Props> = ({
 
     const filteredOwners = allOwners.filter(
       (owner) =>
-        removeAccents(owner.name)
+        removeAccents(owner.displayName)
           .toLowerCase()
           .trim()
           .includes(normalizedSearch) ||
@@ -186,7 +189,7 @@ export const PaymentAddUserForm: FC<Props> = ({
                   className="flex justify-between w-full ml-2 text-sm font-medium text-gray-900 rounded"
                 >
                   <div className="pl-2 flex flex-col">
-                    {owner.name}
+                    {owner.displayName}
                     <small className="text-gray-600">
                       {owner.email}
                     </small>
