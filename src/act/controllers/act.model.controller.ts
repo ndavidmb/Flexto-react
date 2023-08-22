@@ -119,7 +119,7 @@ export const useActModelController = () => {
     return acts.map((act) => {
       const ownerAccess = owners
         .filter((owner) =>
-          owner.actsAccess.includes(act.id!),
+          owner.actsAccess?.includes(act.id!),
         )
         .map((owner) => owner.id)
 
