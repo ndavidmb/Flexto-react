@@ -85,7 +85,12 @@ export const useActModelController = () => {
           return null
         }
 
-        console.log(owner)
+        if (!owner.actsAccess) {
+          return {
+            ...owner,
+            actsAccess: [],
+          }
+        }
 
         return {
           ...owner,
@@ -95,7 +100,7 @@ export const useActModelController = () => {
                 new Set([...owner.actsAccess, act.id]),
               ) as string[])
             : // Elimina el elemento si no esta seleccionado
-              owner.actsAccess?.filter(
+              owner.actsAccess.filter(
                 (actId) => actId !== act.id,
               ),
         }
