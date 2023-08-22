@@ -12,10 +12,20 @@ import {
   ActWithOwnersAccess,
 } from '../interfaces/act-templates.interface'
 import { useActViewController } from '../controllers/act.view.controller'
+import { ActTemplatesForm } from '../components/ActTemplatesForm'
+import { ModalContainer } from '../../shared/components/Modal/Modal'
+import { ActFormData } from '../interfaces/act-form-data.interface'
 
 export const ActPage = () => {
   const { isOpen, openModal, closeModal, setData, data } =
     useModal<ActWithOwnersAccess>()
+
+  const {
+    isOpen: isOpenCreateForm,
+    openModal: openCreateForm,
+    closeModal: closeCreateForm,
+  } = useModal<ActWithOwnersAccess>()
+
   const [acts, setActs] = useState<ActWithOwnersAccess[]>(
     [],
   )
@@ -44,8 +54,11 @@ export const ActPage = () => {
     if (act) {
       const completeAct = acts.find((a) => a.id === act.id)
       setData(completeAct)
+      openModal()
+      return
     }
-    openModal()
+
+    openCreateForm()
   }
 
   const handleOwnerIds = (ids: PaymentSelectedIds[]) => {
@@ -59,6 +72,20 @@ export const ActPage = () => {
       })
   }
 
+  const handleSaveNewAct = (act?: ActFormData) => {
+    if (!act) {
+      closeCreateForm()
+      return
+    }
+
+    actController.addTemplate(act).then((successfully) => {
+      if (successfully) {
+        getActs()
+        closeCreateForm()
+      }
+    })
+  }
+
   return (
     <>
       {isOpen && (
@@ -67,6 +94,18 @@ export const ActPage = () => {
           handleClose={closeModal}
           handleOwnerIds={handleOwnerIds}
         />
+      )}
+      {isOpenCreateForm && (
+        <ModalContainer
+          close={closeCreateForm}
+          title="Crear acta"
+          width="300px"
+        >
+          <ActTemplatesForm
+            closeModal={handleSaveNewAct}
+            labelsName="acta"
+          />
+        </ModalContainer>
       )}
       <ActTemplatesList
         templates={acts}
