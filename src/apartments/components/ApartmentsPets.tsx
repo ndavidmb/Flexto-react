@@ -87,7 +87,7 @@ export const ApartmentsPets = () => {
             </td>
             <td className="text-center">
               <Field
-                className="h-8 border rounded px-2"
+                className="h-8 border rounded mt-2 px-2"
                 as="textarea"
                 placeholder="Descripción"
                 name="petDescription"

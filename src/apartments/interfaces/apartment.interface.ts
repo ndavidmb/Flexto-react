@@ -17,7 +17,8 @@ export interface ApartmentExtraInfo {
   members: MemberInfo[]
   vehicle: Vehicle
   pets: Pet[]
-  type: 'house' | 'apartment'
+  // eslint-disable-next-line no-use-before-define
+  type: ApartmentType
 }
 export interface Apartment {
   tower: string

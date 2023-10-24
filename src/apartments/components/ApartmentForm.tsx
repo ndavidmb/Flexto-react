@@ -40,7 +40,7 @@ export const ApartmentForm: FC<Props> = ({
     petQuantity: 1,
 
     pets: data?.extraInfo?.pets || [],
-    type: ApartmentType.APARTMENT,
+    type: data?.extraInfo.type ?? ApartmentType.APARTMENT,
   }
 
   const apartmentViewController =
