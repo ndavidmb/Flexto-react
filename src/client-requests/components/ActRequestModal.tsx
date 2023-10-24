@@ -24,26 +24,29 @@ export const ActRequestModal: FC<Props> = ({
   refreshState,
   data,
 }) => {
-  const [availableActs, setAvailableActs] =
-  useState<ActTemplate[]>([])
+  const [availableActs, setAvailableActs] = useState<
+    ActTemplate[]
+  >([])
 
   const requestViewController = useRequestViewController()
   const actViewController = useActViewController()
 
   useEffect(() => {
-    const newData2 = new Date(data.dateDetail.date );
-    newData2.setDate(newData2.getDate()+1)
+    const newData2 = new Date(data.dateDetail.date)
+    newData2.setDate(newData2.getDate() + 1)
 
     actViewController
-      .getAvailableAct( getFormattedDate(newData2))
+      .getAvailableAct(getFormattedDate(newData2))
       .then((data) => {
         setAvailableActs(data)
       })
   }, [])
 
   const handleCloseModal = (ids: string[]) => {
+    if (ids.length === 0) return
+
     requestViewController
-      .acceptActRequest(data,ids)
+      .acceptActRequest(data, ids)
       .then((successfully) => {
         if (successfully) {
           refreshState(data.id!, RequestStates.ACCEPTED)
@@ -58,6 +61,7 @@ export const ActRequestModal: FC<Props> = ({
       title="Acceso a acta"
     >
       <ActRequestConnectOwnerForm
+        data={data}
         acts={availableActs}
         closeModal={handleCloseModal}
       />

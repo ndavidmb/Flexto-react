@@ -1,17 +1,17 @@
-import { FC, useEffect, useState } from 'react'
-import { useApartmentViewController } from '../../apartments/controllers/apartment.view.controller'
-import { Select } from '../../shared/styled-components/Select'
-import { Apartment } from '../../apartments/interfaces/apartment.interface'
-import { Label } from '../../shared/styled-components/Label'
-import { Button } from '../../shared/styled-components/Button'
+import { FC, useState } from 'react'
 import { ActTemplate } from '../../act/interfaces/act-templates.interface'
+import { Button } from '../../shared/styled-components/Button'
+import { Label } from '../../shared/styled-components/Label'
 import { MultiSelect } from '../../shared/styled-components/MultiSelect'
+import { AdminRequest } from '../interfaces/request.interface'
 
 type Props = {
+  data: AdminRequest
   acts: ActTemplate[]
   closeModal: (id: string[]) => void
 }
 export const ActRequestConnectOwnerForm: FC<Props> = ({
+  data,
   closeModal,
   acts,
 }) => {
@@ -21,10 +21,12 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
     if (save && chooseAct) {
       closeModal(chooseAct)
     }
+
+    closeModal([])
   }
 
   const handleOnChange = (actId: string) => {
-    console.log(actId);
+    console.log(actId)
     if (
       chooseAct.some((id) => {
         return id === actId
@@ -39,7 +41,7 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
   return (
     <section>
       <Label htmlFor="acts" required={true}>
-        Actas disponibles
+        {`Actas disponibles para la fecha ${data.dateDetail.date}`}
       </Label>
       <MultiSelect
         onChange={(ev) => handleOnChange(ev.target.value)}

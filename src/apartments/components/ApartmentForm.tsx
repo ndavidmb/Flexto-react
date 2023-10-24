@@ -12,6 +12,7 @@ import {
 } from '../interfaces/apartment.interface'
 import { ApartmentMembers } from './ApartmentMembers'
 import { ApartmentsPets } from './ApartmentsPets'
+import { WarningSave } from './WarningSave'
 
 // Estos varían en el tipo de la data
 type Props = {
@@ -152,7 +153,10 @@ export const ApartmentForm: FC<Props> = ({
 
         <ApartmentMembers />
         <ApartmentsPets />
-
+        <WarningSave
+          title="¡Atención!"
+          text="Para agregar el usuario o la mascota tenga en cuenta oprimir los iconos de la derecha, si no la información no será guardada"
+        />
         <div className="flex flex-row-reverse gap-3 pt-3">
           <Button type="submit" color="primary">
             {data ? 'Actualizar' : 'Crear'}
