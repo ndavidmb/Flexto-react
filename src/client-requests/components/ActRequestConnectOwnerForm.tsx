@@ -4,6 +4,7 @@ import { Button } from '../../shared/styled-components/Button'
 import { Label } from '../../shared/styled-components/Label'
 import { MultiSelect } from '../../shared/styled-components/MultiSelect'
 import { AdminRequest } from '../interfaces/request.interface'
+import { WarningSave } from '../../apartments/components/WarningSave'
 
 type Props = {
   data: AdminRequest
@@ -20,6 +21,7 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
   const handleClose = (save = false) => {
     if (save && chooseAct) {
       closeModal(chooseAct)
+      return
     }
 
     closeModal([])
@@ -41,7 +43,7 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
   return (
     <section>
       <Label htmlFor="acts" required={true}>
-        {`Actas disponibles para la fecha ${data.dateDetail.date}`}
+        Actas
       </Label>
       <MultiSelect
         onChange={(ev) => handleOnChange(ev.target.value)}
@@ -57,7 +59,10 @@ export const ActRequestConnectOwnerForm: FC<Props> = ({
           </option>
         ))}
       </MultiSelect>
-
+      <WarningSave
+        title={data.dateDetail.date}
+        text="Actas disponibles"
+      />
       <div className="flex flex-row-reverse gap-3 pt-3">
         <Button
           color="primary"

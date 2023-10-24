@@ -43,7 +43,10 @@ export const ActRequestModal: FC<Props> = ({
   }, [])
 
   const handleCloseModal = (ids: string[]) => {
-    if (ids.length === 0) return
+    if (ids.length === 0) {
+      closeModal()
+      return
+    }
 
     requestViewController
       .acceptActRequest(data, ids)
@@ -58,7 +61,7 @@ export const ActRequestModal: FC<Props> = ({
   return (
     <ModalContainer
       close={closeModal}
-      title="Acceso a acta"
+      title="Acceso a actas"
     >
       <ActRequestConnectOwnerForm
         data={data}
