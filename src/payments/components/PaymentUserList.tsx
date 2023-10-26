@@ -1,5 +1,6 @@
 import { FC, useMemo } from 'react'
 import { BiReset } from 'react-icons/bi'
+import { IoArrowBack } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import { DefaultContainerWithSearch } from '../../shared/components/DefaultContainerWithSearch/DefaultContainerWithSearch'
 import { Button } from '../../shared/styled-components/Button'
@@ -10,14 +11,14 @@ import { Table } from '../../shared/styled-components/Table'
 import { formattedCurrency } from '../../shared/utils/formattedCurrency'
 import {
   OwnerPaymentVm,
+  OwnerPaymentWithStateName,
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
-import { IoArrowBack } from 'react-icons/io5'
 
 type Props = {
-  owners: OwnerPaymentVm[]
-  allOwners: OwnerPaymentVm[]
+  owners: OwnerPaymentWithStateName[]
+  allOwners: OwnerPaymentWithStateName[]
   payment: PaymentWithId | null
   handleSentMessage: (owner: OwnerPaymentVm) => void
   handleResetUserStates: (paymentId: string) => void
@@ -28,7 +29,7 @@ type Props = {
     newState: PaymentState,
   ) => void
   setOwners: React.Dispatch<
-    React.SetStateAction<OwnerPaymentVm[]>
+    React.SetStateAction<OwnerPaymentWithStateName[]>
   >
 }
 export const PaymentUserList: FC<Props> = ({
@@ -59,6 +60,8 @@ export const PaymentUserList: FC<Props> = ({
             'email',
             'phoneNumber',
             'displayName',
+            'paymentId',
+            'stateName',
           ],
         }}
         title={`${payment?.description}` ?? 'Servicio'}

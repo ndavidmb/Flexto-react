@@ -7,6 +7,7 @@ import {
 } from 'firebase/firestore/lite'
 import { db } from '../../shared/services/firebase.service'
 import { Theme } from '../interfaces/theme.interface'
+import { FirestoreTable } from '../../shared/constants/firestore-tables'
 
 let currentId: string | null = null
 let cacheResponse: Theme | null = null
@@ -36,7 +37,7 @@ export function useCustomizationService() {
 
   const addCustomization = async (customization: Theme) => {
     const docRef = await addDoc(
-      collection(db, 'customizations'),
+      collection(db, FirestoreTable.CUSTOMIZATIONS),
       customization,
     )
 

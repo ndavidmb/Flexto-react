@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { AiFillStar } from 'react-icons/ai'
 import {
   IoBusiness,
   IoHandRightOutline,
@@ -10,7 +11,9 @@ import {
 } from 'react-icons/md'
 import { SiReadthedocs } from 'react-icons/si'
 import { TbBrandBooking } from 'react-icons/tb'
+import { useSelector } from 'react-redux'
 import { UserRoles } from '../../../../auth/interfaces/user-roles.enums'
+import { RootState } from '../../../store/store'
 import { MenuLink } from '../../../styled-components/MenuLink'
 
 type Props = {
@@ -18,6 +21,10 @@ type Props = {
 }
 
 export const AdminMenu: FC<Props> = ({ id }) => {
+  const { theme } = useSelector(
+    (state: RootState) => state.themeState,
+  )
+
   return (
     <>
       <MenuLink
@@ -67,13 +74,24 @@ export const AdminMenu: FC<Props> = ({ id }) => {
         Zonas comunes
       </MenuLink>
 
-      <MenuLink
-        permissionsRole={UserRoles.ADMIN}
-        href={`/${id}/home/booking/admin`}
-      >
-        <TbBrandBooking className="text-xl" />
-        Reservas
-      </MenuLink>
+      {theme.premium && (
+        <MenuLink
+          permissionsRole={UserRoles.ADMIN}
+          href={`/${id}/home/booking/admin`}
+        >
+          <div className="w-full flex justify-between">
+            <span className="flex items-center justify-items-start">
+              <TbBrandBooking className="text-xl" />
+              Reservas
+            </span>
+
+            <span className='text-xs flex items-center gap-1 bg-yellow-500 text-white rounded px-2'>
+              <AiFillStar />
+              premium
+            </span>
+          </div>
+        </MenuLink>
+      )}
     </>
   )
 }

@@ -8,13 +8,21 @@ import { usePaymentViewController } from '../controllers/payment.view.controller
 import { PaymentSelectedIds } from '../interfaces/payment-form'
 import {
   OwnerPaymentVm,
+  OwnerPaymentWithStateName,
+  PAYMENT_TYPE_LABELS,
   PaymentState,
   PaymentWithId,
 } from '../interfaces/payment.interface'
 import { PaymentMessageForm } from '../components/PaymentMessageForm'
 
 export const PaymentUserPage = () => {
-  const [owners, setOwners] = useState<OwnerPaymentVm[]>([])
+  const [owners, setOwners] = useState<
+    OwnerPaymentWithStateName[]
+  >([])
+  const [allOwners, setAllOwners] = useState<
+    OwnerPaymentWithStateName[]
+  >([])
+
   const { closeModal, isOpen, data, openModal, setData } =
     useModal<string[]>()
 
@@ -28,9 +36,6 @@ export const PaymentUserPage = () => {
 
   const [payment, setPayment] =
     useState<PaymentWithId | null>(null)
-  const [allOwners, setAllOwners] = useState<
-    OwnerPaymentVm[]
-  >([])
 
   const { paymentId } = useParams()
 
@@ -57,8 +62,12 @@ export const PaymentUserPage = () => {
     paymentOwnerViewController
       .getAllOwnersByPaymentId(paymentId)
       .then((res) => {
-        setOwners(res)
-        setAllOwners(res)
+        const completeOwners = res.map((owner) => ({
+          ...owner,
+          stateName: PAYMENT_TYPE_LABELS[owner.state],
+        }))
+        setOwners(completeOwners)
+        setAllOwners(completeOwners)
       })
   }
 

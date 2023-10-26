@@ -44,6 +44,11 @@ export interface OwnerPaymentVm
   ownerId: string | undefined
 }
 
+export interface OwnerPaymentWithStateName
+  extends OwnerPaymentVm {
+  stateName: string
+}
+
 export const PAYMENT_TYPE_LABELS = {
   [PaymentState.PAID]: 'Pagó',
   [PaymentState.PENDING]: 'Pendiente',

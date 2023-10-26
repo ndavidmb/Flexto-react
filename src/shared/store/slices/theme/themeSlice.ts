@@ -5,6 +5,7 @@ const initialValue: {
   theme: Theme
 } = {
   theme: {
+    premium: false,
     id: '',
     logo: '',
     menu: ['', ''],
